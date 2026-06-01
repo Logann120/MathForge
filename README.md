@@ -2,7 +2,7 @@
 
 MathForge is an open-source platform for helping mathematics instructors generate high-quality instructional materials.
 
-The project is currently in the planning stage. This repository contains documentation and a placeholder repository structure that define the product direction, architecture, roadmap, and contributor expectations before business logic or user interface code is introduced.
+MathForge MVP 0.1 includes a small Streamlit application for generating deterministic linear equation worksheets and instructional resource packs. The project remains intentionally focused: no AI integration, no Canvas integration, and no account system are included in the current MVP.
 
 ## Mission
 
@@ -19,13 +19,16 @@ The initial focus is on worksheet generation, detailed solution keys, accessible
 
 ## MVP Scope
 
-The minimum viable product will support:
+The current MVP supports:
 
-- Generating math worksheets
+- Generating linear equation worksheets of the form `ax + b = c`
 - Generating detailed solution keys
-- Exporting accessible HTML
-- Exporting Markdown
-- Validating answers using SymPy
+- Validating generated answers using SymPy
+- Exporting worksheets to Markdown
+- Exporting worksheets to accessible HTML
+- Generating full instructional resource packs with study guides, common mistakes, and tutor notes
+- Exporting full resource packs to Markdown
+- Exporting full resource packs to accessible HTML
 
 ## Future Direction
 
@@ -39,7 +42,7 @@ Planned future capabilities include:
 
 ## Technology Direction
 
-MathForge will be built with:
+MathForge is built with:
 
 - Python for core application logic
 - Streamlit for the user interface
@@ -47,6 +50,34 @@ MathForge will be built with:
 - Accessible HTML and Markdown export formats
 
 Implementation should prioritize maintainability, clear module boundaries, automated validation, and accessibility from the beginning.
+
+## How to Run Locally
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the Streamlit app:
+
+```bash
+streamlit run app/main.py
+```
+
+Run the test suite:
+
+```bash
+pytest
+```
+
+## Screenshots
+
+Screenshots will be added as the MVP interface stabilizes.
+
+- Worksheet-only generation
+- Full Resource Pack generation
+- Markdown and HTML export previews
 
 ## Project Documentation
 
@@ -58,12 +89,12 @@ Implementation should prioritize maintainability, clear module boundaries, autom
 
 ## Current Status
 
-MathForge is pre-implementation. The repository includes placeholder packages and metadata for future work, but no business logic, Streamlit UI, or AI integration has been added.
+MathForge is at MVP 0.1 readiness review. The core linear equation worksheet flow, resource pack generation, SymPy validation, Markdown export, HTML export, and minimal Streamlit UI are implemented and covered by automated tests.
 
-Contributors should focus on documentation, design review, requirements refinement, architecture planning, and carefully scoped repository organization until the project is ready for application code.
+Current work should focus on hardening, documentation, accessibility review, topic expansion, and keeping the implementation small and maintainable.
 
 ## Contributing
 
-Contributions are welcome, especially improvements to requirements, accessibility criteria, mathematical content design, and architecture planning.
+Contributions are welcome, especially improvements to requirements, accessibility criteria, mathematical content design, documentation, tests, and maintainable topic expansion.
 
-Before adding application code, review the project specification, roadmap, architecture plan, and agent guidance. New implementation work should align with the MVP scope and should preserve accessibility and maintainability as first-class requirements.
+Before adding application code, review the project specification, roadmap, architecture plan, and agent guidance. New implementation work should preserve accessibility and maintainability as first-class requirements.

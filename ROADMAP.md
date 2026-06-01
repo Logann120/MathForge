@@ -4,16 +4,15 @@ This roadmap describes the planned progression from documentation through the MV
 
 ## Phase 0: Planning and Project Foundation
 
-Status: In progress
+Status: Completed
 
 Goals:
 
-- Define the project mission and target users.
-- Document MVP requirements.
-- Establish architecture principles before implementation.
-- Clarify contributor and agent expectations.
-- Establish the initial repository structure without business logic.
-- Keep the repository pre-implementation until the initial design is accepted.
+- Completed: Define the project mission and target users.
+- Completed: Document MVP requirements.
+- Completed: Establish architecture principles before implementation.
+- Completed: Clarify contributor and agent expectations.
+- Completed: Establish the initial repository structure.
 
 Deliverables:
 
@@ -28,35 +27,39 @@ Deliverables:
 
 ## Phase 1: MVP Prototype
 
-Status: Planned
+Status: Completed for MVP 0.1
 
 Goals:
 
-- Build a minimal Streamlit interface.
-- Implement one or more worksheet generators for initial math topics.
-- Generate corresponding detailed solution keys.
-- Validate generated answers with SymPy.
-- Export worksheets and solution keys to Markdown.
-- Export worksheets and solution keys to accessible HTML.
+- Completed: Build a minimal Streamlit interface.
+- Completed: Implement a deterministic linear equation worksheet generator.
+- Completed: Generate corresponding detailed solution keys.
+- Completed: Validate generated answers with SymPy.
+- Completed: Export worksheets and solution keys to Markdown.
+- Completed: Export worksheets and solution keys to accessible HTML.
+- Completed: Generate deterministic instructional resource packs.
+- Completed: Export full resource packs to Markdown.
+- Completed: Export full resource packs to accessible HTML.
 
 Success criteria:
 
-- Instructors can generate a usable worksheet.
-- The solution key is accurate and readable.
-- SymPy validation catches incorrect generated answers.
-- HTML and Markdown exports are suitable for classroom review.
+- Completed: Instructors can generate a usable linear equation worksheet.
+- Completed: The solution key is accurate and readable.
+- Completed: SymPy validation catches incorrect generated answers.
+- Completed: HTML and Markdown exports are suitable for classroom review.
+- Completed: Resource packs include study guides, common mistakes, and tutor notes.
 
 ## Phase 2: MVP Hardening
 
-Status: Planned
+Status: Next
 
 Goals:
 
-- Expand topic coverage.
-- Add focused automated tests for generation, validation, and export workflows.
-- Improve accessibility of the Streamlit interface and exported HTML.
+- Expand topic coverage beyond linear equations.
+- Continue focused automated tests for generation, validation, resource packs, and export workflows.
+- Review accessibility of the Streamlit interface and exported HTML.
 - Refine error messages and validation feedback.
-- Establish stable data structures for problems, worksheets, and solution keys.
+- Stabilize data structures for problems, worksheets, solution keys, and instructional resource packs.
 
 Success criteria:
 
