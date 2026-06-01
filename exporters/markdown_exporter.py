@@ -1,8 +1,9 @@
-"""Markdown export helpers for MathForge worksheets."""
+"""Markdown export helpers for MathForge instructional content."""
 
 from __future__ import annotations
 
 from models.content_models import ExportResult, Solution, Worksheet
+from models.resource_pack import CommonMistakes, ResourcePack, StudyGuide, TutorNotes
 
 
 def export_worksheet_to_markdown(
@@ -63,6 +64,43 @@ def export_worksheet_to_markdown(
     )
 
 
+def export_resource_pack_to_markdown(
+    resource_pack: ResourcePack,
+    include_solutions: bool = True,
+) -> ExportResult:
+    """Render a full instructional resource pack as readable Markdown."""
+    if not isinstance(resource_pack, ResourcePack):
+        raise TypeError("resource_pack must be a ResourcePack.")
+
+    worksheet_export = export_worksheet_to_markdown(
+        resource_pack.worksheet,
+        include_solutions=include_solutions,
+    )
+    lines: list[str] = [
+        worksheet_export.content.rstrip(),
+        "",
+        "## Study Guide",
+        "",
+    ]
+    lines.extend(_format_study_guide(resource_pack.study_guide))
+    lines.extend(["", "## Common Mistakes", ""])
+    lines.extend(_format_common_mistakes(resource_pack.common_mistakes))
+    lines.extend(["", "## Tutor Notes", ""])
+    lines.extend(_format_tutor_notes(resource_pack.tutor_notes))
+
+    content = "\n".join(lines).rstrip() + "\n"
+    return ExportResult(
+        content=content,
+        format_name="markdown",
+        filename=_resource_pack_markdown_filename(resource_pack),
+        metadata={
+            "worksheet_id": resource_pack.worksheet.worksheet_id or "",
+            "include_solutions": str(include_solutions),
+            "resource_type": "resource_pack",
+        },
+    )
+
+
 def _format_solution(index: int, solution: Solution) -> list[str]:
     """Format a solution entry for the Markdown solution key."""
     lines = [
@@ -77,6 +115,54 @@ def _format_solution(index: int, solution: Solution) -> list[str]:
     return lines
 
 
+def _format_study_guide(study_guide: StudyGuide) -> list[str]:
+    """Format a study guide section."""
+    lines = [
+        f"### {_escape_markdown_text(study_guide.title)}",
+        "",
+        _escape_markdown_text(study_guide.overview),
+    ]
+
+    if study_guide.key_points:
+        lines.extend(["", "#### Key Ideas", ""])
+        lines.extend(_format_bullets(study_guide.key_points))
+
+    if study_guide.practice_tips:
+        lines.extend(["", "#### Worked-Example Guidance", ""])
+        lines.extend(_format_bullets(study_guide.practice_tips))
+
+    return lines
+
+
+def _format_common_mistakes(common_mistakes: CommonMistakes) -> list[str]:
+    """Format common mistakes and corrections."""
+    lines = ["### Mistakes to Watch For", ""]
+    lines.extend(_format_bullets(common_mistakes.mistakes))
+
+    if common_mistakes.corrections:
+        lines.extend(["", "### Corrections and Interventions", ""])
+        lines.extend(_format_bullets(common_mistakes.corrections))
+
+    return lines
+
+
+def _format_tutor_notes(tutor_notes: TutorNotes) -> list[str]:
+    """Format tutor-facing notes and prompts."""
+    lines = ["### Notes", ""]
+    lines.extend(_format_bullets(tutor_notes.notes))
+
+    if tutor_notes.discussion_prompts:
+        lines.extend(["", "### Discussion Prompts", ""])
+        lines.extend(_format_bullets(tutor_notes.discussion_prompts))
+
+    return lines
+
+
+def _format_bullets(items: tuple[str, ...]) -> list[str]:
+    """Format text items as escaped Markdown bullets."""
+    return [f"- {_escape_markdown_text(item)}" for item in items]
+
+
 def _markdown_filename(worksheet: Worksheet) -> str:
     """Create a simple Markdown filename from worksheet metadata."""
     base_name = worksheet.worksheet_id or worksheet.title
@@ -85,6 +171,12 @@ def _markdown_filename(worksheet: Worksheet) -> str:
         for character in base_name.strip()
     ).strip("-")
     return f"{safe_name or 'worksheet'}.md"
+
+
+def _resource_pack_markdown_filename(resource_pack: ResourcePack) -> str:
+    """Create a Markdown filename for a resource pack."""
+    worksheet_filename = _markdown_filename(resource_pack.worksheet)
+    return worksheet_filename.replace(".md", "-resource-pack.md")
 
 
 def _escape_markdown_text(text: str) -> str:
