@@ -1,0 +1,121 @@
+"""Tests for deterministic resource pack generation."""
+
+import pytest
+
+from generator.resource_pack_generator import generate_linear_equation_resource_pack
+from models.resource_pack import CommonMistakes, ResourcePack, StudyGuide, TutorNotes
+
+
+def test_generate_linear_equation_resource_pack_returns_resource_pack() -> None:
+    resource_pack = generate_linear_equation_resource_pack(
+        topic="Linear equations",
+        difficulty="easy",
+        count=2,
+        start_id="linear",
+    )
+
+    assert isinstance(resource_pack, ResourcePack)
+    assert isinstance(resource_pack.study_guide, StudyGuide)
+    assert isinstance(resource_pack.common_mistakes, CommonMistakes)
+    assert isinstance(resource_pack.tutor_notes, TutorNotes)
+    assert resource_pack.worksheet.worksheet_id == "linear-worksheet"
+    assert len(resource_pack.worksheet.problems) == 2
+
+
+def test_generate_linear_equation_resource_pack_is_deterministic() -> None:
+    first = generate_linear_equation_resource_pack(
+        "Linear equations",
+        "easy",
+        3,
+        "linear",
+    )
+    second = generate_linear_equation_resource_pack(
+        "Linear equations",
+        "easy",
+        3,
+        "linear",
+    )
+
+    assert first == second
+
+
+def test_resource_pack_includes_study_guide_content() -> None:
+    resource_pack = generate_linear_equation_resource_pack(
+        topic="Linear equations",
+        difficulty="easy",
+        count=1,
+        start_id="linear",
+    )
+
+    assert resource_pack.study_guide.title == "Linear equations Study Guide"
+    assert "inverse operations" in resource_pack.study_guide.overview
+    assert any(
+        "Learning objective" in point for point in resource_pack.study_guide.key_points
+    )
+    assert any(
+        "Worked-example guidance" in tip
+        for tip in resource_pack.study_guide.practice_tips
+    )
+
+
+def test_resource_pack_includes_common_mistakes_content() -> None:
+    resource_pack = generate_linear_equation_resource_pack(
+        topic="Linear equations",
+        difficulty="easy",
+        count=1,
+        start_id="linear",
+    )
+
+    assert any(
+        "one side" in mistake
+        for mistake in resource_pack.common_mistakes.mistakes
+    )
+    assert any(
+        "Remove b first" in correction
+        for correction in resource_pack.common_mistakes.corrections
+    )
+
+
+def test_resource_pack_includes_tutor_notes_content() -> None:
+    resource_pack = generate_linear_equation_resource_pack(
+        topic="Linear equations",
+        difficulty="easy",
+        count=1,
+        start_id="linear",
+    )
+
+    assert any("Tutoring prompt" in note for note in resource_pack.tutor_notes.notes)
+    assert any("Diagnostic question" in note for note in resource_pack.tutor_notes.notes)
+    assert any(
+        "Intervention suggestion" in note for note in resource_pack.tutor_notes.notes
+    )
+    assert any(
+        "balanced" in prompt
+        for prompt in resource_pack.tutor_notes.discussion_prompts
+    )
+
+
+def test_resource_pack_metadata_describes_generator() -> None:
+    resource_pack = generate_linear_equation_resource_pack(
+        topic="Linear equations",
+        difficulty="advanced",
+        count=1,
+        start_id="linear",
+    )
+
+    assert resource_pack.metadata["topic"] == "Linear equations"
+    assert resource_pack.metadata["difficulty"] == "advanced"
+    assert resource_pack.metadata["generator"] == "linear_equation_resource_pack"
+    assert resource_pack.study_guide.metadata["resource_type"] == "study_guide"
+    assert resource_pack.common_mistakes.metadata["resource_type"] == "common_mistakes"
+    assert resource_pack.tutor_notes.metadata["resource_type"] == "tutor_notes"
+
+
+def test_generate_linear_equation_resource_pack_rejects_invalid_count() -> None:
+    with pytest.raises(ValueError, match="count must be positive"):
+        generate_linear_equation_resource_pack(
+            topic="Linear equations",
+            difficulty="easy",
+            count=0,
+            start_id="linear",
+        )
