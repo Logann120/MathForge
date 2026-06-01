@@ -1,10 +1,11 @@
-"""Accessible HTML export helpers for MathForge worksheets."""
+"""Accessible HTML export helpers for MathForge instructional content."""
 
 from __future__ import annotations
 
 from html import escape
 
 from models.content_models import ExportResult, Solution, Worksheet
+from models.resource_pack import CommonMistakes, ResourcePack, StudyGuide, TutorNotes
 
 
 def export_worksheet_to_html(
@@ -64,6 +65,40 @@ def export_worksheet_to_html(
     )
 
 
+def export_resource_pack_to_html(
+    resource_pack: ResourcePack,
+    include_solutions: bool = True,
+) -> ExportResult:
+    """Render a full instructional resource pack as a semantic HTML fragment."""
+    if not isinstance(resource_pack, ResourcePack):
+        raise TypeError("resource_pack must be a ResourcePack.")
+
+    worksheet_export = export_worksheet_to_html(
+        resource_pack.worksheet,
+        include_solutions=include_solutions,
+    )
+    lines: list[str] = [
+        '<section class="mathforge-resource-pack">',
+        worksheet_export.content.rstrip(),
+    ]
+    lines.extend(_format_study_guide(resource_pack.study_guide))
+    lines.extend(_format_common_mistakes(resource_pack.common_mistakes))
+    lines.extend(_format_tutor_notes(resource_pack.tutor_notes))
+    lines.append("</section>")
+
+    content = "\n".join(lines) + "\n"
+    return ExportResult(
+        content=content,
+        format_name="html",
+        filename=_resource_pack_html_filename(resource_pack),
+        metadata={
+            "worksheet_id": resource_pack.worksheet.worksheet_id or "",
+            "include_solutions": str(include_solutions),
+            "resource_type": "resource_pack",
+        },
+    )
+
+
 def _format_solution_key(worksheet: Worksheet) -> list[str]:
     """Format the optional instructor-facing solution key."""
     lines = [
@@ -104,6 +139,76 @@ def _format_solution(solution: Solution) -> list[str]:
     return lines
 
 
+def _format_study_guide(study_guide: StudyGuide) -> list[str]:
+    """Format a study guide section."""
+    lines = [
+        '  <section class="mathforge-study-guide">',
+        "    <h2>Study Guide</h2>",
+        f"    <h3>{_escape_text(study_guide.title)}</h3>",
+        f"    <p>{_escape_text(study_guide.overview)}</p>",
+    ]
+
+    if study_guide.key_points:
+        lines.extend(_format_text_list("Key Ideas", study_guide.key_points))
+
+    if study_guide.practice_tips:
+        lines.extend(
+            _format_text_list("Worked-Example Guidance", study_guide.practice_tips)
+        )
+
+    lines.append("  </section>")
+    return lines
+
+
+def _format_common_mistakes(common_mistakes: CommonMistakes) -> list[str]:
+    """Format common mistakes and corrections."""
+    lines = [
+        '  <section class="mathforge-common-mistakes">',
+        "    <h2>Common Mistakes</h2>",
+    ]
+    lines.extend(_format_text_list("Mistakes to Watch For", common_mistakes.mistakes))
+
+    if common_mistakes.corrections:
+        lines.extend(
+            _format_text_list(
+                "Corrections and Interventions",
+                common_mistakes.corrections,
+            )
+        )
+
+    lines.append("  </section>")
+    return lines
+
+
+def _format_tutor_notes(tutor_notes: TutorNotes) -> list[str]:
+    """Format tutor-facing notes and prompts."""
+    lines = [
+        '  <section class="mathforge-tutor-notes">',
+        "    <h2>Tutor Notes</h2>",
+    ]
+    lines.extend(_format_text_list("Notes", tutor_notes.notes))
+
+    if tutor_notes.discussion_prompts:
+        lines.extend(
+            _format_text_list("Discussion Prompts", tutor_notes.discussion_prompts)
+        )
+
+    lines.append("  </section>")
+    return lines
+
+
+def _format_text_list(heading: str, items: tuple[str, ...]) -> list[str]:
+    """Format a titled unordered list of escaped text items."""
+    lines = [
+        f"    <h3>{_escape_text(heading)}</h3>",
+        "    <ul>",
+    ]
+    for item in items:
+        lines.append(f"      <li>{_escape_text(item)}</li>")
+    lines.append("    </ul>")
+    return lines
+
+
 def _html_filename(worksheet: Worksheet) -> str:
     """Create a simple HTML filename from worksheet metadata."""
     base_name = worksheet.worksheet_id or worksheet.title
@@ -112,6 +217,12 @@ def _html_filename(worksheet: Worksheet) -> str:
         for character in base_name.strip()
     ).strip("-")
     return f"{safe_name or 'worksheet'}.html"
+
+
+def _resource_pack_html_filename(resource_pack: ResourcePack) -> str:
+    """Create an HTML filename for a resource pack."""
+    worksheet_filename = _html_filename(resource_pack.worksheet)
+    return worksheet_filename.replace(".html", "-resource-pack.html")
 
 
 def _escape_text(text: str) -> str:

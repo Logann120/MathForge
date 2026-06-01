@@ -2,8 +2,12 @@
 
 import pytest
 
-from exporters.html_exporter import export_worksheet_to_html
+from exporters.html_exporter import (
+    export_resource_pack_to_html,
+    export_worksheet_to_html,
+)
 from generator.problem_generator import generate_linear_equation_worksheet
+from generator.resource_pack_generator import generate_linear_equation_resource_pack
 from models.content_models import ExportResult, MathProblem, Worksheet
 
 
@@ -95,3 +99,79 @@ def test_export_worksheet_to_html_escapes_html_sensitive_text() -> None:
 def test_export_worksheet_to_html_rejects_non_worksheet() -> None:
     with pytest.raises(TypeError, match="worksheet must be a Worksheet"):
         export_worksheet_to_html("not a worksheet")
+
+
+def test_export_resource_pack_to_html_returns_export_result() -> None:
+    resource_pack = generate_linear_equation_resource_pack(
+        topic="Linear equations",
+        difficulty="easy",
+        count=1,
+        start_id="linear",
+    )
+
+    result = export_resource_pack_to_html(resource_pack)
+
+    assert isinstance(result, ExportResult)
+    assert result.format_name == "html"
+    assert result.filename == "linear-worksheet-resource-pack.html"
+    assert result.metadata["worksheet_id"] == "linear-worksheet"
+    assert result.metadata["resource_type"] == "resource_pack"
+    assert result.metadata["include_solutions"] == "True"
+
+
+def test_export_resource_pack_to_html_includes_all_sections() -> None:
+    resource_pack = generate_linear_equation_resource_pack(
+        topic="Linear equations",
+        difficulty="easy",
+        count=1,
+        start_id="linear",
+    )
+
+    result = export_resource_pack_to_html(resource_pack)
+
+    assert '<section class="mathforge-resource-pack">' in result.content
+    assert '<section class="mathforge-worksheet">' in result.content
+    assert "<h1" not in result.content
+    assert "<h2>Linear equations Worksheet</h2>" in result.content
+    assert "<h3>Solution Key</h3>" in result.content
+    assert "<h2>Study Guide</h2>" in result.content
+    assert "<h3>Linear equations Study Guide</h3>" in result.content
+    assert "<h3>Key Ideas</h3>" in result.content
+    assert "<h2>Common Mistakes</h2>" in result.content
+    assert "<h3>Corrections and Interventions</h3>" in result.content
+    assert "<h2>Tutor Notes</h2>" in result.content
+    assert "<h3>Discussion Prompts</h3>" in result.content
+
+
+def test_export_resource_pack_to_html_can_omit_solution_key() -> None:
+    resource_pack = generate_linear_equation_resource_pack(
+        topic="Linear equations",
+        difficulty="easy",
+        count=1,
+        start_id="linear",
+    )
+
+    result = export_resource_pack_to_html(resource_pack, include_solutions=False)
+
+    assert "<h3>Solution Key</h3>" not in result.content
+    assert "<h2>Study Guide</h2>" in result.content
+    assert result.metadata["include_solutions"] == "False"
+
+
+def test_export_resource_pack_to_html_escapes_resource_text() -> None:
+    resource_pack = generate_linear_equation_resource_pack(
+        topic="Linear <equations>",
+        difficulty="easy",
+        count=1,
+        start_id="linear",
+    )
+
+    result = export_resource_pack_to_html(resource_pack)
+
+    assert "<h2>Linear &lt;equations&gt; Worksheet</h2>" in result.content
+    assert "<h3>Linear &lt;equations&gt; Study Guide</h3>" in result.content
+
+
+def test_export_resource_pack_to_html_rejects_non_resource_pack() -> None:
+    with pytest.raises(TypeError, match="resource_pack must be a ResourcePack"):
+        export_resource_pack_to_html("not a resource pack")
