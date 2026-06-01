@@ -9,10 +9,15 @@ from exporters.markdown_exporter import (
     export_resource_pack_to_markdown,
     export_worksheet_to_markdown,
 )
+from generator.curriculum_resource_pack_generator import (
+    generate_resource_pack_from_learning_objective,
+)
 from generator.problem_generator import generate_linear_equation_worksheet
 from generator.resource_pack_generator import generate_linear_equation_resource_pack
+from models.curriculum import CourseModule, CourseTemplate, LearningObjective
 from models.content_models import Solution, Worksheet
 from models.resource_pack import CommonMistakes, ResourcePack, StudyGuide, TutorNotes
+from templates.course_templates import college_algebra_template
 
 
 def main() -> None:
@@ -28,7 +33,19 @@ def main() -> None:
         options=("Worksheet only", "Full Resource Pack"),
         horizontal=True,
     )
-    topic = st.text_input("Topic", value="Linear equations")
+    generation_mode = st.radio(
+        "Generation mode",
+        options=("Topic mode", "Learning Objective mode"),
+        horizontal=True,
+    )
+
+    learning_objective: LearningObjective | None = None
+    if generation_mode == "Learning Objective mode":
+        learning_objective = _select_learning_objective(st, college_algebra_template())
+        topic = learning_objective.topic
+    else:
+        topic = st.text_input("Topic", value="Linear equations")
+
     difficulty = st.text_input("Difficulty", value="easy")
     count = st.number_input("Problem count", min_value=1, max_value=50, value=5, step=1)
     start_id = st.text_input("Start ID", value="linear")
@@ -36,12 +53,20 @@ def main() -> None:
     if st.button("Generate", type="primary"):
         try:
             if output_type == "Full Resource Pack":
-                resource_pack = generate_linear_equation_resource_pack(
-                    topic=topic,
-                    difficulty=difficulty,
-                    count=int(count),
-                    start_id=start_id,
-                )
+                if learning_objective is not None:
+                    resource_pack = generate_resource_pack_from_learning_objective(
+                        learning_objective=learning_objective,
+                        difficulty=difficulty,
+                        count=int(count),
+                        start_id=start_id,
+                    )
+                else:
+                    resource_pack = generate_linear_equation_resource_pack(
+                        topic=topic,
+                        difficulty=difficulty,
+                        count=int(count),
+                        start_id=start_id,
+                    )
                 _render_resource_pack(st, resource_pack)
                 return
 
@@ -55,6 +80,46 @@ def main() -> None:
         except (TypeError, ValueError) as exc:
             st.error(str(exc))
             return
+
+
+def _select_learning_objective(
+    st: Any,
+    course_template: CourseTemplate,
+) -> LearningObjective:
+    """Render curriculum selectors and return the selected learning objective."""
+    st.write(f"Course template: {course_template.title}")
+    selected_module_title = st.selectbox(
+        "Course module",
+        options=tuple(module.title for module in course_template.modules),
+    )
+    selected_module = _find_module(course_template, selected_module_title)
+    selected_objective_description = st.selectbox(
+        "Learning objective",
+        options=tuple(
+            objective.description
+            for objective in selected_module.learning_objectives
+        ),
+    )
+    return _find_learning_objective(selected_module, selected_objective_description)
+
+
+def _find_module(course_template: CourseTemplate, title: str) -> CourseModule:
+    """Find a course module by title."""
+    for module in course_template.modules:
+        if module.title == title:
+            return module
+    raise ValueError(f"unknown course module: {title}")
+
+
+def _find_learning_objective(
+    course_module: CourseModule,
+    description: str,
+) -> LearningObjective:
+    """Find a learning objective by description."""
+    for objective in course_module.learning_objectives:
+        if objective.description == description:
+            return objective
+    raise ValueError(f"unknown learning objective: {description}")
 
 
 def _render_worksheet(st: Any, worksheet: Worksheet) -> None:

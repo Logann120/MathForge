@@ -29,6 +29,7 @@ The current MVP supports:
 - Generating full instructional resource packs with study guides, common mistakes, and tutor notes
 - Exporting full resource packs to Markdown
 - Exporting full resource packs to accessible HTML
+- Generating materials from a sample College Algebra learning objective for linear equations
 
 ## Future Direction
 
@@ -48,6 +49,7 @@ MathForge is built with:
 - Streamlit for the user interface
 - SymPy for symbolic math validation
 - Accessible HTML and Markdown export formats
+- Deterministic curriculum templates for alignment workflows
 
 Implementation should prioritize maintainability, clear module boundaries, automated validation, and accessibility from the beginning.
 
@@ -91,7 +93,7 @@ Screenshots will be added as the MVP interface stabilizes.
 
 MathForge is at MVP 0.1 readiness review. The core linear equation worksheet flow, resource pack generation, SymPy validation, Markdown export, HTML export, and minimal Streamlit UI are implemented and covered by automated tests.
 
-Current work should focus on hardening, documentation, accessibility review, topic expansion, and keeping the implementation small and maintainable.
+Current work includes an initial curriculum-alignment milestone with a deterministic College Algebra template. Next work should focus on hardening, documentation, accessibility review, topic expansion, and keeping the implementation small and maintainable.
 
 ## Contributing
 

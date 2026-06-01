@@ -55,6 +55,7 @@ Status: Next
 
 Goals:
 
+- Completed: Add initial curriculum-aligned generation with a College Algebra linear equations objective.
 - Expand topic coverage beyond linear equations.
 - Continue focused automated tests for generation, validation, resource packs, and export workflows.
 - Review accessibility of the Streamlit interface and exported HTML.
