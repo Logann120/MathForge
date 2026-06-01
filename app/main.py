@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from exporters.html_exporter import export_worksheet_to_html
+from exporters.html_exporter import export_resource_pack_to_html, export_worksheet_to_html
 from exporters.markdown_exporter import (
     export_resource_pack_to_markdown,
     export_worksheet_to_markdown,
@@ -114,6 +114,10 @@ def _render_resource_pack(st: Any, resource_pack: ResourcePack) -> None:
         resource_pack,
         include_solutions=True,
     )
+    html_export = export_resource_pack_to_html(
+        resource_pack,
+        include_solutions=True,
+    )
 
     st.header("Resource Pack Export")
     st.download_button(
@@ -122,11 +126,25 @@ def _render_resource_pack(st: Any, resource_pack: ResourcePack) -> None:
         file_name=markdown_export.filename,
         mime="text/markdown",
     )
+    st.download_button(
+        label="Download Resource Pack HTML",
+        data=html_export.content,
+        file_name=html_export.filename,
+        mime="text/html",
+    )
 
     with st.expander("Resource pack Markdown export text"):
         st.text_area(
             "Resource Pack Markdown",
             value=markdown_export.content,
+            height=320,
+            label_visibility="collapsed",
+        )
+
+    with st.expander("Resource pack HTML export text"):
+        st.text_area(
+            "Resource Pack HTML",
+            value=html_export.content,
             height=320,
             label_visibility="collapsed",
         )
