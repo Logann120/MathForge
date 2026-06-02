@@ -57,7 +57,8 @@ Purpose:
 
 Current implementation:
 
-- `generator/problem_generator.py` contains deterministic worksheet generators.
+- `generator/problem_generator.py` preserves the public worksheet generator API.
+- `generator/topics/` contains deterministic topic-focused worksheet generator implementations.
 - Supported topics are linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics.
 - Generators return reusable worksheet models and do not depend on Streamlit.
 
@@ -71,9 +72,28 @@ Purpose:
 
 Current implementation:
 
-- `generator/resource_pack_generator.py` generates topic-based resource packs.
+- `generator/resource_pack_generator.py` preserves the public resource-pack generator API.
+- Topic-focused resource-pack implementations live alongside worksheet generators in `generator/topics/`.
 - `generator/curriculum_resource_pack_generator.py` generates resource packs from supported learning objectives.
 - Generated resource content is deterministic and does not use AI or LLM services.
+
+### Topic-Focused Generator Modules
+
+Purpose:
+
+- Keep topic-specific worksheet and instructional resource-pack content readable.
+- Prevent the public generator API modules from becoming large topic branches.
+- Preserve stable import paths while making future topic additions easier to review.
+
+Current implementation:
+
+- `generator/topics/linear_equations.py` contains linear-equation worksheet and resource-pack generation.
+- `generator/topics/quadratic_equations.py` contains quadratic-equation-by-factoring generation.
+- `generator/topics/systems_of_equations.py` contains systems-of-linear-equations generation.
+- `generator/topics/factoring_techniques.py` contains factoring-techniques generation.
+- `generator/topics/functions_basics.py` contains functions-basics generation.
+- `generator/topics/common.py` contains small shared helpers for input validation and deterministic practice-quiz construction.
+- `generator/problem_generator.py` and `generator/resource_pack_generator.py` re-export the existing public generator functions for backward-compatible imports.
 
 ### Answer Validation
 
@@ -244,7 +264,7 @@ Generated content is deterministic and instructor-reviewable. Future AI-assisted
 - Continuous integration runs the pytest suite on Python 3.11 and Python 3.12.
 - There is no deployment workflow.
 - Accessibility and browser QA are limited and should be expanded before broader release.
-- Top-level topic routing is centralized in `topics/registry.py`; topic-specific generator internals remain explicit.
+- Top-level topic routing is centralized in `topics/registry.py`; topic-specific generator internals remain explicit in `generator/topics/`.
 - `generator/solution_generator.py` remains a placeholder.
 
 ## Maintainability Principles

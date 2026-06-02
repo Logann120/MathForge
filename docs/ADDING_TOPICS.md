@@ -17,7 +17,9 @@ MathForge does not use AI, Canvas integration, persistence, authentication, an e
 
 ### `generator/problem_generator.py`
 
-Add the deterministic worksheet generator for the new topic. The generator should:
+Keep this file as the public worksheet generator API. For a new topic, add the deterministic worksheet generator implementation in a topic-focused module under `generator/topics/`, then re-export the public function from `generator/problem_generator.py`.
+
+The generator should:
 
 - Accept `topic`, `difficulty`, `count`, and `start_id`.
 - Validate `count` and text inputs consistently with existing generators.
@@ -28,13 +30,21 @@ Add the deterministic worksheet generator for the new topic. The generator shoul
 
 ### `generator/resource_pack_generator.py`
 
-Add the deterministic resource-pack generator if the topic supports full resource packs. The generator should:
+Keep this file as the public resource-pack generator API. For a new topic, add the deterministic resource-pack generator implementation in the same topic-focused module under `generator/topics/`, then re-export the public function from `generator/resource_pack_generator.py`.
+
+The generator should:
 
 - Reuse the worksheet generator.
 - Return a `ResourcePack`.
 - Include study guide, common mistakes, tutor notes, and a practice quiz when supported.
 - Keep topic-specific instructional text explicit and reviewable.
 - Avoid changing existing topic resource-pack content.
+
+### `generator/topics/`
+
+Add one topic-focused module for the new topic, such as `generator/topics/exponential_equations.py`. Keep worksheet generation, resource-pack generation, and small topic-specific helper functions together when that makes the instructional logic easier to review.
+
+Use `generator/topics/common.py` only for small shared helpers that are truly generic. Do not introduce a plugin system or broad abstraction layer for normal topic additions.
 
 ### `topics/registry.py`
 
@@ -96,13 +106,15 @@ When adding a topic, do not:
 - Change existing worksheet or resource-pack export formats unless required by new model needs.
 - Add unsupported difficulty labels to the Streamlit UI or registry.
 - Scatter topic label, prefix, slug, or alias maps outside the registry.
-- Split generator modules unless that refactor is explicitly requested.
+- Add broad generator abstractions when a small topic-focused module is enough.
 
 ## Topic Addition Checklist
 
-- [ ] Add deterministic worksheet generation in `generator/problem_generator.py`.
+- [ ] Add deterministic worksheet generation in a topic-focused module under `generator/topics/`.
+- [ ] Re-export the worksheet generator from `generator/problem_generator.py`.
 - [ ] Add focused worksheet generation tests.
-- [ ] Add deterministic resource-pack generation in `generator/resource_pack_generator.py`, if supported.
+- [ ] Add deterministic resource-pack generation in the topic-focused module, if supported.
+- [ ] Re-export the resource-pack generator from `generator/resource_pack_generator.py`.
 - [ ] Add focused resource-pack tests, including practice quiz coverage when supported.
 - [ ] Add one `SupportedTopic` entry in `topics/registry.py`.
 - [ ] Add or update registry tests for slug, label, prefix, output type, difficulty, curriculum metadata, and aliases.
