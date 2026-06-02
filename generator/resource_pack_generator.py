@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from generator.problem_generator import (
     generate_factoring_techniques_worksheet,
+    generate_functions_basics_worksheet,
     generate_linear_equation_worksheet,
     generate_quadratic_factoring_worksheet,
     generate_systems_of_equations_worksheet,
@@ -119,6 +120,33 @@ def generate_factoring_techniques_resource_pack(
     )
 
 
+def generate_functions_basics_resource_pack(
+    topic: str,
+    difficulty: str,
+    count: int,
+    start_id: str,
+) -> ResourcePack:
+    """Generate a deterministic functions basics worksheet resource pack."""
+    worksheet = generate_functions_basics_worksheet(
+        topic=topic,
+        difficulty=difficulty,
+        count=count,
+        start_id=start_id,
+    )
+
+    return ResourcePack(
+        worksheet=worksheet,
+        study_guide=_build_functions_study_guide(topic, difficulty),
+        common_mistakes=_build_functions_common_mistakes(topic, difficulty),
+        tutor_notes=_build_functions_tutor_notes(topic, difficulty),
+        metadata={
+            "topic": topic,
+            "difficulty": difficulty,
+            "generator": "functions_basics_resource_pack",
+        },
+    )
+
+
 def _build_study_guide(topic: str, difficulty: str) -> StudyGuide:
     """Build deterministic student-facing guidance."""
     return StudyGuide(
@@ -166,6 +194,34 @@ def _build_quadratic_study_guide(topic: str, difficulty: str) -> StudyGuide:
             "Worked-example guidance: confirm those integers add to b.",
             "Worked-example guidance: set each factor equal to zero.",
             "Worked-example guidance: substitute both roots to check the equation.",
+        ),
+        metadata={
+            "topic": topic,
+            "difficulty": difficulty,
+            "resource_type": "study_guide",
+        },
+    )
+
+
+def _build_functions_study_guide(topic: str, difficulty: str) -> StudyGuide:
+    """Build deterministic student-facing guidance for functions basics."""
+    return StudyGuide(
+        title=f"{topic} Study Guide",
+        overview=(
+            "Function notation describes how an input value is paired with an "
+            "output value according to a rule."
+        ),
+        key_points=(
+            "Learning objective: evaluate and interpret functions using notation.",
+            "Key idea: f(a) means the output when the input is a.",
+            "Key idea: evaluating a function means substituting an input value.",
+            "Key idea: domain restrictions come from values that make expressions undefined.",
+        ),
+        practice_tips=(
+            "Worked-example guidance: replace every x with the given input.",
+            "Worked-example guidance: read f(3) as f evaluated at 3.",
+            "Worked-example guidance: check denominators for values that make zero.",
+            "Worked-example guidance: state domain restrictions clearly in words.",
         ),
         metadata={
             "topic": topic,
@@ -277,6 +333,29 @@ def _build_quadratic_common_mistakes(topic: str, difficulty: str) -> CommonMista
     )
 
 
+def _build_functions_common_mistakes(topic: str, difficulty: str) -> CommonMistakes:
+    """Build deterministic common-mistake guidance for functions basics."""
+    return CommonMistakes(
+        mistakes=(
+            "Treating f(x) as multiplication instead of function notation.",
+            "Substituting the input into only part of the expression.",
+            "Confusing the input value with the output value.",
+            "Forgetting that a denominator cannot be zero.",
+        ),
+        corrections=(
+            "Read f(x) as the value of the function at input x.",
+            "Replace every occurrence of x with the input value.",
+            "Identify the number inside parentheses as the input.",
+            "Exclude input values that make any denominator equal zero.",
+        ),
+        metadata={
+            "topic": topic,
+            "difficulty": difficulty,
+            "resource_type": "common_mistakes",
+        },
+    )
+
+
 def _build_factoring_common_mistakes(topic: str, difficulty: str) -> CommonMistakes:
     """Build deterministic common-mistake guidance for factoring techniques."""
     return CommonMistakes(
@@ -338,6 +417,29 @@ def _build_tutor_notes(topic: str, difficulty: str) -> TutorNotes:
             "How do you know which operation to undo first?",
             "What does it mean for both sides of an equation to stay balanced?",
             "How can substitution help you catch arithmetic mistakes?",
+        ),
+        metadata={
+            "topic": topic,
+            "difficulty": difficulty,
+            "resource_type": "tutor_notes",
+        },
+    )
+
+
+def _build_functions_tutor_notes(topic: str, difficulty: str) -> TutorNotes:
+    """Build deterministic tutor-facing prompts for functions basics."""
+    return TutorNotes(
+        notes=(
+            "Tutoring prompt: ask the learner to identify the input and output.",
+            "Diagnostic question: what does the number inside f( ) represent?",
+            "Diagnostic question: did the learner substitute into every x?",
+            "Intervention suggestion: use an input-output table for notation practice.",
+            "Intervention suggestion: ask what value would make a denominator zero.",
+        ),
+        discussion_prompts=(
+            "How is f(3) different from f times 3?",
+            "Why does evaluating a function require substitution?",
+            "How can an expression tell you a value is outside the domain?",
         ),
         metadata={
             "topic": topic,

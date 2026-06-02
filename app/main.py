@@ -14,11 +14,13 @@ from generator.curriculum_resource_pack_generator import (
     generate_resource_pack_from_learning_objective,
 )
 from generator.problem_generator import generate_factoring_techniques_worksheet
+from generator.problem_generator import generate_functions_basics_worksheet
 from generator.problem_generator import generate_linear_equation_worksheet
 from generator.problem_generator import generate_quadratic_factoring_worksheet
 from generator.problem_generator import generate_systems_of_equations_worksheet
 from generator.resource_pack_generator import (
     generate_factoring_techniques_resource_pack,
+    generate_functions_basics_resource_pack,
     generate_linear_equation_resource_pack,
     generate_quadratic_factoring_resource_pack,
     generate_systems_of_equations_resource_pack,
@@ -36,6 +38,7 @@ TOPIC_OPTIONS = (
     "Quadratic equations by factoring",
     "Systems of linear equations",
     "Factoring techniques",
+    "Functions basics",
 )
 DIFFICULTY_OPTIONS = ("Easy",)
 
@@ -44,6 +47,7 @@ _TOPIC_PREFIXES = {
     "Quadratic equations by factoring": "quadratic",
     "Systems of linear equations": "systems",
     "Factoring techniques": "factoring",
+    "Functions basics": "functions",
 }
 
 
@@ -57,9 +61,9 @@ def main() -> None:
         "Generate curriculum-aligned math worksheets and instructional resource packs."
     )
     st.caption(
-        "MathForge currently supports deterministic generation for linear equations "
+        "MathForge currently supports deterministic generation for linear equations, "
         "quadratic equations by factoring, systems of linear equations, and "
-        "factoring techniques."
+        "factoring techniques, and functions basics."
     )
 
     output_type = st.radio(
@@ -184,6 +188,14 @@ def _generate_worksheet_for_topic(
             start_id=start_id,
         )
 
+    if _is_functions_basics_topic(topic):
+        return generate_functions_basics_worksheet(
+            topic=topic,
+            difficulty=difficulty,
+            count=count,
+            start_id=start_id,
+        )
+
     raise ValueError(f"unsupported topic: {topic}")
 
 
@@ -226,6 +238,14 @@ def _generate_resource_pack_for_topic(
             start_id=start_id,
         )
 
+    if _is_functions_basics_topic(topic):
+        return generate_functions_basics_resource_pack(
+            topic=topic,
+            difficulty=difficulty,
+            count=count,
+            start_id=start_id,
+        )
+
     raise ValueError(f"unsupported topic: {topic}")
 
 
@@ -242,6 +262,11 @@ def _is_systems_of_equations_topic(topic: str) -> bool:
 def _is_factoring_techniques_topic(topic: str) -> bool:
     """Return whether the selected topic is factoring techniques."""
     return topic.strip().lower() == "factoring techniques"
+
+
+def _is_functions_basics_topic(topic: str) -> bool:
+    """Return whether the selected topic is functions basics."""
+    return topic.strip().lower() == "functions basics"
 
 
 def _default_problem_id_prefix(topic: str) -> str:

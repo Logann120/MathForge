@@ -13,6 +13,7 @@ def test_app_main_imports_without_running_streamlit_app() -> None:
     assert isinstance(app.main.generate_quadratic_factoring_resource_pack, Callable)
     assert isinstance(app.main.generate_systems_of_equations_resource_pack, Callable)
     assert isinstance(app.main.generate_factoring_techniques_resource_pack, Callable)
+    assert isinstance(app.main.generate_functions_basics_resource_pack, Callable)
     assert isinstance(app.main.generate_resource_pack_from_learning_objective, Callable)
     assert isinstance(app.main.export_resource_pack_to_markdown, Callable)
     assert isinstance(app.main.export_resource_pack_to_html, Callable)
@@ -20,6 +21,7 @@ def test_app_main_imports_without_running_streamlit_app() -> None:
     assert "Quadratic equations by factoring" in app.main.TOPIC_OPTIONS
     assert "Systems of linear equations" in app.main.TOPIC_OPTIONS
     assert "Factoring techniques" in app.main.TOPIC_OPTIONS
+    assert "Functions basics" in app.main.TOPIC_OPTIONS
 
 
 def test_topic_mode_generates_linear_worksheet() -> None:
@@ -78,6 +80,20 @@ def test_topic_mode_generates_factoring_techniques_worksheet() -> None:
     assert "Download Worksheet HTML" in _download_labels(test_app)
 
 
+def test_topic_mode_generates_functions_basics_worksheet() -> None:
+    test_app = _run_app()
+
+    test_app.selectbox[0].set_value("Functions basics").run()
+    test_app.button[0].click().run()
+
+    assert not test_app.exception
+    assert test_app.text_input[0].value == "functions"
+    assert "Functions basics Worksheet" in test_app.text_area[0].value
+    assert "evaluate f" in test_app.text_area[0].value
+    assert "Download Worksheet Markdown" in _download_labels(test_app)
+    assert "Download Worksheet HTML" in _download_labels(test_app)
+
+
 def test_learning_objective_mode_exposes_college_algebra_objectives() -> None:
     test_app = _run_app()
 
@@ -91,6 +107,7 @@ def test_learning_objective_mode_exposes_college_algebra_objectives() -> None:
     assert "Quadratic Equations" in test_app.selectbox[1].options
     assert "Systems of Equations" in test_app.selectbox[1].options
     assert "Factoring Techniques" in test_app.selectbox[1].options
+    assert "Functions" in test_app.selectbox[1].options
     assert test_app.selectbox[2].label == "Learning Objective"
     assert "Solve linear equations in one variable" in test_app.selectbox[2].options
     assert any(
@@ -137,6 +154,19 @@ def test_learning_objective_mode_exposes_factoring_objective() -> None:
         "Factor polynomial expressions using common factoring strategies",
     ]
     assert test_app.text_input[0].value == "factoring"
+
+
+def test_learning_objective_mode_exposes_functions_objective() -> None:
+    test_app = _run_app()
+
+    test_app.radio[1].set_value("Learning Objective mode").run()
+    test_app.selectbox[1].set_value("Functions").run()
+
+    assert not test_app.exception
+    assert test_app.selectbox[2].options == [
+        "Evaluate and interpret functions using function notation",
+    ]
+    assert test_app.text_input[0].value == "functions"
 
 
 def test_worksheet_only_ui_exposes_worksheet_exports() -> None:

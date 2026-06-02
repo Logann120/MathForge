@@ -316,6 +316,70 @@ def generate_factoring_techniques_worksheet(
     )
 
 
+def generate_functions_basics_worksheet(
+    topic: str,
+    difficulty: str,
+    count: int,
+    start_id: str,
+) -> Worksheet:
+    """Generate deterministic introductory function-notation practice."""
+    _require_text(topic, "topic")
+    _require_text(difficulty, "difficulty")
+    _require_text(start_id, "start_id")
+
+    if not isinstance(count, int):
+        raise TypeError("count must be an integer.")
+    if count <= 0:
+        raise ValueError("count must be positive.")
+
+    problems: list[MathProblem] = []
+    solutions: list[Solution] = []
+
+    for index in range(count):
+        problem_id = f"{start_id}-{index + 1:03d}"
+        prompt, answer, problem_type, metadata, steps = _function_problem(index)
+
+        if problem_type == "evaluate" and not _validate_function_evaluation(metadata):
+            raise ValueError(
+                f"generated function evaluation failed validation for {problem_id}."
+            )
+
+        problems.append(
+            MathProblem(
+                problem_id=problem_id,
+                prompt=prompt,
+                answer=answer,
+                topic=topic,
+                difficulty=difficulty,
+                metadata={
+                    **metadata,
+                    "problem_type": problem_type,
+                    "variable": "x",
+                },
+            )
+        )
+        solutions.append(
+            Solution(
+                problem_id=problem_id,
+                final_answer=answer,
+                steps=steps,
+            )
+        )
+
+    return Worksheet(
+        title=f"{topic} Worksheet",
+        worksheet_id=f"{start_id}-worksheet",
+        instructions="Evaluate and interpret each function notation problem.",
+        problems=tuple(problems),
+        solutions=tuple(solutions),
+        metadata={
+            "topic": topic,
+            "difficulty": difficulty,
+            "generator": "functions_basics",
+        },
+    )
+
+
 def _linear_equation_terms(difficulty: str, index: int) -> tuple[int, int, int]:
     """Return deterministic ``a``, ``b``, and solution values."""
     normalized_difficulty = difficulty.strip().lower()
@@ -475,6 +539,89 @@ def _factoring_problem(index: int) -> tuple[str, str, str]:
 def _validate_factored_expression(expression: str, factored_form: str) -> bool:
     """Validate that a factored form expands to the original expression."""
     return simplify(sympify(expression) - expand(sympify(factored_form))) == 0
+
+
+def _function_problem(
+    index: int,
+) -> tuple[str, str, str, dict[str, str], tuple[str, ...]]:
+    """Return a deterministic function basics problem."""
+    problem_type_index = index % 3
+    sequence = index // 3
+
+    if problem_type_index == 0:
+        coefficient = sequence + 2
+        constant = sequence + 1
+        input_value = sequence + 3
+        expression = f"{coefficient}*x + {constant}"
+        answer = str((coefficient * input_value) + constant)
+        prompt = f"Given f(x) = {expression}, evaluate f({input_value})."
+        return (
+            prompt,
+            answer,
+            "evaluate",
+            {
+                "function_expression": expression,
+                "input_value": str(input_value),
+                "expected_value": answer,
+            },
+            (
+                f"Start with f(x) = {expression}.",
+                f"Substitute x = {input_value}.",
+                f"Evaluate to get f({input_value}) = {answer}.",
+            ),
+        )
+
+    if problem_type_index == 1:
+        input_value = sequence + 4
+        output_value = (2 * input_value) + 1
+        prompt = (
+            f"In the statement f({input_value}) = {output_value}, "
+            f"what does {input_value} represent?"
+        )
+        answer = "The input value"
+        return (
+            prompt,
+            answer,
+            "notation",
+            {
+                "input_value": str(input_value),
+                "output_value": str(output_value),
+            },
+            (
+                f"Read f({input_value}) as the output of f when x = {input_value}.",
+                f"The value {input_value} is the input.",
+                f"The value {output_value} is the output.",
+            ),
+        )
+
+    excluded_value = sequence + 2
+    expression = f"1/(x - {excluded_value})"
+    answer = f"All real numbers except x = {excluded_value}"
+    prompt = f"Determine the domain of f(x) = {expression}."
+    return (
+        prompt,
+        answer,
+        "domain",
+        {
+            "function_expression": expression,
+            "excluded_value": str(excluded_value),
+        },
+        (
+            f"Start with f(x) = {expression}.",
+            "The denominator cannot equal zero.",
+            f"Exclude x = {excluded_value} from the domain.",
+            f"The domain is {answer}.",
+        ),
+    )
+
+
+def _validate_function_evaluation(metadata: dict[str, str]) -> bool:
+    """Validate a generated function evaluation problem."""
+    x_symbol = Symbol("x")
+    expression = sympify(metadata["function_expression"])
+    input_value = sympify(metadata["input_value"])
+    expected_value = sympify(metadata["expected_value"])
+    return simplify(expression.subs(x_symbol, input_value) - expected_value) == 0
 
 
 def _require_text(value: str, field_name: str) -> None:

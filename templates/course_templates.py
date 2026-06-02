@@ -71,6 +71,22 @@ def college_algebra_template() -> CourseTemplate:
         learning_objectives=(factoring_objective,),
         metadata={"course": "College Algebra"},
     )
+    functions_objective = LearningObjective(
+        objective_id="college-algebra-functions-001",
+        description="Evaluate and interpret functions using function notation",
+        topic="Functions basics",
+        standards=("College Algebra: Functions",),
+        metadata={
+            "course": "College Algebra",
+            "module": "Functions",
+        },
+    )
+    functions_module = CourseModule(
+        module_id="college-algebra-functions",
+        title="Functions",
+        learning_objectives=(functions_objective,),
+        metadata={"course": "College Algebra"},
+    )
     return CourseTemplate(
         course_id="college-algebra",
         title="College Algebra",
@@ -79,6 +95,7 @@ def college_algebra_template() -> CourseTemplate:
             quadratic_equations_module,
             systems_module,
             factoring_module,
+            functions_module,
         ),
         metadata={"level": "community_college"},
     )

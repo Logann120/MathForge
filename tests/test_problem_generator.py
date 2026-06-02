@@ -7,6 +7,7 @@ from sympy import Symbol, simplify, sympify
 
 from generator.problem_generator import (
     generate_factoring_techniques_worksheet,
+    generate_functions_basics_worksheet,
     generate_linear_equation_worksheet,
     generate_quadratic_factoring_worksheet,
     generate_systems_of_equations_worksheet,
@@ -351,6 +352,87 @@ def test_generate_factoring_techniques_worksheet_rejects_invalid_count() -> None
         )
 
 
+def test_generate_functions_basics_worksheet_returns_worksheet() -> None:
+    worksheet = generate_functions_basics_worksheet(
+        topic="Functions basics",
+        difficulty="easy",
+        count=3,
+        start_id="functions",
+    )
+
+    assert isinstance(worksheet, Worksheet)
+    assert worksheet.title == "Functions basics Worksheet"
+    assert worksheet.worksheet_id == "functions-worksheet"
+    assert len(worksheet.problems) == 3
+    assert len(worksheet.solutions) == 3
+    assert worksheet.metadata["generator"] == "functions_basics"
+
+
+def test_generate_functions_basics_worksheet_is_deterministic() -> None:
+    first = generate_functions_basics_worksheet(
+        "Functions basics",
+        "easy",
+        4,
+        "functions",
+    )
+    second = generate_functions_basics_worksheet(
+        "Functions basics",
+        "easy",
+        4,
+        "functions",
+    )
+
+    assert first == second
+    assert [problem.problem_id for problem in first.problems] == [
+        "functions-001",
+        "functions-002",
+        "functions-003",
+        "functions-004",
+    ]
+
+
+def test_generate_functions_basics_worksheet_creates_expected_problem_types() -> None:
+    worksheet = generate_functions_basics_worksheet(
+        "Functions basics",
+        "easy",
+        3,
+        "func",
+    )
+
+    problem_types = [problem.metadata["problem_type"] for problem in worksheet.problems]
+
+    assert problem_types == ["evaluate", "notation", "domain"]
+    assert worksheet.problems[0].prompt == (
+        "Given f(x) = 2*x + 1, evaluate f(3)."
+    )
+    assert worksheet.problems[0].answer == "7"
+    assert worksheet.problems[1].answer == "The input value"
+    assert worksheet.problems[2].answer == "All real numbers except x = 2"
+
+
+def test_generated_function_evaluations_are_correct() -> None:
+    worksheet = generate_functions_basics_worksheet(
+        topic="Functions basics",
+        difficulty="easy",
+        count=6,
+        start_id="functions",
+    )
+
+    for problem in worksheet.problems:
+        if problem.metadata["problem_type"] == "evaluate":
+            assert _function_evaluation_is_valid(problem.metadata)
+
+
+def test_generate_functions_basics_worksheet_rejects_invalid_count() -> None:
+    with pytest.raises(ValueError, match="count must be positive"):
+        generate_functions_basics_worksheet(
+            "Functions basics",
+            "easy",
+            0,
+            "functions",
+        )
+
+
 def _system_solution_is_valid(metadata: Mapping[str, str]) -> bool:
     """Return whether generated system metadata describes a valid solution."""
     x_symbol = Symbol("x")
@@ -371,3 +453,12 @@ def _system_solution_is_valid(metadata: Mapping[str, str]) -> bool:
 def _factoring_answer_is_valid(expression: str, factored_form: str) -> bool:
     """Return whether a generated factorization expands correctly."""
     return simplify(sympify(expression) - sympify(factored_form).expand()) == 0
+
+
+def _function_evaluation_is_valid(metadata: Mapping[str, str]) -> bool:
+    """Return whether a generated function evaluation is correct."""
+    x_symbol = Symbol("x")
+    expression = sympify(metadata["function_expression"])
+    input_value = sympify(metadata["input_value"])
+    expected_value = sympify(metadata["expected_value"])
+    return simplify(expression.subs(x_symbol, input_value) - expected_value) == 0

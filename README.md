@@ -2,7 +2,7 @@
 
 MathForge is an open-source platform for helping mathematics instructors generate high-quality instructional materials.
 
-MathForge MVP 0.1 includes a small Streamlit application for generating deterministic worksheets and instructional resource packs for linear equations, quadratic equations by factoring, systems of linear equations, and factoring techniques. The project remains intentionally focused: no AI integration, no Canvas integration, and no account system are included in the current MVP.
+MathForge MVP 0.1 includes a small Streamlit application for generating deterministic worksheets and instructional resource packs for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics. The project remains intentionally focused: no AI integration, no Canvas integration, and no account system are included in the current MVP.
 
 ## Mission
 
@@ -25,6 +25,7 @@ The current MVP supports:
 - Generating factorable quadratic equation worksheets
 - Generating systems of linear equations worksheets
 - Generating factoring techniques worksheets
+- Generating functions basics worksheets
 - Generating detailed solution keys
 - Validating generated answers using SymPy
 - Exporting worksheets to Markdown
@@ -32,7 +33,7 @@ The current MVP supports:
 - Generating full instructional resource packs with study guides, common mistakes, and tutor notes
 - Exporting full resource packs to Markdown
 - Exporting full resource packs to accessible HTML
-- Generating materials from sample College Algebra learning objectives for linear equations, quadratic equations by factoring, systems of linear equations, and factoring techniques
+- Generating materials from sample College Algebra learning objectives for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics
 
 ## Future Direction
 
@@ -94,7 +95,7 @@ Screenshots will be added as the MVP interface stabilizes.
 
 ## Current Status
 
-MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations, quadratic equations by factoring, systems of linear equations, and factoring techniques, resource pack generation, SymPy validation, Markdown export, HTML export, and demo-ready Streamlit UI are implemented and covered by automated tests.
+MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics, resource pack generation, SymPy validation, Markdown export, HTML export, and demo-ready Streamlit UI are implemented and covered by automated tests.
 
 Current work includes a curriculum-alignment milestone with a deterministic College Algebra template. Next work should focus on hardening, documentation, accessibility review, careful topic expansion, and keeping the implementation small and maintainable.
 
