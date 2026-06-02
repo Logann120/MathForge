@@ -57,6 +57,7 @@ Goals:
 
 - Completed: Add initial curriculum-aligned generation with a College Algebra linear equations objective.
 - Completed: Expand topic coverage to quadratic equations by factoring.
+- Completed: Polish the Streamlit UI for MVP demo readiness.
 - Continue careful topic expansion beyond linear equations and quadratic factoring.
 - Continue focused automated tests for generation, validation, resource packs, and export workflows.
 - Review accessibility of the Streamlit interface and exported HTML.

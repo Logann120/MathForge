@@ -92,7 +92,7 @@ Screenshots will be added as the MVP interface stabilizes.
 
 ## Current Status
 
-MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations and quadratic equations by factoring, resource pack generation, SymPy validation, Markdown export, HTML export, and minimal Streamlit UI are implemented and covered by automated tests.
+MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations and quadratic equations by factoring, resource pack generation, SymPy validation, Markdown export, HTML export, and demo-ready Streamlit UI are implemented and covered by automated tests.
 
 Current work includes a curriculum-alignment milestone with a deterministic College Algebra template. Next work should focus on hardening, documentation, accessibility review, careful topic expansion, and keeping the implementation small and maintainable.
 
