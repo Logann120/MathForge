@@ -128,6 +128,7 @@ Current implementation:
 - `generator/curriculum_resource_pack_generator.py` uses the registry for learning-objective topic routing.
 - `templates/course_templates.py` uses the registry to construct the College Algebra modules and objectives.
 - The registry is a small metadata table, not a plugin system.
+- Topic additions should follow `docs/ADDING_TOPICS.md`.
 
 ### Curriculum Templates
 

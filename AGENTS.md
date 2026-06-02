@@ -98,6 +98,8 @@ Implementation work should preserve clear boundaries between:
 
 Future topic additions should update deterministic generators, add one `topics/registry.py` entry, update tests, and avoid scattering new label or prefix maps across the app.
 
+Use `docs/ADDING_TOPICS.md` as the source checklist for supported-topic additions.
+
 ## Change Discipline
 
 Before editing, inspect the existing repository state and read relevant files.

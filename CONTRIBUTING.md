@@ -65,6 +65,8 @@ When application code changes are approved, contributions should:
 
 When adding a supported topic, keep routing centralized in `topics/registry.py`. Add deterministic generator behavior, resource-pack behavior if supported, registry metadata, curriculum metadata, and tests together.
 
+Use [docs/ADDING_TOPICS.md](docs/ADDING_TOPICS.md) as the checklist for future topic additions.
+
 ## Current Non-Features
 
 The MVP intentionally has no AI or LLM integration, Canvas integration, database, authentication, external API, production deployment, CI workflow, or production hosting configuration.
