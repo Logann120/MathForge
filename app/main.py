@@ -7,6 +7,10 @@ from typing import Any
 
 from app.presets import find_generation_preset, generation_preset_labels
 from exporters.bundle_exporter import create_export_bundle
+from exporters.download_filenames import (
+    build_bundle_download_filename,
+    with_download_filename,
+)
 from exporters.html_exporter import export_resource_pack_to_html, export_worksheet_to_html
 from exporters.markdown_exporter import (
     export_resource_pack_to_markdown,
@@ -306,19 +310,24 @@ def _render_worksheet_exports(
     html_export: ExportResult,
 ) -> None:
     """Render worksheet export controls."""
-    export_bundle = create_export_bundle((markdown_export, html_export))
+    markdown_download = with_download_filename(markdown_export)
+    html_download = with_download_filename(html_export)
+    export_bundle = create_export_bundle(
+        (markdown_download, html_download),
+        bundle_filename=build_bundle_download_filename(markdown_download),
+    )
 
     st.header("Exports")
     st.download_button(
         label="Download Worksheet Markdown",
-        data=markdown_export.content,
-        file_name=markdown_export.filename,
+        data=markdown_download.content,
+        file_name=markdown_download.filename,
         mime="text/markdown",
     )
     st.download_button(
         label="Download Worksheet HTML",
-        data=html_export.content,
-        file_name=html_export.filename,
+        data=html_download.content,
+        file_name=html_download.filename,
         mime="text/html",
     )
     st.download_button(
@@ -405,19 +414,24 @@ def _render_resource_pack_exports(
     html_export: ExportResult,
 ) -> None:
     """Render resource pack export controls."""
-    export_bundle = create_export_bundle((markdown_export, html_export))
+    markdown_download = with_download_filename(markdown_export)
+    html_download = with_download_filename(html_export)
+    export_bundle = create_export_bundle(
+        (markdown_download, html_download),
+        bundle_filename=build_bundle_download_filename(markdown_download),
+    )
 
     st.header("Resource Pack Export")
     st.download_button(
         label="Download Resource Pack Markdown",
-        data=markdown_export.content,
-        file_name=markdown_export.filename,
+        data=markdown_download.content,
+        file_name=markdown_download.filename,
         mime="text/markdown",
     )
     st.download_button(
         label="Download Resource Pack HTML",
-        data=html_export.content,
-        file_name=html_export.filename,
+        data=html_download.content,
+        file_name=html_download.filename,
         mime="text/html",
     )
     st.download_button(

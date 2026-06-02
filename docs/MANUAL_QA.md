@@ -83,7 +83,9 @@ Review both generation modes and both output types.
 - Download worksheet Markdown and HTML.
 - Download resource-pack Markdown and HTML.
 - Download worksheet and resource-pack ZIP bundles.
-- Confirm filenames are clear and topic-specific.
+- Confirm filenames are clear and deterministic.
+- Confirm filenames identify MathForge, the topic or learning-objective context, the output type, the problem ID prefix, and the file format.
+- Confirm custom problem ID prefixes with spaces, punctuation, or path-like characters are sanitized in filenames.
 - Confirm ZIP bundles contain the same Markdown and HTML files offered by the individual buttons.
 - Open downloaded HTML in a browser and confirm it renders without obvious broken markup.
 - Open downloaded Markdown in a text editor and confirm it is readable as plain text.

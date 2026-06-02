@@ -114,6 +114,7 @@ Current implementation:
 - `exporters/markdown_exporter.py` renders worksheets and full resource packs to Markdown.
 - `exporters/html_exporter.py` renders worksheets and full resource packs to portable semantic HTML.
 - `exporters/bundle_exporter.py` packages already-rendered exports into ZIP convenience downloads using Python standard-library tools.
+- `exporters/download_filenames.py` creates instructor-friendly download filenames from export metadata without changing rendered export content.
 - Exporters do not generate problems and reuse worksheet rendering behavior where appropriate. ZIP bundles do not replace individual Markdown or HTML exports.
 
 ### Supported Topic Registry
@@ -165,8 +166,9 @@ Current implementation:
 5. The validation layer checks generated answers with SymPy where practical.
 6. Resource-pack generators optionally assemble study guides, common mistakes, tutor notes, and practice quizzes.
 7. Exporters render Markdown or semantic HTML.
-8. Optional ZIP bundle helpers group related rendered exports.
-9. The UI offers previews and download actions.
+8. Download filename helpers derive clear filenames from export metadata.
+9. Optional ZIP bundle helpers group related rendered exports.
+10. The UI offers previews and download actions.
 
 ## Core Data Concepts
 

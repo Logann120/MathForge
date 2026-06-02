@@ -68,7 +68,7 @@ MathForge is organized around small, testable Python modules:
 - `app/` contains the Streamlit MVP interface and built-in generation presets.
 - `generator/` contains deterministic worksheet, resource pack, and curriculum-aligned generation.
 - `models/` contains dataclasses for worksheets, problems, solutions, exports, curriculum objects, and resource packs.
-- `exporters/` contains Markdown and accessible HTML exporters for worksheets and resource packs, plus standard-library ZIP bundle helpers for grouping already-rendered exports.
+- `exporters/` contains Markdown and accessible HTML exporters for worksheets and resource packs, standard-library ZIP bundle helpers, and deterministic download filename helpers.
 - `validators/` contains SymPy-based validation helpers.
 - `templates/` contains the deterministic College Algebra course template.
 - `topics/` contains the supported-topic registry for topic labels, routing, defaults, and curriculum metadata.

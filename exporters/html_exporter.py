@@ -67,6 +67,10 @@ def export_worksheet_to_html(
         metadata={
             "worksheet_id": worksheet.worksheet_id or "",
             "include_solutions": str(include_solutions),
+            "resource_type": "worksheet",
+            "topic": worksheet.metadata.get("topic", ""),
+            "difficulty": worksheet.metadata.get("difficulty", ""),
+            "problem_id_prefix": _problem_id_prefix(worksheet),
         },
     )
 
@@ -103,6 +107,23 @@ def export_resource_pack_to_html(
             "worksheet_id": resource_pack.worksheet.worksheet_id or "",
             "include_solutions": str(include_solutions),
             "resource_type": "resource_pack",
+            "topic": resource_pack.metadata.get(
+                "topic",
+                resource_pack.worksheet.metadata.get("topic", ""),
+            ),
+            "difficulty": resource_pack.metadata.get(
+                "difficulty",
+                resource_pack.worksheet.metadata.get("difficulty", ""),
+            ),
+            "problem_id_prefix": _problem_id_prefix(resource_pack.worksheet),
+            "learning_objective": resource_pack.metadata.get(
+                "learning_objective",
+                "",
+            ),
+            "learning_objective_id": resource_pack.metadata.get(
+                "learning_objective_id",
+                "",
+            ),
         },
     )
 
@@ -249,6 +270,15 @@ def _resource_pack_html_filename(resource_pack: ResourcePack) -> str:
     """Create an HTML filename for a resource pack."""
     worksheet_filename = _html_filename(resource_pack.worksheet)
     return worksheet_filename.replace(".html", "-resource-pack.html")
+
+
+def _problem_id_prefix(worksheet: Worksheet) -> str:
+    """Return the problem ID prefix used by a worksheet."""
+    if worksheet.worksheet_id and worksheet.worksheet_id.endswith("-worksheet"):
+        return worksheet.worksheet_id.removesuffix("-worksheet")
+    if worksheet.problems:
+        return worksheet.problems[0].problem_id.rsplit("-", maxsplit=1)[0]
+    return ""
 
 
 def _escape_text(text: str) -> str:

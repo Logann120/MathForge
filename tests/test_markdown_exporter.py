@@ -27,6 +27,10 @@ def test_export_worksheet_to_markdown_returns_export_result() -> None:
     assert result.filename == "linear-worksheet.md"
     assert result.metadata["worksheet_id"] == "linear-worksheet"
     assert result.metadata["include_solutions"] == "False"
+    assert result.metadata["resource_type"] == "worksheet"
+    assert result.metadata["topic"] == "Linear equations"
+    assert result.metadata["difficulty"] == "easy"
+    assert result.metadata["problem_id_prefix"] == "linear"
 
 
 def test_export_worksheet_to_markdown_includes_title_instructions_and_problems() -> None:
@@ -115,6 +119,9 @@ def test_export_resource_pack_to_markdown_returns_export_result() -> None:
     assert result.metadata["worksheet_id"] == "linear-worksheet"
     assert result.metadata["resource_type"] == "resource_pack"
     assert result.metadata["include_solutions"] == "True"
+    assert result.metadata["topic"] == "Linear equations"
+    assert result.metadata["difficulty"] == "easy"
+    assert result.metadata["problem_id_prefix"] == "linear"
 
 
 def test_export_resource_pack_to_markdown_includes_all_sections() -> None:
