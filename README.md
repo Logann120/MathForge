@@ -2,7 +2,7 @@
 
 MathForge is an open-source platform for helping mathematics instructors generate high-quality instructional materials.
 
-MathForge MVP 0.1 includes a small Streamlit application for generating deterministic worksheets and instructional resource packs for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics. The project remains intentionally focused: no AI integration, no Canvas integration, and no account system are included in the current MVP.
+MathForge MVP 0.1 includes a Streamlit application for generating deterministic worksheets and instructional resource packs for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics. The project remains intentionally focused: the current MVP has no AI or LLM integration, no Canvas integration, no database, no authentication, no external API, and no production deployment workflow.
 
 ## Mission
 
@@ -58,6 +58,28 @@ MathForge is built with:
 
 Implementation should prioritize maintainability, clear module boundaries, automated validation, and accessibility from the beginning.
 
+## Current Architecture
+
+MathForge is organized around small, testable Python modules:
+
+- `app/` contains the Streamlit MVP interface.
+- `generator/` contains deterministic worksheet, resource pack, and curriculum-aligned generation.
+- `models/` contains dataclasses for worksheets, problems, solutions, exports, curriculum objects, and resource packs.
+- `exporters/` contains Markdown and accessible HTML exporters for worksheets and resource packs.
+- `validators/` contains SymPy-based validation helpers.
+- `templates/` contains the deterministic College Algebra course template.
+- `topics/` contains the supported-topic registry for topic labels, routing, defaults, and curriculum metadata.
+- `tests/` contains unit and smoke tests for the implemented MVP behavior.
+- `docs/` is reserved for supplemental documentation and currently contains no published guide content.
+
+The app is intentionally deterministic and instructor-reviewable. It does not call AI services, persist user data, publish to Canvas, expose an API, or run as a deployed production service.
+
+## Supported Topic Registry
+
+Current topic metadata is centralized in `topics/registry.py`. The registry lists the supported topic slug, display label, default problem ID prefix, supported output types, generator functions, supported difficulty levels, and College Algebra learning-objective metadata.
+
+When adding a future topic, contributors should add or update the deterministic worksheet/resource-pack generators first, then add one registry entry, update course-template coverage where appropriate, and add focused tests. The registry is intentionally a small explicit table, not a plugin architecture.
+
 ## How to Run Locally
 
 Install dependencies:
@@ -90,9 +112,9 @@ Screenshots will be added as the MVP interface stabilizes.
 
 - [PROJECT_SPEC.md](PROJECT_SPEC.md) defines product goals, users, requirements, and MVP acceptance criteria.
 - [ROADMAP.md](ROADMAP.md) describes planned phases from documentation through future integrations.
-- [ARCHITECTURE.md](ARCHITECTURE.md) outlines the intended technical design before code is written.
+- [ARCHITECTURE.md](ARCHITECTURE.md) outlines the current MVP architecture and future integration boundaries.
 - [AGENTS.md](AGENTS.md) provides guidance for contributors and coding agents working in this repository.
-- [CONTRIBUTING.md](CONTRIBUTING.md) explains how to contribute while the project is still in its pre-implementation phase.
+- [CONTRIBUTING.md](CONTRIBUTING.md) explains how to contribute to the current MVP without weakening maintainability or accessibility.
 
 ## Current Status
 
@@ -100,8 +122,18 @@ MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equ
 
 Current work includes a curriculum-alignment milestone with a deterministic College Algebra template. Next work should focus on hardening, documentation, accessibility review, careful topic expansion, and keeping the implementation small and maintainable.
 
+## Known Limitations
+
+- Example files currently cover only an older linear-equations worksheet sample and should be refreshed.
+- `docs/` is present for future supplemental documentation but has no published guide content yet.
+- Continuous integration is not configured yet.
+- There is no deployment workflow or production hosting configuration.
+- Accessibility and browser behavior need broader manual QA beyond automated exporter tests.
+- Some topic-specific generator internals remain explicit and topic-specific; the central registry now handles top-level topic discovery and routing.
+- There is no AI or LLM integration, Canvas integration, database, authentication, external API, or production deployment.
+
 ## Contributing
 
 Contributions are welcome, especially improvements to requirements, accessibility criteria, mathematical content design, documentation, tests, and maintainable topic expansion.
 
-Before adding application code, review the project specification, roadmap, architecture plan, and agent guidance. New implementation work should preserve accessibility and maintainability as first-class requirements.
+Before adding new application behavior, review the project specification, roadmap, architecture, and agent guidance. New implementation work should preserve accessibility and maintainability as first-class requirements.

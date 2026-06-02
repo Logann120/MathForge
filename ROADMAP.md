@@ -1,6 +1,6 @@
 # MathForge Roadmap
 
-This roadmap describes the planned progression from documentation through the MVP and future platform features. Dates are intentionally omitted until the project has active implementation capacity.
+This roadmap describes the progression from the completed MVP prototype toward hardening and future platform features. Dates are intentionally omitted until the project has active implementation capacity.
 
 ## Phase 0: Planning and Project Foundation
 
@@ -22,7 +22,7 @@ Deliverables:
 - ARCHITECTURE.md
 - AGENTS.md
 - CONTRIBUTING.md
-- Initial Python package placeholders
+- Initial Python package structure
 - Project metadata and MIT license
 
 ## Phase 1: MVP Prototype
@@ -62,11 +62,16 @@ Goals:
 - Completed: Expand College Algebra coverage to functions basics.
 - Completed: Add practice quizzes to instructional resource packs.
 - Completed: Polish the Streamlit UI for MVP demo readiness.
+- Completed: Add a supported-topic registry for topic discovery and top-level routing.
 - Continue careful topic expansion beyond the current College Algebra topics.
 - Continue focused automated tests for generation, validation, resource packs, and export workflows.
 - Review accessibility of the Streamlit interface and exported HTML.
 - Refine error messages and validation feedback.
 - Stabilize data structures for problems, worksheets, solution keys, and instructional resource packs.
+- Refresh example exports so they reflect current resource-pack and practice-quiz capabilities.
+- Add continuous integration.
+- Add a deployment workflow or clearly document non-deployment status.
+- Continue reducing duplicated topic-specific branching where it remains outside the registry.
 
 Success criteria:
 
@@ -125,6 +130,18 @@ Success criteria:
 - Integrations fit instructor workflows without weakening the core export workflow.
 - AI-assisted features remain transparent, reviewable, and optional.
 - Mathematical correctness and accessibility remain required quality gates.
+
+## Current Non-Features
+
+The current MVP has no AI or LLM integration, Canvas integration, database, authentication, external API, production deployment, CI workflow, or production hosting configuration.
+
+## Known Limitations
+
+- Example files are stale and cover only an older linear-equations worksheet sample.
+- `docs/` is currently an empty placeholder folder.
+- CI and deployment workflows are not configured.
+- Accessibility and browser QA are limited.
+- Top-level topic routing is centralized in a supported-topic registry; some topic-specific internals remain intentionally explicit.
 
 ## Ongoing Priorities
 

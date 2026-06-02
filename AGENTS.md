@@ -1,12 +1,12 @@
 # Agent Guidance for MathForge
 
-This repository is currently in a planning and pre-implementation structure phase.
+This repository contains a working Python/Streamlit MVP for deterministic College Algebra instructional material generation.
 
-Agents and contributors must not add business logic, Streamlit UI, or AI integration until the project owner explicitly requests implementation work.
+Agents and contributors must preserve the implemented MVP unless the project owner explicitly requests behavior changes. Do not add AI integration, Canvas integration, persistence, authentication, APIs, deployment workflows, or new product features unless they are specifically requested.
 
 ## Current Scope
 
-Allowed work:
+Useful work:
 
 - Improve README.md.
 - Improve PROJECT_SPEC.md.
@@ -16,33 +16,50 @@ Allowed work:
 - Improve CONTRIBUTING.md.
 - Clarify requirements, risks, and acceptance criteria.
 - Propose maintainability and accessibility improvements.
-- Maintain placeholder package structure when explicitly requested.
+- Maintain the implemented module structure when explicitly requested.
+- Add focused tests when implementation changes are requested.
 
-Out of scope until explicitly requested:
+Out of scope unless explicitly requested:
 
-- Python application modules.
-- Streamlit app files.
-- SymPy validation implementation.
-- Dependency installation.
-- Generated application assets.
+- New generator behavior.
+- Streamlit UI behavior changes.
+- Model, exporter, or validator behavior changes.
+- Dependency installation or dependency changes.
+- AI or LLM integration.
+- Canvas integration.
+- Database, authentication, API, or deployment code.
 
 ## Project Direction
 
-MathForge will be an open-source platform for generating high-quality mathematics instructional materials.
+MathForge is an open-source platform for generating high-quality mathematics instructional materials.
 
-The planned implementation stack is:
+The current implementation stack is:
 
 - Python
 - Streamlit
 - SymPy
 
-The MVP will support:
+The MVP supports:
 
 - Math worksheet generation.
 - Detailed solution key generation.
 - Accessible HTML export.
 - Markdown export.
 - Answer validation using SymPy.
+- Instructional resource packs with study guides, common mistakes, tutor notes, and practice quizzes.
+- Curriculum-aligned generation from a deterministic College Algebra template.
+
+## Current Architecture
+
+- `app/` contains the Streamlit MVP interface.
+- `generator/` contains deterministic worksheet, resource-pack, and curriculum-aligned generation.
+- `models/` contains dataclasses for content, resource packs, and curriculum structures.
+- `exporters/` contains Markdown and HTML exporters.
+- `validators/` contains SymPy validation helpers.
+- `templates/` contains the College Algebra course template.
+- `topics/` contains the supported-topic registry for labels, defaults, routing, difficulty support, and curriculum metadata.
+- `tests/` contains unit and smoke tests.
+- `docs/` is currently a placeholder for future supplemental documentation.
 
 ## Working Principles
 
@@ -52,12 +69,12 @@ When working in this repository:
 - Keep documentation professional and suitable for a public GitHub project.
 - Prioritize maintainability and accessibility.
 - Separate confirmed requirements from future ideas.
-- Avoid speculative implementation details that would constrain the project too early.
+- Avoid speculative implementation details that would constrain future work unnecessarily.
 - Prefer clear, plain language over buzzwords.
 
 ## Accessibility Expectations
 
-Documentation and future implementation should treat accessibility as a core requirement.
+Documentation and implementation should treat accessibility as a core requirement.
 
 Agents should preserve or improve guidance related to:
 
@@ -70,14 +87,16 @@ Agents should preserve or improve guidance related to:
 
 ## Maintainability Expectations
 
-Future implementation plans should preserve clear boundaries between:
+Implementation work should preserve clear boundaries between:
 
 - Streamlit user interface code.
 - Problem generation logic.
 - SymPy validation logic.
 - Worksheet assembly.
 - HTML and Markdown exporters.
-- Future integrations.
+- Curriculum templates and future integrations.
+
+Future topic additions should update deterministic generators, add one `topics/registry.py` entry, update tests, and avoid scattering new label or prefix maps across the app.
 
 ## Change Discipline
 
@@ -91,9 +110,18 @@ For documentation-only tasks:
 - Do not delete existing files.
 - Summarize intended file changes before making them when requested.
 
-For future implementation tasks:
+For implementation tasks:
 
 - Confirm scope before adding new project structure.
 - Add focused tests for core generation, validation, and export behavior.
 - Keep UI behavior separate from reusable domain logic.
 - Document any accessibility limitations that cannot be resolved immediately.
+
+## Known Limitations
+
+- Example exports are stale and should be refreshed.
+- `docs/` is present but empty.
+- CI and deployment workflows are not configured.
+- Accessibility and browser QA remain limited.
+- Top-level topic routing now uses `topics/registry.py`; topic-specific generator internals remain explicit.
+- There is no AI or LLM integration, Canvas integration, database, authentication, API, or production deployment.

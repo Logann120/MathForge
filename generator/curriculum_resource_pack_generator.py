@@ -2,15 +2,9 @@
 
 from __future__ import annotations
 
-from generator.resource_pack_generator import (
-    generate_factoring_techniques_resource_pack,
-    generate_functions_basics_resource_pack,
-    generate_linear_equation_resource_pack,
-    generate_quadratic_factoring_resource_pack,
-    generate_systems_of_equations_resource_pack,
-)
 from models.curriculum import LearningObjective
 from models.resource_pack import ResourcePack
+from topics.registry import find_topic_by_learning_objective_topic
 
 
 def generate_resource_pack_from_learning_objective(
@@ -23,155 +17,30 @@ def generate_resource_pack_from_learning_objective(
     if not isinstance(learning_objective, LearningObjective):
         raise TypeError("learning_objective must be a LearningObjective.")
 
-    if _is_linear_equations_topic(learning_objective.topic):
-        resource_pack = generate_linear_equation_resource_pack(
-            topic=learning_objective.topic,
-            difficulty=difficulty,
-            count=count,
-            start_id=start_id,
-        )
-        return ResourcePack(
-            worksheet=resource_pack.worksheet,
-            study_guide=resource_pack.study_guide,
-            common_mistakes=resource_pack.common_mistakes,
-            tutor_notes=resource_pack.tutor_notes,
-            practice_quiz=resource_pack.practice_quiz,
-            metadata={
-                **dict(resource_pack.metadata),
-                "learning_objective_id": learning_objective.objective_id,
-                "learning_objective": learning_objective.description,
-            },
-        )
+    try:
+        topic = find_topic_by_learning_objective_topic(learning_objective.topic)
+    except ValueError as exc:
+        raise ValueError(
+            "resource pack generation currently supports only linear equations, "
+            "quadratic factoring, systems of equations, factoring techniques, "
+            "and functions basics learning objectives."
+        ) from exc
 
-    if _is_quadratic_factoring_topic(learning_objective.topic):
-        resource_pack = generate_quadratic_factoring_resource_pack(
-            topic=learning_objective.topic,
-            difficulty=difficulty,
-            count=count,
-            start_id=start_id,
-        )
-        return ResourcePack(
-            worksheet=resource_pack.worksheet,
-            study_guide=resource_pack.study_guide,
-            common_mistakes=resource_pack.common_mistakes,
-            tutor_notes=resource_pack.tutor_notes,
-            practice_quiz=resource_pack.practice_quiz,
-            metadata={
-                **dict(resource_pack.metadata),
-                "learning_objective_id": learning_objective.objective_id,
-                "learning_objective": learning_objective.description,
-            },
-        )
-
-    if _is_systems_of_equations_topic(learning_objective.topic):
-        resource_pack = generate_systems_of_equations_resource_pack(
-            topic=learning_objective.topic,
-            difficulty=difficulty,
-            count=count,
-            start_id=start_id,
-        )
-        return ResourcePack(
-            worksheet=resource_pack.worksheet,
-            study_guide=resource_pack.study_guide,
-            common_mistakes=resource_pack.common_mistakes,
-            tutor_notes=resource_pack.tutor_notes,
-            practice_quiz=resource_pack.practice_quiz,
-            metadata={
-                **dict(resource_pack.metadata),
-                "learning_objective_id": learning_objective.objective_id,
-                "learning_objective": learning_objective.description,
-            },
-        )
-
-    if _is_factoring_techniques_topic(learning_objective.topic):
-        resource_pack = generate_factoring_techniques_resource_pack(
-            topic=learning_objective.topic,
-            difficulty=difficulty,
-            count=count,
-            start_id=start_id,
-        )
-        return ResourcePack(
-            worksheet=resource_pack.worksheet,
-            study_guide=resource_pack.study_guide,
-            common_mistakes=resource_pack.common_mistakes,
-            tutor_notes=resource_pack.tutor_notes,
-            practice_quiz=resource_pack.practice_quiz,
-            metadata={
-                **dict(resource_pack.metadata),
-                "learning_objective_id": learning_objective.objective_id,
-                "learning_objective": learning_objective.description,
-            },
-        )
-
-    if _is_functions_basics_topic(learning_objective.topic):
-        resource_pack = generate_functions_basics_resource_pack(
-            topic=learning_objective.topic,
-            difficulty=difficulty,
-            count=count,
-            start_id=start_id,
-        )
-        return ResourcePack(
-            worksheet=resource_pack.worksheet,
-            study_guide=resource_pack.study_guide,
-            common_mistakes=resource_pack.common_mistakes,
-            tutor_notes=resource_pack.tutor_notes,
-            practice_quiz=resource_pack.practice_quiz,
-            metadata={
-                **dict(resource_pack.metadata),
-                "learning_objective_id": learning_objective.objective_id,
-                "learning_objective": learning_objective.description,
-            },
-        )
-
-    raise ValueError(
-        "resource pack generation currently supports only linear equations, "
-        "quadratic factoring, systems of equations, and factoring techniques "
-        "learning objectives, and functions basics learning objectives."
+    resource_pack = topic.resource_pack_generator(
+        topic=learning_objective.topic,
+        difficulty=difficulty,
+        count=count,
+        start_id=start_id,
     )
-
-
-def _is_linear_equations_topic(topic: str) -> bool:
-    """Return whether a topic maps to the current linear equations generator."""
-    return topic.strip().lower() in {
-        "linear equation",
-        "linear equations",
-        "linear equations in one variable",
-    }
-
-
-def _is_quadratic_factoring_topic(topic: str) -> bool:
-    """Return whether a topic maps to the current quadratic factoring generator."""
-    return topic.strip().lower() in {
-        "quadratic equation",
-        "quadratic equations",
-        "quadratic equations by factoring",
-        "factoring quadratic equations",
-    }
-
-
-def _is_systems_of_equations_topic(topic: str) -> bool:
-    """Return whether a topic maps to the current systems generator."""
-    return topic.strip().lower() in {
-        "systems of equations",
-        "systems of linear equations",
-        "systems of linear equations in two variables",
-    }
-
-
-def _is_factoring_techniques_topic(topic: str) -> bool:
-    """Return whether a topic maps to the current factoring generator."""
-    return topic.strip().lower() in {
-        "factoring",
-        "factoring techniques",
-        "factoring polynomial expressions",
-    }
-
-
-def _is_functions_basics_topic(topic: str) -> bool:
-    """Return whether a topic maps to the current functions generator."""
-    return topic.strip().lower() in {
-        "functions",
-        "functions basics",
-        "function notation",
-        "introductory functions",
-    }
+    return ResourcePack(
+        worksheet=resource_pack.worksheet,
+        study_guide=resource_pack.study_guide,
+        common_mistakes=resource_pack.common_mistakes,
+        tutor_notes=resource_pack.tutor_notes,
+        practice_quiz=resource_pack.practice_quiz,
+        metadata={
+            **dict(resource_pack.metadata),
+            "learning_objective_id": learning_objective.objective_id,
+            "learning_objective": learning_objective.description,
+        },
+    )

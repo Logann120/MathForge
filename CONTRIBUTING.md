@@ -2,20 +2,21 @@
 
 Thank you for your interest in contributing to MathForge.
 
-MathForge is currently establishing its initial repository structure and project direction. Contributions should align with the documented mission: helping mathematics instructors generate high-quality instructional materials with maintainable, accessible open-source tools.
+MathForge currently has a working Python/Streamlit MVP for deterministic College Algebra instructional material generation. Contributions should align with the documented mission: helping mathematics instructors generate high-quality instructional materials with maintainable, accessible open-source tools.
 
 ## Current Contribution Scope
 
-At this stage, useful contributions include:
+Useful contributions include:
 
 - Improving project documentation.
-- Refining MVP requirements.
+- Refining MVP requirements and known limitations.
 - Clarifying accessibility expectations.
 - Reviewing architecture boundaries.
-- Proposing maintainable approaches for future Python, Streamlit, and SymPy implementation.
-- Adding placeholder structure only when it supports the documented architecture.
+- Improving tests for implemented behavior.
+- Proposing maintainable approaches for new supported topics.
+- Refreshing examples and supplemental documentation.
 
-Do not add business logic, Streamlit UI, or AI integration until implementation work is explicitly requested.
+Do not add or change business logic, Streamlit UI behavior, AI integration, Canvas integration, persistence, authentication, APIs, or deployment code unless that implementation work is explicitly requested.
 
 ## Project Principles
 
@@ -29,15 +30,17 @@ Contributions should prioritize:
 
 ## Repository Structure
 
-The initial structure is organized around future responsibilities:
+The structure is organized around current MVP responsibilities:
 
-- `app/` for the future Streamlit interface.
-- `generator/` for future problem and solution generation.
-- `validators/` for future answer validation, including SymPy-based checks.
-- `exporters/` for future HTML and Markdown exports.
-- `templates/` for future worksheet or course templates.
-- `tests/` for future automated tests.
-- `docs/` for supplemental project documentation.
+- `app/` for the Streamlit interface.
+- `generator/` for deterministic worksheet, resource-pack, and curriculum-aligned generation.
+- `models/` for dataclasses representing content, resource packs, and curriculum structures.
+- `validators/` for answer validation, including SymPy-based checks.
+- `exporters/` for HTML and Markdown exports.
+- `templates/` for the College Algebra course template.
+- `topics/` for the supported-topic registry.
+- `tests/` for automated tests.
+- `docs/` for future supplemental project documentation.
 
 ## Documentation Standards
 
@@ -50,15 +53,29 @@ When changing documentation:
 - Keep accessibility and maintainability visible.
 - Update related files when a requirement or architectural decision changes.
 
-## Future Code Standards
+## Code Standards
 
-When application code is approved, contributions should:
+When application code changes are approved, contributions should:
 
 - Keep Streamlit UI code separate from reusable domain logic.
 - Keep generation, validation, and export modules independently testable.
 - Use SymPy for symbolic validation where appropriate.
 - Add focused tests for new behavior.
 - Document known limitations.
+
+When adding a supported topic, keep routing centralized in `topics/registry.py`. Add deterministic generator behavior, resource-pack behavior if supported, registry metadata, curriculum metadata, and tests together.
+
+## Current Non-Features
+
+The MVP intentionally has no AI or LLM integration, Canvas integration, database, authentication, external API, production deployment, CI workflow, or production hosting configuration.
+
+## Known Limitations
+
+- Example outputs are stale and do not yet show the current full resource-pack flow.
+- `docs/` is currently a placeholder folder.
+- CI and deployment workflows are not configured.
+- Accessibility and browser QA need more coverage before broader release.
+- Top-level topic routing now uses `topics/registry.py`; topic-specific generator internals remain explicit and should stay small.
 
 ## Questions and Design Discussion
 

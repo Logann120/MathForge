@@ -1,8 +1,8 @@
 # MathForge Architecture
 
-MathForge will be a Python application with a Streamlit user interface, SymPy-powered validation, and export support for accessible HTML and Markdown.
+MathForge is a Python and Streamlit MVP with deterministic College Algebra generation, SymPy-powered validation helpers, and export support for Markdown and accessible HTML.
 
-This document describes the intended architecture before business logic or user interface code is added. The repository may contain placeholder packages that reserve the major architectural boundaries.
+This document describes the current implemented architecture. MathForge is no longer a planning-only repository: it has working generators, models, exporters, validators, a Streamlit interface, curriculum templates, and automated tests.
 
 ## Architecture Goals
 
@@ -11,8 +11,9 @@ This document describes the intended architecture before business logic or user 
 - Make answer validation explicit and testable.
 - Keep exports accessible and predictable.
 - Allow new math topics and templates to be added without large rewrites.
+- Preserve deterministic, instructor-reviewable generation.
 
-## Proposed Technology Stack
+## Technology Stack
 
 - Python for application and domain logic.
 - Streamlit for the web interface.
@@ -20,106 +21,162 @@ This document describes the intended architecture before business logic or user 
 - Markdown for portable text exports.
 - Semantic HTML for accessible browser-based exports.
 
-## Proposed Module Boundaries
+## Current Architecture
 
-The eventual application should separate responsibilities into clear modules.
+The application separates responsibilities into clear modules so contributors and future AI coding agents can reason about changes safely.
 
 ### User Interface
 
 Purpose:
 
-- Present worksheet generation options.
+- Present worksheet and resource-pack generation options.
 - Collect user configuration.
-- Display worksheet and solution previews.
-- Trigger validation and export actions.
+- Display worksheet, solution, and instructional resource previews.
+- Trigger Markdown and HTML export actions.
 
-Expected implementation direction:
+Current implementation:
 
-- Streamlit pages and UI components.
-- Minimal business logic in UI code.
-- Clear handoff from UI state to core generation services.
+- `app/main.py` contains the Streamlit MVP.
+- Topic mode generates from a supported topic label.
+- Learning Objective mode generates from the College Algebra template.
+- The UI hands off to generator and exporter functions rather than embedding generation logic.
 
 ### Problem Generation
 
 Purpose:
 
 - Generate structured math problems from topic and difficulty settings.
-- Produce problem prompts, expected answers, and optional solution steps.
-- Keep generation deterministic when a seed is provided.
+- Produce problem prompts, expected answers, and solution steps.
+- Keep generation deterministic and reviewable.
 
-Expected implementation direction:
+Current implementation:
 
-- Topic-specific generators.
-- Shared problem data structures.
-- No direct dependency on Streamlit.
+- `generator/problem_generator.py` contains deterministic worksheet generators.
+- Supported topics are linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics.
+- Generators return reusable worksheet models and do not depend on Streamlit.
+
+### Resource Pack Generation
+
+Purpose:
+
+- Assemble complete instructional resource packs around generated worksheets.
+- Provide study guides, common mistakes, tutor notes, and practice quizzes.
+- Preserve deterministic output for supported topics.
+
+Current implementation:
+
+- `generator/resource_pack_generator.py` generates topic-based resource packs.
+- `generator/curriculum_resource_pack_generator.py` generates resource packs from supported learning objectives.
+- Generated resource content is deterministic and does not use AI or LLM services.
 
 ### Answer Validation
 
 Purpose:
 
-- Validate generated answers and equivalent student-facing answer forms.
+- Validate generated answers and equivalent answer forms.
 - Use SymPy for symbolic equivalence checks where appropriate.
-- Report validation failures clearly before export.
+- Report validation failures clearly before export or display.
 
-Expected implementation direction:
+Current implementation:
 
-- Dedicated validation functions or services.
-- Explicit result objects for success, failure, and warnings.
-- Tests covering equivalent expressions and known invalid cases.
+- `validators/sympy_validator.py` contains dedicated validation functions.
+- Validation functions return structured results for success, failure, and parse errors.
+- Tests cover equivalent expressions, numeric answers, equation solutions, and invalid input.
 
-### Worksheet Assembly
+### Models and Worksheet Assembly
 
 Purpose:
 
-- Combine generated problems into a complete worksheet.
+- Represent generated content with typed dataclasses.
+- Combine generated problems into worksheets.
 - Pair worksheets with solution keys.
-- Preserve stable ordering, numbering, and metadata.
+- Preserve stable ordering, identifiers, and metadata.
 
-Expected implementation direction:
+Current implementation:
 
-- Worksheet-level data structures.
-- Clear distinction between student-facing content and instructor-only solutions.
+- `models/content_models.py` defines worksheet, problem, solution, hint, and export dataclasses.
+- `models/resource_pack.py` defines study guide, common mistakes, tutor notes, practice quiz, and resource-pack dataclasses.
+- `models/curriculum.py` defines curriculum alignment dataclasses.
+- Student-facing worksheet content and instructor-facing solution/resource sections are represented separately.
 
 ### Exporters
 
 Purpose:
 
-- Convert worksheets and solution keys into external formats.
+- Convert worksheets, solution keys, and resource packs into external formats.
 - Support accessible HTML.
-- Support Markdown.
+- Support readable Markdown.
 
-Expected implementation direction:
+Current implementation:
 
-- Separate exporter modules for each format.
-- No problem generation inside exporters.
-- Shared rendering helpers only when they improve consistency.
+- `exporters/markdown_exporter.py` renders worksheets and full resource packs to Markdown.
+- `exporters/html_exporter.py` renders worksheets and full resource packs to portable semantic HTML.
+- Exporters do not generate problems and reuse worksheet rendering behavior where appropriate.
+
+### Supported Topic Registry
+
+Purpose:
+
+- Centralize supported topic labels, slugs, default problem ID prefixes, output types, generator routing, difficulty support, and curriculum metadata.
+- Make supported topics easier to discover without scanning the UI, curriculum generator, and templates separately.
+- Keep topic additions explicit and reviewable.
+
+Current implementation:
+
+- `topics/registry.py` contains the supported-topic registry.
+- `app/main.py` uses the registry for topic options, default problem ID prefixes, and topic routing.
+- `generator/curriculum_resource_pack_generator.py` uses the registry for learning-objective topic routing.
+- `templates/course_templates.py` uses the registry to construct the College Algebra modules and objectives.
+- The registry is a small metadata table, not a plugin system.
+
+### Curriculum Templates
+
+Purpose:
+
+- Provide deterministic course, module, and learning-objective structures.
+- Support curriculum-aligned generation without Canvas or external systems.
+
+Current implementation:
+
+- `templates/course_templates.py` contains the College Algebra sample template.
+- Supported objectives are built from the topic registry metadata.
+
+### Tests
+
+Purpose:
+
+- Preserve generator, model, validator, exporter, curriculum, and Streamlit import behavior.
+- Keep future changes reviewable.
+
+Current implementation:
+
+- `tests/` contains focused unit and smoke tests for the MVP modules.
 
 ## Conceptual Data Flow
 
-1. A user selects worksheet options in Streamlit.
+1. A user selects worksheet or resource-pack options in Streamlit.
 2. The UI passes structured options to the generation layer.
 3. Problem generators create structured problem objects.
-4. The validation layer checks generated answers with SymPy.
-5. Worksheet assembly creates a worksheet and solution key.
-6. Exporters render accessible HTML and Markdown.
+4. The validation layer checks generated answers with SymPy where practical.
+5. Resource-pack generators optionally assemble study guides, common mistakes, tutor notes, and practice quizzes.
+6. Exporters render Markdown or semantic HTML.
 7. The UI offers previews and download actions.
 
-## Suggested Core Data Concepts
+## Core Data Concepts
 
-Future implementation may define data structures such as:
+The current MVP uses dataclasses for:
 
-- Problem: prompt, answer, topic, difficulty, metadata, and solution steps.
-- SolutionStep: explanation text, mathematical expression, or transformation.
-- Worksheet: title, instructions, problem list, and metadata.
-- SolutionKey: worksheet reference, numbered answers, and solution steps.
-- ValidationResult: status, messages, warnings, and failure details.
-- ExportDocument: rendered content, format, filename, and metadata.
-
-These concepts are planning guidance only. They should be refined during implementation.
+- MathProblem: prompt, answer, topic, difficulty, hints, and metadata.
+- HintSet: scaffolded hints for a problem.
+- Solution: answer and solution steps paired with a problem identifier.
+- Worksheet: title, instructions, problems, solutions, and metadata.
+- ExportResult: rendered content, format, filename, and metadata.
+- StudyGuide, CommonMistakes, TutorNotes, PracticeQuiz, and ResourcePack.
+- LearningObjective, CourseModule, and CourseTemplate.
 
 ## Accessibility Architecture
 
-Accessible output should be designed into the export layer.
+Accessible output is designed into the export layer.
 
 HTML exporters should:
 
@@ -139,15 +196,38 @@ Markdown exporters should:
 
 ## Validation Strategy
 
-SymPy should be used to validate symbolic correctness in the core workflow.
+SymPy is used to validate symbolic correctness in the core workflow.
 
-The validation layer should:
+The validation layer:
 
-- Compare mathematically equivalent expressions where appropriate.
-- Detect malformed expressions.
-- Return structured errors rather than crashing the UI.
-- Distinguish validation failures from unsupported validation cases.
-- Be covered by focused automated tests once application code exists.
+- Compares mathematically equivalent expressions where appropriate.
+- Detects malformed expressions.
+- Returns structured errors rather than crashing the UI.
+- Distinguishes validation failures from unsupported validation cases.
+- Is covered by focused automated tests.
+
+## Current Non-Features
+
+The MVP intentionally has no:
+
+- AI or LLM integration.
+- Canvas LMS integration.
+- Database or persistence layer.
+- Authentication or authorization.
+- External API.
+- Production deployment or hosting workflow.
+
+Generated content is deterministic and instructor-reviewable. Future AI-assisted work should remain optional, transparent, and subject to instructor approval.
+
+## Known Limitations
+
+- Example exports are stale and currently show only an older linear-equations worksheet sample.
+- `docs/` exists as a placeholder folder but has no supplemental guides yet.
+- Continuous integration is not configured.
+- There is no deployment workflow.
+- Accessibility and browser QA are limited and should be expanded before broader release.
+- Top-level topic routing is centralized in `topics/registry.py`; topic-specific generator internals remain explicit.
+- `generator/solution_generator.py` remains a placeholder.
 
 ## Maintainability Principles
 
@@ -156,12 +236,13 @@ Future implementation should:
 - Keep modules small and purpose-driven.
 - Avoid coupling Streamlit widgets to core generation logic.
 - Make supported topics easy to discover and extend.
+- Add future topics through the supported-topic registry after adding deterministic generators and tests.
 - Prefer explicit data structures over loosely shaped dictionaries when practical.
 - Document assumptions for each problem generator.
 - Add tests before expanding high-risk logic.
 
 ## Future Integration Considerations
 
-Future Canvas LMS integration, question banks, AI-generated hints, AI-generated study guides, and course-specific templates should build on the same core concepts rather than bypassing them.
+Future Canvas LMS integration, question banks, AI-generated hints, AI-generated study guides, and broader course-specific templates should build on the same core concepts rather than bypassing them.
 
 Integrations should treat validated worksheet content as the source of truth. AI-assisted features should remain reviewable by instructors and should never replace validation or instructor approval.

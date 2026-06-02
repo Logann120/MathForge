@@ -13,11 +13,6 @@ from exporters.markdown_exporter import (
 from generator.curriculum_resource_pack_generator import (
     generate_resource_pack_from_learning_objective,
 )
-from generator.problem_generator import generate_factoring_techniques_worksheet
-from generator.problem_generator import generate_functions_basics_worksheet
-from generator.problem_generator import generate_linear_equation_worksheet
-from generator.problem_generator import generate_quadratic_factoring_worksheet
-from generator.problem_generator import generate_systems_of_equations_worksheet
 from generator.resource_pack_generator import (
     generate_factoring_techniques_resource_pack,
     generate_functions_basics_resource_pack,
@@ -35,26 +30,13 @@ from models.resource_pack import (
     TutorNotes,
 )
 from templates.course_templates import college_algebra_template
+from topics.registry import find_topic_by_label, supported_topic_labels
 
 
 LOGGER = logging.getLogger(__name__)
 
-TOPIC_OPTIONS = (
-    "Linear equations",
-    "Quadratic equations by factoring",
-    "Systems of linear equations",
-    "Factoring techniques",
-    "Functions basics",
-)
+TOPIC_OPTIONS = supported_topic_labels()
 DIFFICULTY_OPTIONS = ("Easy",)
-
-_TOPIC_PREFIXES = {
-    "Linear equations": "linear",
-    "Quadratic equations by factoring": "quadratic",
-    "Systems of linear equations": "systems",
-    "Factoring techniques": "factoring",
-    "Functions basics": "functions",
-}
 
 
 def main() -> None:
@@ -162,47 +144,13 @@ def _generate_worksheet_for_topic(
     start_id: str,
 ) -> Worksheet:
     """Generate a worksheet for a supported topic."""
-    if topic == "Linear equations":
-        return generate_linear_equation_worksheet(
-            topic=topic,
-            difficulty=difficulty,
-            count=count,
-            start_id=start_id,
-        )
-
-    if _is_quadratic_factoring_topic(topic):
-        return generate_quadratic_factoring_worksheet(
-            topic=topic,
-            difficulty=difficulty,
-            count=count,
-            start_id=start_id,
-        )
-
-    if _is_systems_of_equations_topic(topic):
-        return generate_systems_of_equations_worksheet(
-            topic=topic,
-            difficulty=difficulty,
-            count=count,
-            start_id=start_id,
-        )
-
-    if _is_factoring_techniques_topic(topic):
-        return generate_factoring_techniques_worksheet(
-            topic=topic,
-            difficulty=difficulty,
-            count=count,
-            start_id=start_id,
-        )
-
-    if _is_functions_basics_topic(topic):
-        return generate_functions_basics_worksheet(
-            topic=topic,
-            difficulty=difficulty,
-            count=count,
-            start_id=start_id,
-        )
-
-    raise ValueError(f"unsupported topic: {topic}")
+    topic_record = find_topic_by_label(topic)
+    return topic_record.worksheet_generator(
+        topic=topic,
+        difficulty=difficulty,
+        count=count,
+        start_id=start_id,
+    )
 
 
 def _generate_resource_pack_for_topic(
@@ -212,72 +160,21 @@ def _generate_resource_pack_for_topic(
     start_id: str,
 ) -> ResourcePack:
     """Generate a resource pack for a supported topic."""
-    if topic == "Linear equations":
-        return generate_linear_equation_resource_pack(
-            topic=topic,
-            difficulty=difficulty,
-            count=count,
-            start_id=start_id,
-        )
-
-    if _is_quadratic_factoring_topic(topic):
-        return generate_quadratic_factoring_resource_pack(
-            topic=topic,
-            difficulty=difficulty,
-            count=count,
-            start_id=start_id,
-        )
-
-    if _is_systems_of_equations_topic(topic):
-        return generate_systems_of_equations_resource_pack(
-            topic=topic,
-            difficulty=difficulty,
-            count=count,
-            start_id=start_id,
-        )
-
-    if _is_factoring_techniques_topic(topic):
-        return generate_factoring_techniques_resource_pack(
-            topic=topic,
-            difficulty=difficulty,
-            count=count,
-            start_id=start_id,
-        )
-
-    if _is_functions_basics_topic(topic):
-        return generate_functions_basics_resource_pack(
-            topic=topic,
-            difficulty=difficulty,
-            count=count,
-            start_id=start_id,
-        )
-
-    raise ValueError(f"unsupported topic: {topic}")
-
-
-def _is_quadratic_factoring_topic(topic: str) -> bool:
-    """Return whether the selected topic is quadratic factoring."""
-    return topic.strip().lower() == "quadratic equations by factoring"
-
-
-def _is_systems_of_equations_topic(topic: str) -> bool:
-    """Return whether the selected topic is systems of equations."""
-    return topic.strip().lower() == "systems of linear equations"
-
-
-def _is_factoring_techniques_topic(topic: str) -> bool:
-    """Return whether the selected topic is factoring techniques."""
-    return topic.strip().lower() == "factoring techniques"
-
-
-def _is_functions_basics_topic(topic: str) -> bool:
-    """Return whether the selected topic is functions basics."""
-    return topic.strip().lower() == "functions basics"
+    topic_record = find_topic_by_label(topic)
+    return topic_record.resource_pack_generator(
+        topic=topic,
+        difficulty=difficulty,
+        count=count,
+        start_id=start_id,
+    )
 
 
 def _default_problem_id_prefix(topic: str) -> str:
     """Return a stable problem ID prefix for a supported topic."""
-    return _TOPIC_PREFIXES.get(topic, "linear")
+    try:
+        return find_topic_by_label(topic).default_problem_id_prefix
+    except ValueError:
+        return "linear"
 
 
 def _topic_key(topic: str) -> str:
