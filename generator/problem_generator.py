@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from sympy import Symbol, simplify, sympify
+from sympy import Symbol, expand, simplify, sympify
 
 from models.content_models import MathProblem, Solution, Worksheet
 from validators.sympy_validator import validate_equation_solution
@@ -246,6 +246,76 @@ def generate_systems_of_equations_worksheet(
     )
 
 
+def generate_factoring_techniques_worksheet(
+    topic: str,
+    difficulty: str,
+    count: int,
+    start_id: str,
+) -> Worksheet:
+    """Generate deterministic factoring practice across common strategies."""
+    _require_text(topic, "topic")
+    _require_text(difficulty, "difficulty")
+    _require_text(start_id, "start_id")
+
+    if not isinstance(count, int):
+        raise TypeError("count must be an integer.")
+    if count <= 0:
+        raise ValueError("count must be positive.")
+
+    problems: list[MathProblem] = []
+    solutions: list[Solution] = []
+
+    for index in range(count):
+        problem_id = f"{start_id}-{index + 1:03d}"
+        expression, factored_form, strategy = _factoring_problem(index)
+
+        if not _validate_factored_expression(expression, factored_form):
+            raise ValueError(
+                f"generated factorization failed validation for {problem_id}."
+            )
+
+        problems.append(
+            MathProblem(
+                problem_id=problem_id,
+                prompt=f"Factor completely: {expression}",
+                answer=factored_form,
+                topic=topic,
+                difficulty=difficulty,
+                metadata={
+                    "expression": expression,
+                    "factored_form": factored_form,
+                    "strategy": strategy,
+                    "variable": "x",
+                },
+            )
+        )
+        solutions.append(
+            Solution(
+                problem_id=problem_id,
+                final_answer=factored_form,
+                steps=(
+                    f"Start with {expression}.",
+                    f"Identify the strategy: {strategy}.",
+                    f"Rewrite the expression as {factored_form}.",
+                    "Check by expanding the factored form.",
+                ),
+            )
+        )
+
+    return Worksheet(
+        title=f"{topic} Worksheet",
+        worksheet_id=f"{start_id}-worksheet",
+        instructions="Factor each polynomial expression completely.",
+        problems=tuple(problems),
+        solutions=tuple(solutions),
+        metadata={
+            "topic": topic,
+            "difficulty": difficulty,
+            "generator": "factoring_techniques",
+        },
+    )
+
+
 def _linear_equation_terms(difficulty: str, index: int) -> tuple[int, int, int]:
     """Return deterministic ``a``, ``b``, and solution values."""
     normalized_difficulty = difficulty.strip().lower()
@@ -372,6 +442,39 @@ def _split_equation_text(equation: str) -> tuple[str, str]:
     if len(parts) != 2:
         raise ValueError("equation must contain exactly one equals sign.")
     return parts[0].strip(), parts[1].strip()
+
+
+def _factoring_problem(index: int) -> tuple[str, str, str]:
+    """Return expression, factored form, and strategy for factoring practice."""
+    strategy_index = index % 3
+    sequence = index // 3
+
+    if strategy_index == 0:
+        factor = sequence + 2
+        coefficient = sequence + 3
+        constant = sequence + 4
+        expression = f"{factor * coefficient}*x + {factor * constant}"
+        factored_form = f"{factor}*({coefficient}*x + {constant})"
+        return expression, factored_form, "greatest common factor"
+
+    if strategy_index == 1:
+        root = sequence + 2
+        expression = f"x**2 - {root * root}"
+        factored_form = f"(x - {root})*(x + {root})"
+        return expression, factored_form, "difference of squares"
+
+    first_root = sequence + 2
+    second_root = sequence + 3
+    linear_coefficient = first_root + second_root
+    constant = first_root * second_root
+    expression = f"x**2 + {linear_coefficient}*x + {constant}"
+    factored_form = f"(x + {first_root})*(x + {second_root})"
+    return expression, factored_form, "simple trinomial"
+
+
+def _validate_factored_expression(expression: str, factored_form: str) -> bool:
+    """Validate that a factored form expands to the original expression."""
+    return simplify(sympify(expression) - expand(sympify(factored_form))) == 0
 
 
 def _require_text(value: str, field_name: str) -> None:

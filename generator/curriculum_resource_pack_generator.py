@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from generator.resource_pack_generator import (
+    generate_factoring_techniques_resource_pack,
     generate_linear_equation_resource_pack,
     generate_quadratic_factoring_resource_pack,
     generate_systems_of_equations_resource_pack,
@@ -78,9 +79,29 @@ def generate_resource_pack_from_learning_objective(
             },
         )
 
+    if _is_factoring_techniques_topic(learning_objective.topic):
+        resource_pack = generate_factoring_techniques_resource_pack(
+            topic=learning_objective.topic,
+            difficulty=difficulty,
+            count=count,
+            start_id=start_id,
+        )
+        return ResourcePack(
+            worksheet=resource_pack.worksheet,
+            study_guide=resource_pack.study_guide,
+            common_mistakes=resource_pack.common_mistakes,
+            tutor_notes=resource_pack.tutor_notes,
+            metadata={
+                **dict(resource_pack.metadata),
+                "learning_objective_id": learning_objective.objective_id,
+                "learning_objective": learning_objective.description,
+            },
+        )
+
     raise ValueError(
         "resource pack generation currently supports only linear equations, "
-        "quadratic factoring, and systems of equations learning objectives."
+        "quadratic factoring, systems of equations, and factoring techniques "
+        "learning objectives."
     )
 
 
@@ -109,4 +130,13 @@ def _is_systems_of_equations_topic(topic: str) -> bool:
         "systems of equations",
         "systems of linear equations",
         "systems of linear equations in two variables",
+    }
+
+
+def _is_factoring_techniques_topic(topic: str) -> bool:
+    """Return whether a topic maps to the current factoring generator."""
+    return topic.strip().lower() in {
+        "factoring",
+        "factoring techniques",
+        "factoring polynomial expressions",
     }

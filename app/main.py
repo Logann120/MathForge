@@ -13,10 +13,12 @@ from exporters.markdown_exporter import (
 from generator.curriculum_resource_pack_generator import (
     generate_resource_pack_from_learning_objective,
 )
+from generator.problem_generator import generate_factoring_techniques_worksheet
 from generator.problem_generator import generate_linear_equation_worksheet
 from generator.problem_generator import generate_quadratic_factoring_worksheet
 from generator.problem_generator import generate_systems_of_equations_worksheet
 from generator.resource_pack_generator import (
+    generate_factoring_techniques_resource_pack,
     generate_linear_equation_resource_pack,
     generate_quadratic_factoring_resource_pack,
     generate_systems_of_equations_resource_pack,
@@ -33,6 +35,7 @@ TOPIC_OPTIONS = (
     "Linear equations",
     "Quadratic equations by factoring",
     "Systems of linear equations",
+    "Factoring techniques",
 )
 DIFFICULTY_OPTIONS = ("Easy",)
 
@@ -40,6 +43,7 @@ _TOPIC_PREFIXES = {
     "Linear equations": "linear",
     "Quadratic equations by factoring": "quadratic",
     "Systems of linear equations": "systems",
+    "Factoring techniques": "factoring",
 }
 
 
@@ -54,7 +58,8 @@ def main() -> None:
     )
     st.caption(
         "MathForge currently supports deterministic generation for linear equations "
-        "quadratic equations by factoring, and systems of linear equations."
+        "quadratic equations by factoring, systems of linear equations, and "
+        "factoring techniques."
     )
 
     output_type = st.radio(
@@ -171,6 +176,14 @@ def _generate_worksheet_for_topic(
             start_id=start_id,
         )
 
+    if _is_factoring_techniques_topic(topic):
+        return generate_factoring_techniques_worksheet(
+            topic=topic,
+            difficulty=difficulty,
+            count=count,
+            start_id=start_id,
+        )
+
     raise ValueError(f"unsupported topic: {topic}")
 
 
@@ -205,6 +218,14 @@ def _generate_resource_pack_for_topic(
             start_id=start_id,
         )
 
+    if _is_factoring_techniques_topic(topic):
+        return generate_factoring_techniques_resource_pack(
+            topic=topic,
+            difficulty=difficulty,
+            count=count,
+            start_id=start_id,
+        )
+
     raise ValueError(f"unsupported topic: {topic}")
 
 
@@ -216,6 +237,11 @@ def _is_quadratic_factoring_topic(topic: str) -> bool:
 def _is_systems_of_equations_topic(topic: str) -> bool:
     """Return whether the selected topic is systems of equations."""
     return topic.strip().lower() == "systems of linear equations"
+
+
+def _is_factoring_techniques_topic(topic: str) -> bool:
+    """Return whether the selected topic is factoring techniques."""
+    return topic.strip().lower() == "factoring techniques"
 
 
 def _default_problem_id_prefix(topic: str) -> str:

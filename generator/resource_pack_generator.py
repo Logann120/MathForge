@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from generator.problem_generator import (
+    generate_factoring_techniques_worksheet,
     generate_linear_equation_worksheet,
     generate_quadratic_factoring_worksheet,
     generate_systems_of_equations_worksheet,
@@ -91,6 +92,33 @@ def generate_systems_of_equations_resource_pack(
     )
 
 
+def generate_factoring_techniques_resource_pack(
+    topic: str,
+    difficulty: str,
+    count: int,
+    start_id: str,
+) -> ResourcePack:
+    """Generate a deterministic factoring techniques worksheet resource pack."""
+    worksheet = generate_factoring_techniques_worksheet(
+        topic=topic,
+        difficulty=difficulty,
+        count=count,
+        start_id=start_id,
+    )
+
+    return ResourcePack(
+        worksheet=worksheet,
+        study_guide=_build_factoring_study_guide(topic, difficulty),
+        common_mistakes=_build_factoring_common_mistakes(topic, difficulty),
+        tutor_notes=_build_factoring_tutor_notes(topic, difficulty),
+        metadata={
+            "topic": topic,
+            "difficulty": difficulty,
+            "generator": "factoring_techniques_resource_pack",
+        },
+    )
+
+
 def _build_study_guide(topic: str, difficulty: str) -> StudyGuide:
     """Build deterministic student-facing guidance."""
     return StudyGuide(
@@ -138,6 +166,34 @@ def _build_quadratic_study_guide(topic: str, difficulty: str) -> StudyGuide:
             "Worked-example guidance: confirm those integers add to b.",
             "Worked-example guidance: set each factor equal to zero.",
             "Worked-example guidance: substitute both roots to check the equation.",
+        ),
+        metadata={
+            "topic": topic,
+            "difficulty": difficulty,
+            "resource_type": "study_guide",
+        },
+    )
+
+
+def _build_factoring_study_guide(topic: str, difficulty: str) -> StudyGuide:
+    """Build deterministic student-facing guidance for factoring techniques."""
+    return StudyGuide(
+        title=f"{topic} Study Guide",
+        overview=(
+            "Factoring rewrites a polynomial as a product of simpler expressions "
+            "without changing its value."
+        ),
+        key_points=(
+            "Learning objective: factor polynomial expressions using common strategies.",
+            "Key idea: always check for a greatest common factor first.",
+            "Key idea: recognize a difference of squares as a**2 - b**2.",
+            "Key idea: for x**2 + bx + c, find factors of c that add to b.",
+        ),
+        practice_tips=(
+            "Worked-example guidance: scan for a shared numerical or variable factor.",
+            "Worked-example guidance: identify perfect squares before factoring.",
+            "Worked-example guidance: use a product-sum check for simple trinomials.",
+            "Worked-example guidance: expand the answer to verify the factorization.",
         ),
         metadata={
             "topic": topic,
@@ -221,6 +277,29 @@ def _build_quadratic_common_mistakes(topic: str, difficulty: str) -> CommonMista
     )
 
 
+def _build_factoring_common_mistakes(topic: str, difficulty: str) -> CommonMistakes:
+    """Build deterministic common-mistake guidance for factoring techniques."""
+    return CommonMistakes(
+        mistakes=(
+            "Skipping the greatest common factor before using another strategy.",
+            "Treating a sum of squares as a difference of squares.",
+            "Choosing trinomial factors with the right product but wrong sum.",
+            "Forgetting to check the answer by expanding.",
+        ),
+        corrections=(
+            "Look for a shared factor before applying a special pattern.",
+            "Use the difference of squares pattern only for subtraction.",
+            "Check both the product and the sum for trinomial factors.",
+            "Expand the factored form to confirm it matches the original expression.",
+        ),
+        metadata={
+            "topic": topic,
+            "difficulty": difficulty,
+            "resource_type": "common_mistakes",
+        },
+    )
+
+
 def _build_systems_common_mistakes(topic: str, difficulty: str) -> CommonMistakes:
     """Build deterministic common-mistake guidance for systems of equations."""
     return CommonMistakes(
@@ -259,6 +338,29 @@ def _build_tutor_notes(topic: str, difficulty: str) -> TutorNotes:
             "How do you know which operation to undo first?",
             "What does it mean for both sides of an equation to stay balanced?",
             "How can substitution help you catch arithmetic mistakes?",
+        ),
+        metadata={
+            "topic": topic,
+            "difficulty": difficulty,
+            "resource_type": "tutor_notes",
+        },
+    )
+
+
+def _build_factoring_tutor_notes(topic: str, difficulty: str) -> TutorNotes:
+    """Build deterministic tutor-facing prompts for factoring techniques."""
+    return TutorNotes(
+        notes=(
+            "Tutoring prompt: ask the learner which factoring strategy fits first.",
+            "Diagnostic question: is there a greatest common factor?",
+            "Diagnostic question: does the expression match a special product pattern?",
+            "Intervention suggestion: have the learner expand the proposed factors.",
+            "Intervention suggestion: use a product-sum table for simple trinomials.",
+        ),
+        discussion_prompts=(
+            "Why is checking for a greatest common factor a useful first step?",
+            "How can expanding help verify a factorization?",
+            "What clues distinguish a difference of squares from a trinomial?",
         ),
         metadata={
             "topic": topic,

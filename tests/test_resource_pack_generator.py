@@ -3,6 +3,7 @@
 import pytest
 
 from generator.resource_pack_generator import (
+    generate_factoring_techniques_resource_pack,
     generate_linear_equation_resource_pack,
     generate_quadratic_factoring_resource_pack,
     generate_systems_of_equations_resource_pack,
@@ -225,5 +226,59 @@ def test_systems_resource_pack_includes_systems_guidance() -> None:
     assert any("both equations" in note for note in resource_pack.tutor_notes.notes)
     assert any(
         "only one equation" in mistake
+        for mistake in resource_pack.common_mistakes.mistakes
+    )
+
+
+def test_generate_factoring_techniques_resource_pack_returns_resource_pack() -> None:
+    resource_pack = generate_factoring_techniques_resource_pack(
+        topic="Factoring techniques",
+        difficulty="easy",
+        count=3,
+        start_id="factoring",
+    )
+
+    assert isinstance(resource_pack, ResourcePack)
+    assert isinstance(resource_pack.study_guide, StudyGuide)
+    assert isinstance(resource_pack.common_mistakes, CommonMistakes)
+    assert isinstance(resource_pack.tutor_notes, TutorNotes)
+    assert resource_pack.worksheet.worksheet_id == "factoring-worksheet"
+    assert len(resource_pack.worksheet.problems) == 3
+    assert resource_pack.metadata["generator"] == "factoring_techniques_resource_pack"
+
+
+def test_generate_factoring_techniques_resource_pack_is_deterministic() -> None:
+    first = generate_factoring_techniques_resource_pack(
+        "Factoring techniques",
+        "easy",
+        3,
+        "factoring",
+    )
+    second = generate_factoring_techniques_resource_pack(
+        "Factoring techniques",
+        "easy",
+        3,
+        "factoring",
+    )
+
+    assert first == second
+
+
+def test_factoring_resource_pack_includes_factoring_guidance() -> None:
+    resource_pack = generate_factoring_techniques_resource_pack(
+        topic="Factoring techniques",
+        difficulty="easy",
+        count=3,
+        start_id="factoring",
+    )
+
+    assert "product of simpler expressions" in resource_pack.study_guide.overview
+    assert any(
+        "greatest common factor" in point
+        for point in resource_pack.study_guide.key_points
+    )
+    assert any("product-sum table" in note for note in resource_pack.tutor_notes.notes)
+    assert any(
+        "sum of squares" in mistake
         for mistake in resource_pack.common_mistakes.mistakes
     )

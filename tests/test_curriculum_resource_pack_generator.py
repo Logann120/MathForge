@@ -82,6 +82,24 @@ def test_generate_systems_resource_pack_from_learning_objective() -> None:
     assert resource_pack.metadata["learning_objective"] == objective.description
 
 
+def test_generate_factoring_resource_pack_from_learning_objective() -> None:
+    objective = college_algebra_template().modules[3].learning_objectives[0]
+
+    resource_pack = generate_resource_pack_from_learning_objective(
+        learning_objective=objective,
+        difficulty="easy",
+        count=3,
+        start_id="factoring-objective",
+    )
+
+    assert isinstance(resource_pack, ResourcePack)
+    assert resource_pack.worksheet.worksheet_id == "factoring-objective-worksheet"
+    assert len(resource_pack.worksheet.problems) == 3
+    assert resource_pack.worksheet.metadata["generator"] == "factoring_techniques"
+    assert resource_pack.metadata["learning_objective_id"] == objective.objective_id
+    assert resource_pack.metadata["learning_objective"] == objective.description
+
+
 def test_generate_resource_pack_from_learning_objective_rejects_unsupported_topic() -> None:
     objective = LearningObjective(
         objective_id="exponential-001",
@@ -89,7 +107,7 @@ def test_generate_resource_pack_from_learning_objective_rejects_unsupported_topi
         topic="Exponential equations",
     )
 
-    with pytest.raises(ValueError, match="systems of equations"):
+    with pytest.raises(ValueError, match="factoring techniques"):
         generate_resource_pack_from_learning_objective(
             learning_objective=objective,
             difficulty="easy",

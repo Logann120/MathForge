@@ -55,9 +55,30 @@ def college_algebra_template() -> CourseTemplate:
         learning_objectives=(systems_objective,),
         metadata={"course": "College Algebra"},
     )
+    factoring_objective = LearningObjective(
+        objective_id="college-algebra-factoring-techniques-001",
+        description="Factor polynomial expressions using common factoring strategies",
+        topic="Factoring techniques",
+        standards=("College Algebra: Factoring Techniques",),
+        metadata={
+            "course": "College Algebra",
+            "module": "Factoring Techniques",
+        },
+    )
+    factoring_module = CourseModule(
+        module_id="college-algebra-factoring-techniques",
+        title="Factoring Techniques",
+        learning_objectives=(factoring_objective,),
+        metadata={"course": "College Algebra"},
+    )
     return CourseTemplate(
         course_id="college-algebra",
         title="College Algebra",
-        modules=(linear_equations_module, quadratic_equations_module, systems_module),
+        modules=(
+            linear_equations_module,
+            quadratic_equations_module,
+            systems_module,
+            factoring_module,
+        ),
         metadata={"level": "community_college"},
     )

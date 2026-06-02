@@ -6,6 +6,7 @@ import pytest
 from sympy import Symbol, simplify, sympify
 
 from generator.problem_generator import (
+    generate_factoring_techniques_worksheet,
     generate_linear_equation_worksheet,
     generate_quadratic_factoring_worksheet,
     generate_systems_of_equations_worksheet,
@@ -265,6 +266,91 @@ def test_generate_systems_of_equations_worksheet_rejects_invalid_count() -> None
         )
 
 
+def test_generate_factoring_techniques_worksheet_returns_worksheet() -> None:
+    worksheet = generate_factoring_techniques_worksheet(
+        topic="Factoring techniques",
+        difficulty="easy",
+        count=3,
+        start_id="factoring",
+    )
+
+    assert isinstance(worksheet, Worksheet)
+    assert worksheet.title == "Factoring techniques Worksheet"
+    assert worksheet.worksheet_id == "factoring-worksheet"
+    assert len(worksheet.problems) == 3
+    assert len(worksheet.solutions) == 3
+    assert worksheet.metadata["generator"] == "factoring_techniques"
+
+
+def test_generate_factoring_techniques_worksheet_is_deterministic() -> None:
+    first = generate_factoring_techniques_worksheet(
+        "Factoring techniques",
+        "easy",
+        4,
+        "factoring",
+    )
+    second = generate_factoring_techniques_worksheet(
+        "Factoring techniques",
+        "easy",
+        4,
+        "factoring",
+    )
+
+    assert first == second
+    assert [problem.problem_id for problem in first.problems] == [
+        "factoring-001",
+        "factoring-002",
+        "factoring-003",
+        "factoring-004",
+    ]
+
+
+def test_generate_factoring_techniques_worksheet_creates_expected_strategies() -> None:
+    worksheet = generate_factoring_techniques_worksheet(
+        "Factoring techniques",
+        "easy",
+        3,
+        "factor",
+    )
+
+    strategies = [problem.metadata["strategy"] for problem in worksheet.problems]
+
+    assert strategies == [
+        "greatest common factor",
+        "difference of squares",
+        "simple trinomial",
+    ]
+    assert worksheet.problems[0].prompt == "Factor completely: 6*x + 8"
+    assert worksheet.problems[0].answer == "2*(3*x + 4)"
+    assert worksheet.problems[1].answer == "(x - 2)*(x + 2)"
+    assert worksheet.problems[2].answer == "(x + 2)*(x + 3)"
+
+
+def test_generated_factoring_answers_expand_to_original_expressions() -> None:
+    worksheet = generate_factoring_techniques_worksheet(
+        topic="Factoring techniques",
+        difficulty="easy",
+        count=6,
+        start_id="factoring",
+    )
+
+    for problem in worksheet.problems:
+        assert _factoring_answer_is_valid(
+            problem.metadata["expression"],
+            problem.metadata["factored_form"],
+        )
+
+
+def test_generate_factoring_techniques_worksheet_rejects_invalid_count() -> None:
+    with pytest.raises(ValueError, match="count must be positive"):
+        generate_factoring_techniques_worksheet(
+            "Factoring techniques",
+            "easy",
+            0,
+            "factoring",
+        )
+
+
 def _system_solution_is_valid(metadata: Mapping[str, str]) -> bool:
     """Return whether generated system metadata describes a valid solution."""
     x_symbol = Symbol("x")
@@ -280,3 +366,8 @@ def _system_solution_is_valid(metadata: Mapping[str, str]) -> bool:
             return False
 
     return True
+
+
+def _factoring_answer_is_valid(expression: str, factored_form: str) -> bool:
+    """Return whether a generated factorization expands correctly."""
+    return simplify(sympify(expression) - sympify(factored_form).expand()) == 0
