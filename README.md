@@ -100,6 +100,14 @@ Run the test suite:
 pytest
 ```
 
+## Continuous Integration
+
+GitHub Actions runs the existing pytest suite on Python 3.11 and Python 3.12 for pushes and pull requests. The workflow installs dependencies from `requirements.txt` and runs:
+
+```bash
+python -B -m pytest -p no:cacheprovider tests
+```
+
 ## Screenshots
 
 Screenshots will be added as the MVP interface stabilizes.
@@ -127,7 +135,7 @@ Current work includes a curriculum-alignment milestone with a deterministic Coll
 
 - Example files currently cover only an older linear-equations worksheet sample and should be refreshed.
 - `docs/` is present for future supplemental documentation but has no published guide content yet.
-- Continuous integration is not configured yet.
+- Continuous integration currently runs the pytest suite on Python 3.11 and Python 3.12.
 - There is no deployment workflow or production hosting configuration.
 - Accessibility and browser behavior need broader manual QA beyond automated exporter tests.
 - Some topic-specific generator internals remain explicit and topic-specific; the central registry now handles top-level topic discovery and routing.

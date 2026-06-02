@@ -63,19 +63,23 @@ When application code changes are approved, contributions should:
 - Add focused tests for new behavior.
 - Document known limitations.
 
+## Continuous Integration
+
+GitHub Actions runs the pytest suite on Python 3.11 and Python 3.12 for pushes and pull requests. The workflow installs dependencies from `requirements.txt` and runs `python -B -m pytest -p no:cacheprovider tests`.
+
 When adding a supported topic, keep routing centralized in `topics/registry.py`. Add deterministic generator behavior, resource-pack behavior if supported, registry metadata, curriculum metadata, and tests together.
 
 Use [docs/ADDING_TOPICS.md](docs/ADDING_TOPICS.md) as the checklist for future topic additions.
 
 ## Current Non-Features
 
-The MVP intentionally has no AI or LLM integration, Canvas integration, database, authentication, external API, production deployment, CI workflow, or production hosting configuration.
+The MVP intentionally has no AI or LLM integration, Canvas integration, database, authentication, external API, production deployment workflow, or production hosting configuration.
 
 ## Known Limitations
 
 - Example outputs are stale and do not yet show the current full resource-pack flow.
 - `docs/` is currently a placeholder folder.
-- CI and deployment workflows are not configured.
+- CI runs the pytest suite on Python 3.11 and Python 3.12; deployment workflows are not configured.
 - Accessibility and browser QA need more coverage before broader release.
 - Top-level topic routing now uses `topics/registry.py`; topic-specific generator internals remain explicit and should stay small.
 

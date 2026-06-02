@@ -133,13 +133,13 @@ Success criteria:
 
 ## Current Non-Features
 
-The current MVP has no AI or LLM integration, Canvas integration, database, authentication, external API, production deployment, CI workflow, or production hosting configuration.
+The current MVP has no AI or LLM integration, Canvas integration, database, authentication, external API, production deployment workflow, or production hosting configuration.
 
 ## Known Limitations
 
 - Example files are stale and cover only an older linear-equations worksheet sample.
 - `docs/` is currently an empty placeholder folder.
-- CI and deployment workflows are not configured.
+- CI runs the pytest suite on Python 3.11 and Python 3.12; deployment workflows are not configured.
 - Accessibility and browser QA are limited.
 - Top-level topic routing is centralized in a supported-topic registry; some topic-specific internals remain intentionally explicit.
 

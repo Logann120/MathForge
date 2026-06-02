@@ -224,7 +224,7 @@ Generated content is deterministic and instructor-reviewable. Future AI-assisted
 
 - Example exports are stale and currently show only an older linear-equations worksheet sample.
 - `docs/` exists as a placeholder folder but has no supplemental guides yet.
-- Continuous integration is not configured.
+- Continuous integration runs the pytest suite on Python 3.11 and Python 3.12.
 - There is no deployment workflow.
 - Accessibility and browser QA are limited and should be expanded before broader release.
 - Top-level topic routing is centralized in `topics/registry.py`; topic-specific generator internals remain explicit.

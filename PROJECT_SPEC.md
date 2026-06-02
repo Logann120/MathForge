@@ -173,7 +173,7 @@ MVP 0.1 work is considered complete when:
 
 - Example exports are stale and currently show an older linear-equations worksheet sample.
 - `docs/` exists as a placeholder folder and does not yet contain supplemental guides.
-- Continuous integration is not configured.
+- Continuous integration runs the pytest suite on Python 3.11 and Python 3.12.
 - There is no deployment workflow.
 - Accessibility and browser QA are limited beyond automated tests and Streamlit smoke coverage.
 - Top-level topic discovery and routing now use a supported-topic registry; topic-specific generator internals remain explicit and should stay small.

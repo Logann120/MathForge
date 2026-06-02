@@ -123,7 +123,7 @@ For implementation tasks:
 
 - Example exports are stale and should be refreshed.
 - `docs/` is present but empty.
-- CI and deployment workflows are not configured.
+- CI runs the pytest suite on Python 3.11 and Python 3.12; deployment workflows are not configured.
 - Accessibility and browser QA remain limited.
 - Top-level topic routing now uses `topics/registry.py`; topic-specific generator internals remain explicit.
 - There is no AI or LLM integration, Canvas integration, database, authentication, API, or production deployment.
