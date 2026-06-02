@@ -52,7 +52,10 @@ Review both generation modes and both output types.
 - Confirm `College Algebra` appears as the current course.
 - Select each module and confirm its learning objective is readable.
 - Confirm the selected learning objective caption appears before generation.
+- Confirm the Learning Objective Context summary appears before generation.
+- Confirm the context summary includes course, module, selected objective, mapped topic, and planned output type.
 - Generate output from at least one objective and confirm it matches the selected topic.
+- Confirm the generated-output summary identifies `Learning Objective mode` and includes course, module, objective, and mapped topic.
 
 ### Worksheet Only
 
@@ -159,6 +162,7 @@ Use a browser and basic keyboard navigation. When practical, also inspect the HT
 - [ ] Topic mode generates worksheet-only output for every supported topic.
 - [ ] Topic mode generates full resource packs for every supported topic.
 - [ ] Learning Objective mode exposes College Algebra modules and objectives.
+- [ ] Learning Objective mode shows course/module/objective context and mapped topic before generation.
 - [ ] Learning Objective mode generates at least one worksheet and one full resource pack.
 - [ ] Worksheet previews show problems and solution steps.
 - [ ] Resource-pack previews show study guide, common mistakes, tutor notes, and practice quiz.

@@ -36,7 +36,8 @@ def test_topic_mode_generates_linear_worksheet() -> None:
     assert "Linear equations Worksheet" in test_app.text_area[0].value
     assert "Generated Output Summary" in _subheader_values(test_app)
     assert "**Output type:** Worksheet" in _summary_markdown(test_app)
-    assert "**Context:** Linear equations" in _summary_markdown(test_app)
+    assert "**Generation mode:** Topic mode" in _summary_markdown(test_app)
+    assert "**Topic:** Linear equations" in _summary_markdown(test_app)
     assert "Download Worksheet Markdown" in _download_labels(test_app)
     assert "Download Worksheet HTML" in _download_labels(test_app)
 
@@ -118,6 +119,16 @@ def test_learning_objective_mode_exposes_college_algebra_objectives() -> None:
         in caption.value
         for caption in test_app.caption
     )
+    assert "Learning Objective Context" in _subheader_values(test_app)
+    objective_context = _learning_objective_context_markdown(test_app)
+    assert "**Course:** College Algebra" in objective_context
+    assert "**Module:** Linear Equations" in objective_context
+    assert (
+        "**Learning objective:** Solve linear equations in one variable"
+        in objective_context
+    )
+    assert "**Mapped topic:** Linear equations" in objective_context
+    assert "**Planned output:** Worksheet only" in objective_context
 
 
 def test_learning_objective_mode_exposes_quadratic_objective() -> None:
@@ -202,6 +213,24 @@ def test_worksheet_summary_includes_export_filenames_and_download_types() -> Non
     assert "**Available downloads:** Markdown, HTML, ZIP bundle" in summary
 
 
+def test_learning_objective_mode_generated_summary_includes_curriculum_context() -> None:
+    test_app = _run_app()
+
+    test_app.radio[1].set_value("Learning Objective mode").run()
+    test_app.button[0].click().run()
+
+    summary = _summary_markdown(test_app)
+
+    assert not test_app.exception
+    assert "**Output type:** Worksheet" in summary
+    assert "**Generation mode:** Learning Objective mode" in summary
+    assert "**Course:** College Algebra" in summary
+    assert "**Module:** Linear Equations" in summary
+    assert "**Learning objective:** Solve linear equations in one variable" in summary
+    assert "**Mapped topic:** Linear equations" in summary
+    assert "**Problem ID prefix:** `linear`" in summary
+
+
 def test_generation_preset_selector_exposes_built_in_presets() -> None:
     test_app = _run_app()
 
@@ -248,6 +277,7 @@ def test_full_tutor_resource_pack_preset_generates_resource_pack() -> None:
     assert test_app.number_input[0].value == 5
     assert "Study Guide" in _tab_labels(test_app)
     assert "**Output type:** Full Resource Pack" in _summary_markdown(test_app)
+    assert "**Generation mode:** Topic mode" in _summary_markdown(test_app)
     assert "Download Resource Pack Export Bundle" in _download_labels(test_app)
 
 
@@ -313,5 +343,13 @@ def _summary_markdown(test_app: AppTest) -> str:
     """Return the generated-output summary Markdown."""
     for element in test_app.markdown:
         if "**Output type:**" in element.value:
+            return element.value
+    return ""
+
+
+def _learning_objective_context_markdown(test_app: AppTest) -> str:
+    """Return the pre-generation learning-objective context Markdown."""
+    for element in test_app.markdown:
+        if "**Planned output:**" in element.value:
             return element.value
     return ""

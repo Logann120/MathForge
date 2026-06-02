@@ -37,7 +37,11 @@ from models.resource_pack import (
     TutorNotes,
 )
 from templates.course_templates import college_algebra_template
-from topics.registry import find_topic_by_label, supported_topic_labels
+from topics.registry import (
+    find_topic_by_label,
+    find_topic_by_learning_objective_topic,
+    supported_topic_labels,
+)
 
 
 LOGGER = logging.getLogger(__name__)
@@ -102,9 +106,18 @@ def main() -> None:
     )
 
     learning_objective: LearningObjective | None = None
+    generation_context: GenerationContext
     if generation_mode == "Learning Objective mode":
-        learning_objective = _select_learning_objective(st, college_algebra_template())
+        learning_selection = _select_learning_objective(
+            st,
+            college_algebra_template(),
+            output_type=output_type,
+        )
+        learning_objective = learning_selection.learning_objective
         topic = learning_objective.topic
+        generation_context = GenerationContext.from_learning_objective_selection(
+            learning_selection
+        )
     else:
         topic = st.selectbox(
             "Topic",
@@ -112,6 +125,7 @@ def main() -> None:
             index=_option_index(TOPIC_OPTIONS, preset.topic_label),
             key=f"topic_{preset_key}",
         )
+        generation_context = GenerationContext.topic_mode(topic)
 
     difficulty_label = st.selectbox(
         "Difficulty",
@@ -156,7 +170,7 @@ def main() -> None:
                         count=int(count),
                         start_id=start_id,
                     )
-                _render_resource_pack(st, resource_pack)
+                _render_resource_pack(st, resource_pack, generation_context)
                 return
 
             worksheet = _generate_worksheet_for_topic(
@@ -165,7 +179,7 @@ def main() -> None:
                 count=int(count),
                 start_id=start_id,
             )
-            _render_worksheet(st, worksheet)
+            _render_worksheet(st, worksheet, generation_context)
         except (TypeError, ValueError) as exc:
             LOGGER.warning("MathForge generation failed: %s", exc)
             st.error(
@@ -246,8 +260,10 @@ def _widget_key(value: str) -> str:
 def _select_learning_objective(
     st: Any,
     course_template: CourseTemplate,
-) -> LearningObjective:
-    """Render curriculum selectors and return the selected learning objective."""
+    *,
+    output_type: str,
+) -> "LearningObjectiveSelection":
+    """Render curriculum selectors and return selected learning-objective context."""
     st.selectbox("Course", options=(course_template.title,))
     selected_module_title = st.selectbox(
         "Module",
@@ -265,8 +281,15 @@ def _select_learning_objective(
         selected_module,
         selected_objective_description,
     )
+    selection = LearningObjectiveSelection(
+        course_title=course_template.title,
+        module_title=selected_module.title,
+        learning_objective=learning_objective,
+        mapped_topic=_mapped_topic_label(learning_objective),
+    )
     st.caption(f"Selected learning objective: {learning_objective.description}")
-    return learning_objective
+    _render_learning_objective_context_summary(st, selection, output_type)
+    return selection
 
 
 def _find_module(course_template: CourseTemplate, title: str) -> CourseModule:
@@ -288,7 +311,85 @@ def _find_learning_objective(
     raise ValueError(f"unknown learning objective: {description}")
 
 
-def _render_worksheet(st: Any, worksheet: Worksheet) -> None:
+def _mapped_topic_label(learning_objective: LearningObjective) -> str:
+    """Return the registry topic label mapped to a learning objective."""
+    try:
+        return find_topic_by_learning_objective_topic(
+            learning_objective.topic
+        ).display_label
+    except ValueError:
+        return "Not mapped"
+
+
+def _render_learning_objective_context_summary(
+    st: Any,
+    selection: "LearningObjectiveSelection",
+    output_type: str,
+) -> None:
+    """Render selected learning-objective context before generation."""
+    st.subheader("Learning Objective Context")
+    st.markdown(
+        "\n".join(
+            (
+                f"- **Course:** {selection.course_title}",
+                f"- **Module:** {selection.module_title}",
+                (
+                    "- **Learning objective:** "
+                    f"{selection.learning_objective.description}"
+                ),
+                f"- **Mapped topic:** {selection.mapped_topic}",
+                f"- **Planned output:** {output_type}",
+            )
+        )
+    )
+
+
+@dataclass(frozen=True, slots=True)
+class LearningObjectiveSelection:
+    """Selected curriculum context for Learning Objective mode."""
+
+    course_title: str
+    module_title: str
+    learning_objective: LearningObjective
+    mapped_topic: str
+
+
+@dataclass(frozen=True, slots=True)
+class GenerationContext:
+    """Generation mode context for preview summaries."""
+
+    mode: str
+    topic: str = ""
+    course_title: str = ""
+    module_title: str = ""
+    learning_objective: str = ""
+    mapped_topic: str = ""
+
+    @classmethod
+    def topic_mode(cls, topic: str) -> "GenerationContext":
+        """Return context for Topic mode generation."""
+        return cls(mode="Topic mode", topic=topic)
+
+    @classmethod
+    def from_learning_objective_selection(
+        cls,
+        selection: LearningObjectiveSelection,
+    ) -> "GenerationContext":
+        """Return context for Learning Objective mode generation."""
+        return cls(
+            mode="Learning Objective mode",
+            course_title=selection.course_title,
+            module_title=selection.module_title,
+            learning_objective=selection.learning_objective.description,
+            mapped_topic=selection.mapped_topic,
+        )
+
+
+def _render_worksheet(
+    st: Any,
+    worksheet: Worksheet,
+    generation_context: GenerationContext,
+) -> None:
     """Render previews and exports for a generated worksheet."""
     markdown_export = export_worksheet_to_markdown(worksheet, include_solutions=True)
     html_export = export_worksheet_to_html(worksheet, include_solutions=True)
@@ -302,13 +403,14 @@ def _render_worksheet(st: Any, worksheet: Worksheet) -> None:
     with solution_tab:
         _render_solution_key_preview(st, worksheet)
     with exports_tab:
-        _render_worksheet_exports(st, markdown_export, html_export)
+        _render_worksheet_exports(st, markdown_export, html_export, generation_context)
 
 
 def _render_worksheet_exports(
     st: Any,
     markdown_export: ExportResult,
     html_export: ExportResult,
+    generation_context: GenerationContext,
 ) -> None:
     """Render worksheet export controls."""
     markdown_download = with_download_filename(markdown_export)
@@ -323,6 +425,7 @@ def _render_worksheet_exports(
         st,
         output_type="Worksheet",
         worksheet=WorksheetSummary.from_export(markdown_download),
+        generation_context=generation_context,
         markdown_filename=markdown_download.filename,
         html_filename=html_download.filename,
         bundle_filename=export_bundle.filename,
@@ -363,7 +466,11 @@ def _render_worksheet_exports(
         )
 
 
-def _render_resource_pack(st: Any, resource_pack: ResourcePack) -> None:
+def _render_resource_pack(
+    st: Any,
+    resource_pack: ResourcePack,
+    generation_context: GenerationContext,
+) -> None:
     """Render previews and Markdown export for a full resource pack."""
     markdown_export = export_resource_pack_to_markdown(
         resource_pack,
@@ -414,13 +521,19 @@ def _render_resource_pack(st: Any, resource_pack: ResourcePack) -> None:
         else:
             _render_practice_quiz(st, resource_pack.practice_quiz)
     with exports_tab:
-        _render_resource_pack_exports(st, markdown_export, html_export)
+        _render_resource_pack_exports(
+            st,
+            markdown_export,
+            html_export,
+            generation_context,
+        )
 
 
 def _render_resource_pack_exports(
     st: Any,
     markdown_export: ExportResult,
     html_export: ExportResult,
+    generation_context: GenerationContext,
 ) -> None:
     """Render resource pack export controls."""
     markdown_download = with_download_filename(markdown_export)
@@ -435,6 +548,7 @@ def _render_resource_pack_exports(
         st,
         output_type="Full Resource Pack",
         worksheet=WorksheetSummary.from_export(markdown_download),
+        generation_context=generation_context,
         markdown_filename=markdown_download.filename,
         html_filename=html_download.filename,
         bundle_filename=export_bundle.filename,
@@ -480,6 +594,7 @@ def _render_generated_output_summary(
     *,
     output_type: str,
     worksheet: "WorksheetSummary",
+    generation_context: GenerationContext,
     markdown_filename: str,
     html_filename: str,
     bundle_filename: str,
@@ -491,6 +606,7 @@ def _render_generated_output_summary(
             _generated_output_summary_lines(
                 output_type=output_type,
                 worksheet=worksheet,
+                generation_context=generation_context,
                 markdown_filename=markdown_filename,
                 html_filename=html_filename,
                 bundle_filename=bundle_filename,
@@ -503,6 +619,7 @@ def _generated_output_summary_lines(
     *,
     output_type: str,
     worksheet: "WorksheetSummary",
+    generation_context: GenerationContext,
     markdown_filename: str,
     html_filename: str,
     bundle_filename: str,
@@ -510,7 +627,8 @@ def _generated_output_summary_lines(
     """Return Markdown lines for the generated output summary."""
     lines = [
         f"- **Output type:** {output_type}",
-        f"- **Context:** {worksheet.context}",
+        f"- **Generation mode:** {generation_context.mode}",
+        *_generation_context_lines(generation_context, worksheet),
         f"- **Difficulty:** {worksheet.difficulty}",
         f"- **Problem count:** {worksheet.problem_count}",
         f"- **Problem ID prefix:** `{worksheet.problem_id_prefix}`",
@@ -521,6 +639,23 @@ def _generated_output_summary_lines(
         "- **Available downloads:** Markdown, HTML, ZIP bundle",
     ]
     return tuple(lines)
+
+
+def _generation_context_lines(
+    generation_context: GenerationContext,
+    worksheet: "WorksheetSummary",
+) -> tuple[str, ...]:
+    """Return summary lines for Topic mode or Learning Objective mode."""
+    if generation_context.mode == "Learning Objective mode":
+        return (
+            f"- **Course:** {generation_context.course_title}",
+            f"- **Module:** {generation_context.module_title}",
+            f"- **Learning objective:** {generation_context.learning_objective}",
+            f"- **Mapped topic:** {generation_context.mapped_topic}",
+        )
+
+    topic = generation_context.topic or worksheet.context
+    return (f"- **Topic:** {topic}",)
 
 
 @dataclass(frozen=True, slots=True)
