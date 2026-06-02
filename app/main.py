@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from exporters.bundle_exporter import create_export_bundle
 from exporters.html_exporter import export_resource_pack_to_html, export_worksheet_to_html
 from exporters.markdown_exporter import (
     export_resource_pack_to_markdown,
@@ -257,6 +258,8 @@ def _render_worksheet_exports(
     html_export: ExportResult,
 ) -> None:
     """Render worksheet export controls."""
+    export_bundle = create_export_bundle((markdown_export, html_export))
+
     st.header("Exports")
     st.download_button(
         label="Download Worksheet Markdown",
@@ -269,6 +272,12 @@ def _render_worksheet_exports(
         data=html_export.content,
         file_name=html_export.filename,
         mime="text/html",
+    )
+    st.download_button(
+        label="Download Worksheet Export Bundle",
+        data=export_bundle.content,
+        file_name=export_bundle.filename,
+        mime=export_bundle.mime_type,
     )
 
     with st.expander("Markdown export text"):
@@ -348,6 +357,8 @@ def _render_resource_pack_exports(
     html_export: ExportResult,
 ) -> None:
     """Render resource pack export controls."""
+    export_bundle = create_export_bundle((markdown_export, html_export))
+
     st.header("Resource Pack Export")
     st.download_button(
         label="Download Resource Pack Markdown",
@@ -360,6 +371,12 @@ def _render_resource_pack_exports(
         data=html_export.content,
         file_name=html_export.filename,
         mime="text/html",
+    )
+    st.download_button(
+        label="Download Resource Pack Export Bundle",
+        data=export_bundle.content,
+        file_name=export_bundle.filename,
+        mime=export_bundle.mime_type,
     )
 
     with st.expander("Resource pack Markdown export text"):

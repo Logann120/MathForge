@@ -111,7 +111,8 @@ Current implementation:
 
 - `exporters/markdown_exporter.py` renders worksheets and full resource packs to Markdown.
 - `exporters/html_exporter.py` renders worksheets and full resource packs to portable semantic HTML.
-- Exporters do not generate problems and reuse worksheet rendering behavior where appropriate.
+- `exporters/bundle_exporter.py` packages already-rendered exports into ZIP convenience downloads using Python standard-library tools.
+- Exporters do not generate problems and reuse worksheet rendering behavior where appropriate. ZIP bundles do not replace individual Markdown or HTML exports.
 
 ### Supported Topic Registry
 
@@ -161,7 +162,8 @@ Current implementation:
 4. The validation layer checks generated answers with SymPy where practical.
 5. Resource-pack generators optionally assemble study guides, common mistakes, tutor notes, and practice quizzes.
 6. Exporters render Markdown or semantic HTML.
-7. The UI offers previews and download actions.
+7. Optional ZIP bundle helpers group related rendered exports.
+8. The UI offers previews and download actions.
 
 ## Core Data Concepts
 
@@ -223,8 +225,8 @@ Generated content is deterministic and instructor-reviewable. Future AI-assisted
 
 ## Known Limitations
 
-- Example exports are stale and currently show only an older linear-equations worksheet sample.
-- `docs/` exists as a placeholder folder but has no supplemental guides yet.
+- Example exports should be periodically checked against current generated output.
+- ZIP bundles currently include the rendered exports already available in the active export panel; they do not add separate generated artifacts.
 - Continuous integration runs the pytest suite on Python 3.11 and Python 3.12.
 - There is no deployment workflow.
 - Accessibility and browser QA are limited and should be expanded before broader release.

@@ -55,6 +55,7 @@ Review both generation modes and both output types.
 - Confirm the worksheet preview lists numbered problems.
 - Confirm the solution key preview includes answers and solution steps.
 - Confirm Markdown and HTML download buttons are present.
+- Confirm the worksheet export bundle download is present and does not replace the individual downloads.
 - Expand raw Markdown and HTML export text areas and confirm they are readable.
 
 ### Full Resource Pack
@@ -67,13 +68,16 @@ Review both generation modes and both output types.
 - Confirm tutor notes include notes and discussion prompts.
 - Confirm the practice quiz includes questions and an answer key.
 - Confirm Resource Pack Markdown and HTML download buttons are present.
+- Confirm the resource-pack export bundle download is present and does not replace the individual downloads.
 - Expand raw export text areas and confirm the content includes all resource-pack sections.
 
 ### Downloads
 
 - Download worksheet Markdown and HTML.
 - Download resource-pack Markdown and HTML.
+- Download worksheet and resource-pack ZIP bundles.
 - Confirm filenames are clear and topic-specific.
+- Confirm ZIP bundles contain the same Markdown and HTML files offered by the individual buttons.
 - Open downloaded HTML in a browser and confirm it renders without obvious broken markup.
 - Open downloaded Markdown in a text editor and confirm it is readable as plain text.
 
@@ -146,6 +150,7 @@ Use a browser and basic keyboard navigation. When practical, also inspect the HT
 - [ ] Resource-pack previews show study guide, common mistakes, tutor notes, and practice quiz.
 - [ ] Markdown export text areas and downloads work for worksheet-only and resource-pack output.
 - [ ] HTML export text areas and downloads work for worksheet-only and resource-pack output.
+- [ ] ZIP export bundles download for worksheet-only and resource-pack output.
 - [ ] Downloaded HTML opens in a browser and has sensible semantic structure.
 - [ ] Downloaded Markdown is readable when opened as plain text.
 - [ ] Browser zoom and print preview remain readable.

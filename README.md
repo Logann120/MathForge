@@ -30,10 +30,12 @@ The current MVP supports:
 - Validating generated answers using SymPy
 - Exporting worksheets to Markdown
 - Exporting worksheets to accessible HTML
+- Downloading worksheet Markdown and HTML together as a ZIP convenience bundle
 - Generating full instructional resource packs with study guides, common mistakes, and tutor notes
 - Generating practice quizzes inside full instructional resource packs
 - Exporting full resource packs to Markdown
 - Exporting full resource packs to accessible HTML
+- Downloading resource-pack Markdown and HTML together as a ZIP convenience bundle
 - Generating materials from sample College Algebra learning objectives for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics
 
 ## Future Direction
@@ -65,12 +67,12 @@ MathForge is organized around small, testable Python modules:
 - `app/` contains the Streamlit MVP interface.
 - `generator/` contains deterministic worksheet, resource pack, and curriculum-aligned generation.
 - `models/` contains dataclasses for worksheets, problems, solutions, exports, curriculum objects, and resource packs.
-- `exporters/` contains Markdown and accessible HTML exporters for worksheets and resource packs.
+- `exporters/` contains Markdown and accessible HTML exporters for worksheets and resource packs, plus standard-library ZIP bundle helpers for grouping already-rendered exports.
 - `validators/` contains SymPy-based validation helpers.
 - `templates/` contains the deterministic College Algebra course template.
 - `topics/` contains the supported-topic registry for topic labels, routing, defaults, and curriculum metadata.
 - `tests/` contains unit and smoke tests for the implemented MVP behavior.
-- `docs/` is reserved for supplemental documentation and currently contains no published guide content.
+- `docs/` contains supplemental guides for topic additions and manual QA.
 
 The app is intentionally deterministic and instructor-reviewable. It does not call AI services, persist user data, publish to Canvas, expose an API, or run as a deployed production service.
 
@@ -128,14 +130,14 @@ Screenshots will be added as the MVP interface stabilizes.
 
 ## Current Status
 
-MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics, resource pack generation with practice quizzes, SymPy validation, Markdown export, HTML export, and demo-ready Streamlit UI are implemented and covered by automated tests.
+MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics, resource pack generation with practice quizzes, SymPy validation, Markdown export, HTML export, optional ZIP export bundles, and demo-ready Streamlit UI are implemented and covered by automated tests.
 
 Current work includes a curriculum-alignment milestone with a deterministic College Algebra template. Next work should focus on hardening, documentation, accessibility review, careful topic expansion, and keeping the implementation small and maintainable.
 
 ## Known Limitations
 
-- Example files currently cover only an older linear-equations worksheet sample and should be refreshed.
-- `docs/` is present for future supplemental documentation but has no published guide content yet.
+- Example files should be periodically checked against current generated output as topics and resource-pack sections evolve.
+- ZIP export bundles are convenience downloads for already-rendered Markdown and HTML files; individual export buttons remain the source of each format.
 - Continuous integration currently runs the pytest suite on Python 3.11 and Python 3.12.
 - There is no deployment workflow or production hosting configuration.
 - Accessibility and browser behavior need broader manual QA beyond automated exporter tests.

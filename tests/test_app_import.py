@@ -176,6 +176,7 @@ def test_worksheet_only_ui_exposes_worksheet_exports() -> None:
     assert _download_labels(test_app) == [
         "Download Worksheet Markdown",
         "Download Worksheet HTML",
+        "Download Worksheet Export Bundle",
     ]
     assert test_app.text_area[0].label == "Markdown"
     assert test_app.text_area[1].label == "HTML"
@@ -200,6 +201,7 @@ def test_full_resource_pack_ui_exposes_resource_pack_exports() -> None:
     assert _download_labels(test_app) == [
         "Download Resource Pack Markdown",
         "Download Resource Pack HTML",
+        "Download Resource Pack Export Bundle",
     ]
     assert test_app.text_area[0].label == "Resource Pack Markdown"
     assert test_app.text_area[1].label == "Resource Pack HTML"
