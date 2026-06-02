@@ -71,6 +71,8 @@ When adding a supported topic, keep routing centralized in `topics/registry.py`.
 
 Use [docs/ADDING_TOPICS.md](docs/ADDING_TOPICS.md) as the checklist for future topic additions.
 
+Use [docs/MANUAL_QA.md](docs/MANUAL_QA.md) before major UI, exporter, or topic changes.
+
 ## Current Non-Features
 
 The MVP intentionally has no AI or LLM integration, Canvas integration, database, authentication, external API, production deployment workflow, or production hosting configuration.

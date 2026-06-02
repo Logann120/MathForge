@@ -124,6 +124,7 @@ Screenshots will be added as the MVP interface stabilizes.
 - [AGENTS.md](AGENTS.md) provides guidance for contributors and coding agents working in this repository.
 - [CONTRIBUTING.md](CONTRIBUTING.md) explains how to contribute to the current MVP without weakening maintainability or accessibility.
 - [docs/ADDING_TOPICS.md](docs/ADDING_TOPICS.md) explains how to add a supported topic through the registry.
+- [docs/MANUAL_QA.md](docs/MANUAL_QA.md) provides manual QA and accessibility review guidance.
 
 ## Current Status
 

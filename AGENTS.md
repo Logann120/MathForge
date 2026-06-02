@@ -100,6 +100,8 @@ Future topic additions should update deterministic generators, add one `topics/r
 
 Use `docs/ADDING_TOPICS.md` as the source checklist for supported-topic additions.
 
+Use `docs/MANUAL_QA.md` for manual Streamlit, Markdown export, and HTML accessibility review before major user-facing changes.
+
 ## Change Discipline
 
 Before editing, inspect the existing repository state and read relevant files.

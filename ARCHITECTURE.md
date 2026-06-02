@@ -187,6 +187,7 @@ HTML exporters should:
 - Avoid layout structures that confuse assistive technologies.
 - Avoid color-only meaning.
 - Include document language and metadata when practical.
+- Follow `docs/MANUAL_QA.md` for manual accessibility review.
 
 Markdown exporters should:
 
