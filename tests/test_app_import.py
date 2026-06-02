@@ -5,6 +5,7 @@ from collections.abc import Callable
 from streamlit.testing.v1 import AppTest
 
 import app.main
+from topics.registry import supported_topic_labels
 
 
 def test_app_main_imports_without_running_streamlit_app() -> None:
@@ -18,10 +19,7 @@ def test_app_main_imports_without_running_streamlit_app() -> None:
     assert isinstance(app.main.export_resource_pack_to_markdown, Callable)
     assert isinstance(app.main.export_resource_pack_to_html, Callable)
     assert isinstance(app.main.college_algebra_template, Callable)
-    assert "Quadratic equations by factoring" in app.main.TOPIC_OPTIONS
-    assert "Systems of linear equations" in app.main.TOPIC_OPTIONS
-    assert "Factoring techniques" in app.main.TOPIC_OPTIONS
-    assert "Functions basics" in app.main.TOPIC_OPTIONS
+    assert app.main.TOPIC_OPTIONS == supported_topic_labels()
 
 
 def test_topic_mode_generates_linear_worksheet() -> None:

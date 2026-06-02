@@ -14,6 +14,45 @@ from topics.registry import (
 )
 
 
+EXPECTED_TOPIC_SNAPSHOT = (
+    (
+        "linear-equations",
+        "Linear equations",
+        "linear",
+        "Linear Equations",
+        "Solve linear equations in one variable",
+    ),
+    (
+        "quadratic-equations-by-factoring",
+        "Quadratic equations by factoring",
+        "quadratic",
+        "Quadratic Equations",
+        "Solve quadratic equations by factoring",
+    ),
+    (
+        "systems-of-linear-equations",
+        "Systems of linear equations",
+        "systems",
+        "Systems of Equations",
+        "Solve systems of linear equations in two variables",
+    ),
+    (
+        "factoring-techniques",
+        "Factoring techniques",
+        "factoring",
+        "Factoring Techniques",
+        "Factor polynomial expressions using common factoring strategies",
+    ),
+    (
+        "functions-basics",
+        "Functions basics",
+        "functions",
+        "Functions",
+        "Evaluate and interpret functions using function notation",
+    ),
+)
+
+
 def test_supported_topics_are_in_ui_display_order() -> None:
     assert supported_topic_labels() == (
         "Linear equations",
@@ -22,6 +61,27 @@ def test_supported_topics_are_in_ui_display_order() -> None:
         "Factoring techniques",
         "Functions basics",
     )
+
+
+def test_supported_topic_snapshot_preserves_labels_prefixes_and_objectives() -> None:
+    snapshot = tuple(
+        (
+            topic.slug,
+            topic.display_label,
+            topic.default_problem_id_prefix,
+            topic.curriculum_module_title,
+            topic.curriculum_objective_description,
+        )
+        for topic in supported_topics()
+    )
+
+    assert snapshot == EXPECTED_TOPIC_SNAPSHOT
+
+
+def test_supported_topics_use_current_output_types_and_difficulty() -> None:
+    for topic in supported_topics():
+        assert topic.supported_output_types == ("worksheet", "resource_pack")
+        assert topic.supported_difficulty_levels == ("easy",)
 
 
 def test_supported_topics_include_expected_metadata() -> None:
@@ -52,6 +112,20 @@ def test_find_topic_by_learning_objective_topic_uses_aliases() -> None:
     )
 
     assert topic.display_label == "Systems of linear equations"
+
+
+def test_learning_objective_topic_aliases_are_exact_not_fuzzy() -> None:
+    unsupported_near_matches = (
+        "linear equations and inequalities",
+        "quadratic equations with the quadratic formula",
+        "systems of nonlinear equations",
+        "factoring rational expressions",
+        "function transformations",
+    )
+
+    for topic_text in unsupported_near_matches:
+        with pytest.raises(ValueError, match="unsupported learning objective topic"):
+            find_topic_by_learning_objective_topic(topic_text)
 
 
 def test_registry_generators_produce_current_model_types() -> None:

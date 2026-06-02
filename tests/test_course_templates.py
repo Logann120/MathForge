@@ -1,6 +1,7 @@
 """Tests for deterministic course templates."""
 
 from templates.course_templates import college_algebra_template
+from topics.registry import supported_topics
 
 
 def test_college_algebra_template_contains_linear_equations_module() -> None:
@@ -82,3 +83,22 @@ def test_college_algebra_template_is_deterministic() -> None:
     second = college_algebra_template()
 
     assert first == second
+
+
+def test_college_algebra_template_uses_supported_topic_registry() -> None:
+    course_template = college_algebra_template()
+
+    assert tuple(module.module_id for module in course_template.modules) == tuple(
+        topic.curriculum_module_id for topic in supported_topics()
+    )
+    assert tuple(module.title for module in course_template.modules) == tuple(
+        topic.curriculum_module_title for topic in supported_topics()
+    )
+    assert tuple(
+        module.learning_objectives[0].objective_id
+        for module in course_template.modules
+    ) == tuple(topic.curriculum_objective_id for topic in supported_topics())
+    assert tuple(
+        module.learning_objectives[0].topic
+        for module in course_template.modules
+    ) == tuple(topic.display_label for topic in supported_topics())

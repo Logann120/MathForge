@@ -48,6 +48,8 @@ class SupportedTopic:
     curriculum_objective_id: str
     curriculum_objective_description: str
     curriculum_standards: tuple[str, ...]
+    # Aliases are exact normalized matches for curriculum objective topics.
+    # Avoid broad phrases that could accidentally route a future topic.
     topic_aliases: tuple[str, ...]
 
 
