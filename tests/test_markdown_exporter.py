@@ -31,6 +31,7 @@ def test_export_worksheet_to_markdown_returns_export_result() -> None:
     assert result.metadata["topic"] == "Linear equations"
     assert result.metadata["difficulty"] == "easy"
     assert result.metadata["problem_id_prefix"] == "linear"
+    assert result.metadata["problem_count"] == "1"
 
 
 def test_export_worksheet_to_markdown_includes_title_instructions_and_problems() -> None:
@@ -122,6 +123,7 @@ def test_export_resource_pack_to_markdown_returns_export_result() -> None:
     assert result.metadata["topic"] == "Linear equations"
     assert result.metadata["difficulty"] == "easy"
     assert result.metadata["problem_id_prefix"] == "linear"
+    assert result.metadata["problem_count"] == "1"
 
 
 def test_export_resource_pack_to_markdown_includes_all_sections() -> None:

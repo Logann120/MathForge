@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 import logging
 from typing import Any
 
@@ -318,6 +319,14 @@ def _render_worksheet_exports(
     )
 
     st.header("Exports")
+    _render_generated_output_summary(
+        st,
+        output_type="Worksheet",
+        worksheet=WorksheetSummary.from_export(markdown_download),
+        markdown_filename=markdown_download.filename,
+        html_filename=html_download.filename,
+        bundle_filename=export_bundle.filename,
+    )
     st.download_button(
         label="Download Worksheet Markdown",
         data=markdown_download.content,
@@ -422,6 +431,14 @@ def _render_resource_pack_exports(
     )
 
     st.header("Resource Pack Export")
+    _render_generated_output_summary(
+        st,
+        output_type="Full Resource Pack",
+        worksheet=WorksheetSummary.from_export(markdown_download),
+        markdown_filename=markdown_download.filename,
+        html_filename=html_download.filename,
+        bundle_filename=export_bundle.filename,
+    )
     st.download_button(
         label="Download Resource Pack Markdown",
         data=markdown_download.content,
@@ -456,6 +473,92 @@ def _render_resource_pack_exports(
             height=320,
             label_visibility="collapsed",
         )
+
+
+def _render_generated_output_summary(
+    st: Any,
+    *,
+    output_type: str,
+    worksheet: "WorksheetSummary",
+    markdown_filename: str,
+    html_filename: str,
+    bundle_filename: str,
+) -> None:
+    """Render a compact summary of generated output and downloads."""
+    st.subheader("Generated Output Summary")
+    st.markdown(
+        "\n".join(
+            _generated_output_summary_lines(
+                output_type=output_type,
+                worksheet=worksheet,
+                markdown_filename=markdown_filename,
+                html_filename=html_filename,
+                bundle_filename=bundle_filename,
+            )
+        )
+    )
+
+
+def _generated_output_summary_lines(
+    *,
+    output_type: str,
+    worksheet: "WorksheetSummary",
+    markdown_filename: str,
+    html_filename: str,
+    bundle_filename: str,
+) -> tuple[str, ...]:
+    """Return Markdown lines for the generated output summary."""
+    lines = [
+        f"- **Output type:** {output_type}",
+        f"- **Context:** {worksheet.context}",
+        f"- **Difficulty:** {worksheet.difficulty}",
+        f"- **Problem count:** {worksheet.problem_count}",
+        f"- **Problem ID prefix:** `{worksheet.problem_id_prefix}`",
+        "- **Generated export filenames:**",
+        f"  - Markdown: `{markdown_filename}`",
+        f"  - HTML: `{html_filename}`",
+        f"  - ZIP bundle: `{bundle_filename}`",
+        "- **Available downloads:** Markdown, HTML, ZIP bundle",
+    ]
+    return tuple(lines)
+
+
+@dataclass(frozen=True, slots=True)
+class WorksheetSummary:
+    """Small view model for generated-output summary metadata."""
+
+    context: str
+    difficulty: str
+    problem_count: int
+    problem_id_prefix: str
+
+    @classmethod
+    def from_export(cls, export: ExportResult) -> "WorksheetSummary":
+        """Build summary metadata from a rendered export."""
+        return cls(
+            context=(
+                export.metadata.get("learning_objective")
+                or export.metadata.get("topic")
+                or export.metadata.get("worksheet_id")
+                or "Generated material"
+            ),
+            difficulty=export.metadata.get("difficulty") or "Not specified",
+            problem_count=_problem_count_from_export(export),
+            problem_id_prefix=(
+                export.metadata.get("problem_id_prefix")
+                or export.metadata.get("worksheet_id")
+                or "Not specified"
+            ),
+        )
+
+
+def _problem_count_from_export(export: ExportResult) -> int:
+    """Return the problem count stored in export metadata."""
+    raw_count = export.metadata.get("problem_count", "0")
+    try:
+        return int(raw_count)
+    except ValueError:
+        return 0
 
 
 def _render_worksheet_preview(st: Any, worksheet: Worksheet) -> None:

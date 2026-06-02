@@ -61,6 +61,8 @@ Review both generation modes and both output types.
 - Confirm the tabs are limited to worksheet, solution key, and exports.
 - Confirm the worksheet preview lists numbered problems.
 - Confirm the solution key preview includes answers and solution steps.
+- Confirm the generated-output summary appears in the exports area before download buttons and raw export text.
+- Confirm the summary includes output type, context, difficulty, problem count, problem ID prefix, export filenames, and available download types.
 - Confirm Markdown and HTML download buttons are present.
 - Confirm the worksheet export bundle download is present and does not replace the individual downloads.
 - Expand raw Markdown and HTML export text areas and confirm they are readable.
@@ -74,6 +76,8 @@ Review both generation modes and both output types.
 - Confirm common mistakes include mistakes and corrections.
 - Confirm tutor notes include notes and discussion prompts.
 - Confirm the practice quiz includes questions and an answer key.
+- Confirm the generated-output summary appears in the exports area before download buttons and raw export text.
+- Confirm the summary identifies `Full Resource Pack` and includes resource-pack export filenames.
 - Confirm Resource Pack Markdown and HTML download buttons are present.
 - Confirm the resource-pack export bundle download is present and does not replace the individual downloads.
 - Expand raw export text areas and confirm the content includes all resource-pack sections.
@@ -158,6 +162,7 @@ Use a browser and basic keyboard navigation. When practical, also inspect the HT
 - [ ] Learning Objective mode generates at least one worksheet and one full resource pack.
 - [ ] Worksheet previews show problems and solution steps.
 - [ ] Resource-pack previews show study guide, common mistakes, tutor notes, and practice quiz.
+- [ ] Generated-output summaries appear before export downloads and include filename/download context.
 - [ ] Markdown export text areas and downloads work for worksheet-only and resource-pack output.
 - [ ] HTML export text areas and downloads work for worksheet-only and resource-pack output.
 - [ ] ZIP export bundles download for worksheet-only and resource-pack output.

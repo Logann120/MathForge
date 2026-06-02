@@ -34,6 +34,9 @@ def test_topic_mode_generates_linear_worksheet() -> None:
     assert "Solution Key" in _tab_labels(test_app)
     assert "Exports" in _tab_labels(test_app)
     assert "Linear equations Worksheet" in test_app.text_area[0].value
+    assert "Generated Output Summary" in _subheader_values(test_app)
+    assert "**Output type:** Worksheet" in _summary_markdown(test_app)
+    assert "**Context:** Linear equations" in _summary_markdown(test_app)
     assert "Download Worksheet Markdown" in _download_labels(test_app)
     assert "Download Worksheet HTML" in _download_labels(test_app)
 
@@ -184,6 +187,21 @@ def test_worksheet_only_ui_exposes_worksheet_exports() -> None:
     assert test_app.text_area[1].label == "HTML"
 
 
+def test_worksheet_summary_includes_export_filenames_and_download_types() -> None:
+    test_app = _run_app()
+
+    test_app.button[0].click().run()
+
+    summary = _summary_markdown(test_app)
+
+    assert "**Problem count:** 3" in summary
+    assert "**Problem ID prefix:** `linear`" in summary
+    assert "mathforge-linear-equations-worksheet-linear-markdown.md" in summary
+    assert "mathforge-linear-equations-worksheet-linear-html.html" in summary
+    assert "mathforge-linear-equations-worksheet-linear-bundle.zip" in summary
+    assert "**Available downloads:** Markdown, HTML, ZIP bundle" in summary
+
+
 def test_generation_preset_selector_exposes_built_in_presets() -> None:
     test_app = _run_app()
 
@@ -229,6 +247,7 @@ def test_full_tutor_resource_pack_preset_generates_resource_pack() -> None:
     assert test_app.radio[0].value == "Full Resource Pack"
     assert test_app.number_input[0].value == 5
     assert "Study Guide" in _tab_labels(test_app)
+    assert "**Output type:** Full Resource Pack" in _summary_markdown(test_app)
     assert "Download Resource Pack Export Bundle" in _download_labels(test_app)
 
 
@@ -259,6 +278,12 @@ def test_full_resource_pack_ui_exposes_resource_pack_exports() -> None:
     assert "## Practice Quiz" in test_app.text_area[0].value
     assert "mathforge-resource-pack" in test_app.text_area[1].value
     assert "mathforge-practice-quiz" in test_app.text_area[1].value
+    assert "mathforge-linear-equations-resource-pack-linear-markdown.md" in (
+        _summary_markdown(test_app)
+    )
+    assert "mathforge-linear-equations-resource-pack-linear-bundle.zip" in (
+        _summary_markdown(test_app)
+    )
 
 
 def _run_app() -> AppTest:
@@ -277,3 +302,16 @@ def _tab_labels(test_app: AppTest) -> list[str]:
 def _download_labels(test_app: AppTest) -> list[str]:
     """Return labels for rendered download buttons."""
     return [element.label for element in test_app.get("download_button")]
+
+
+def _subheader_values(test_app: AppTest) -> list[str]:
+    """Return rendered subheader values."""
+    return [element.value for element in test_app.subheader]
+
+
+def _summary_markdown(test_app: AppTest) -> str:
+    """Return the generated-output summary Markdown."""
+    for element in test_app.markdown:
+        if "**Output type:**" in element.value:
+            return element.value
+    return ""

@@ -33,6 +33,7 @@ Purpose:
 - Offer built-in presets for common instructor workflows.
 - Collect user configuration.
 - Display worksheet, solution, and instructional resource previews.
+- Display a compact generated-output summary before export downloads.
 - Trigger Markdown and HTML export actions.
 
 Current implementation:
@@ -168,7 +169,7 @@ Current implementation:
 7. Exporters render Markdown or semantic HTML.
 8. Download filename helpers derive clear filenames from export metadata.
 9. Optional ZIP bundle helpers group related rendered exports.
-10. The UI offers previews and download actions.
+10. The UI offers previews, a generated-output summary, and download actions.
 
 ## Core Data Concepts
 

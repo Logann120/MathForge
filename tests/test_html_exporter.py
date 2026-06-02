@@ -31,6 +31,7 @@ def test_export_worksheet_to_html_returns_export_result() -> None:
     assert result.metadata["topic"] == "Linear equations"
     assert result.metadata["difficulty"] == "easy"
     assert result.metadata["problem_id_prefix"] == "linear"
+    assert result.metadata["problem_count"] == "1"
 
 
 def test_export_worksheet_to_html_uses_semantic_structure_without_h1() -> None:
@@ -125,6 +126,7 @@ def test_export_resource_pack_to_html_returns_export_result() -> None:
     assert result.metadata["topic"] == "Linear equations"
     assert result.metadata["difficulty"] == "easy"
     assert result.metadata["problem_id_prefix"] == "linear"
+    assert result.metadata["problem_count"] == "1"
 
 
 def test_export_resource_pack_to_html_includes_all_sections() -> None:

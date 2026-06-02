@@ -71,6 +71,7 @@ def export_worksheet_to_html(
             "topic": worksheet.metadata.get("topic", ""),
             "difficulty": worksheet.metadata.get("difficulty", ""),
             "problem_id_prefix": _problem_id_prefix(worksheet),
+            "problem_count": str(len(worksheet.problems)),
         },
     )
 
@@ -116,6 +117,7 @@ def export_resource_pack_to_html(
                 resource_pack.worksheet.metadata.get("difficulty", ""),
             ),
             "problem_id_prefix": _problem_id_prefix(resource_pack.worksheet),
+            "problem_count": str(len(resource_pack.worksheet.problems)),
             "learning_objective": resource_pack.metadata.get(
                 "learning_objective",
                 "",
