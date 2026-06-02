@@ -17,6 +17,8 @@ def test_app_main_imports_without_running_streamlit_app() -> None:
     assert isinstance(app.main.generate_factoring_techniques_resource_pack, Callable)
     assert isinstance(app.main.generate_functions_basics_resource_pack, Callable)
     assert isinstance(app.main.generate_resource_pack_from_learning_objective, Callable)
+    assert isinstance(app.main.export_worksheet_to_canvas_csv, Callable)
+    assert isinstance(app.main.export_resource_pack_quiz_to_canvas_csv, Callable)
     assert isinstance(app.main.export_resource_pack_to_markdown, Callable)
     assert isinstance(app.main.export_resource_pack_to_html, Callable)
     assert isinstance(app.main.college_algebra_template, Callable)
@@ -40,6 +42,7 @@ def test_topic_mode_generates_linear_worksheet() -> None:
     assert "**Topic:** Linear equations" in _summary_markdown(test_app)
     assert "Download Worksheet Markdown" in _download_labels(test_app)
     assert "Download Worksheet HTML" in _download_labels(test_app)
+    assert "Download Worksheet Canvas Manual-Entry CSV" in _download_labels(test_app)
 
 
 def test_topic_mode_generates_quadratic_factoring_worksheet() -> None:
@@ -54,6 +57,7 @@ def test_topic_mode_generates_quadratic_factoring_worksheet() -> None:
     assert "Solve by factoring" in test_app.text_area[0].value
     assert "Download Worksheet Markdown" in _download_labels(test_app)
     assert "Download Worksheet HTML" in _download_labels(test_app)
+    assert "Download Worksheet Canvas Manual-Entry CSV" in _download_labels(test_app)
 
 
 def test_topic_mode_generates_systems_of_equations_worksheet() -> None:
@@ -68,6 +72,7 @@ def test_topic_mode_generates_systems_of_equations_worksheet() -> None:
     assert "Solve the system of equations" in test_app.text_area[0].value
     assert "Download Worksheet Markdown" in _download_labels(test_app)
     assert "Download Worksheet HTML" in _download_labels(test_app)
+    assert "Download Worksheet Canvas Manual-Entry CSV" in _download_labels(test_app)
 
 
 def test_topic_mode_generates_factoring_techniques_worksheet() -> None:
@@ -82,6 +87,7 @@ def test_topic_mode_generates_factoring_techniques_worksheet() -> None:
     assert "Factor completely" in test_app.text_area[0].value
     assert "Download Worksheet Markdown" in _download_labels(test_app)
     assert "Download Worksheet HTML" in _download_labels(test_app)
+    assert "Download Worksheet Canvas Manual-Entry CSV" in _download_labels(test_app)
 
 
 def test_topic_mode_generates_functions_basics_worksheet() -> None:
@@ -96,6 +102,7 @@ def test_topic_mode_generates_functions_basics_worksheet() -> None:
     assert "evaluate f" in test_app.text_area[0].value
     assert "Download Worksheet Markdown" in _download_labels(test_app)
     assert "Download Worksheet HTML" in _download_labels(test_app)
+    assert "Download Worksheet Canvas Manual-Entry CSV" in _download_labels(test_app)
 
 
 def test_learning_objective_mode_exposes_college_algebra_objectives() -> None:
@@ -193,9 +200,11 @@ def test_worksheet_only_ui_exposes_worksheet_exports() -> None:
         "Download Worksheet Markdown",
         "Download Worksheet HTML",
         "Download Worksheet Export Bundle",
+        "Download Worksheet Canvas Manual-Entry CSV",
     ]
     assert test_app.text_area[0].label == "Markdown"
     assert test_app.text_area[1].label == "HTML"
+    assert test_app.text_area[2].label == "Canvas Manual-Entry CSV"
 
 
 def test_worksheet_summary_includes_export_filenames_and_download_types() -> None:
@@ -210,7 +219,14 @@ def test_worksheet_summary_includes_export_filenames_and_download_types() -> Non
     assert "mathforge-linear-equations-worksheet-linear-markdown.md" in summary
     assert "mathforge-linear-equations-worksheet-linear-html.html" in summary
     assert "mathforge-linear-equations-worksheet-linear-bundle.zip" in summary
-    assert "**Available downloads:** Markdown, HTML, ZIP bundle" in summary
+    assert "mathforge-linear-equations-worksheet-linear-canvas-csv.csv" in summary
+    assert (
+        "**Available downloads:** Markdown, HTML, ZIP bundle, "
+        "Canvas manual-entry CSV"
+    ) in summary
+    assert "question_title,question_prompt,correct_answer" in (
+        test_app.text_area[2].value
+    )
 
 
 def test_learning_objective_mode_generated_summary_includes_curriculum_context() -> None:
@@ -279,6 +295,10 @@ def test_full_tutor_resource_pack_preset_generates_resource_pack() -> None:
     assert "**Output type:** Full Resource Pack" in _summary_markdown(test_app)
     assert "**Generation mode:** Topic mode" in _summary_markdown(test_app)
     assert "Download Resource Pack Export Bundle" in _download_labels(test_app)
+    assert (
+        "Download Resource Pack Canvas Manual-Entry Quiz CSV"
+        in _download_labels(test_app)
+    )
 
 
 def test_full_resource_pack_ui_exposes_resource_pack_exports() -> None:
@@ -301,9 +321,11 @@ def test_full_resource_pack_ui_exposes_resource_pack_exports() -> None:
         "Download Resource Pack Markdown",
         "Download Resource Pack HTML",
         "Download Resource Pack Export Bundle",
+        "Download Resource Pack Canvas Manual-Entry Quiz CSV",
     ]
     assert test_app.text_area[0].label == "Resource Pack Markdown"
     assert test_app.text_area[1].label == "Resource Pack HTML"
+    assert test_app.text_area[2].label == "Resource Pack Canvas Manual-Entry Quiz CSV"
     assert "## Study Guide" in test_app.text_area[0].value
     assert "## Practice Quiz" in test_app.text_area[0].value
     assert "mathforge-resource-pack" in test_app.text_area[1].value
@@ -314,6 +336,10 @@ def test_full_resource_pack_ui_exposes_resource_pack_exports() -> None:
     assert "mathforge-linear-equations-resource-pack-linear-bundle.zip" in (
         _summary_markdown(test_app)
     )
+    assert "mathforge-linear-equations-resource-pack-linear-canvas-csv.csv" in (
+        _summary_markdown(test_app)
+    )
+    assert "practice_quiz" in test_app.text_area[2].value
 
 
 def _run_app() -> AppTest:

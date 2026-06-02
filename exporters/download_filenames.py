@@ -10,6 +10,7 @@ from models.content_models import ExportResult
 
 MAX_FILENAME_LENGTH = 120
 FORMAT_EXTENSIONS = {
+    "canvas_csv": "csv",
     "html": "html",
     "markdown": "md",
 }
@@ -91,6 +92,8 @@ def _output_type_part(export: ExportResult) -> str:
 
 def _format_part(export: ExportResult) -> str:
     """Return the format segment for a rendered export."""
+    if export.format_name == "canvas_csv":
+        return "canvas-csv"
     if export.format_name == "markdown":
         return "markdown"
     if export.format_name == "html":

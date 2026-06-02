@@ -2,7 +2,7 @@
 
 MathForge is an open-source platform for helping mathematics instructors generate high-quality instructional materials.
 
-MathForge MVP 0.1 includes a Streamlit application for generating deterministic worksheets and instructional resource packs for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics. The project remains intentionally focused: the current MVP has no AI or LLM integration, no Canvas integration, no database, no authentication, no external API, and no production deployment workflow.
+MathForge MVP 0.1 includes a Streamlit application for generating deterministic worksheets and instructional resource packs for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics. The project remains intentionally focused: the current MVP has no AI or LLM integration, no direct Canvas API integration, no database, no authentication, no external API, and no production deployment workflow.
 
 ## Mission
 
@@ -31,11 +31,13 @@ The current MVP supports:
 - Validating generated answers using SymPy
 - Exporting worksheets to Markdown
 - Exporting worksheets to accessible HTML
+- Exporting worksheet problems to a Canvas-friendly manual-entry CSV
 - Downloading worksheet Markdown and HTML together as a ZIP convenience bundle
 - Generating full instructional resource packs with study guides, common mistakes, and tutor notes
 - Generating practice quizzes inside full instructional resource packs
 - Exporting full resource packs to Markdown
 - Exporting full resource packs to accessible HTML
+- Exporting resource-pack practice quizzes to a Canvas-friendly manual-entry CSV
 - Downloading resource-pack Markdown and HTML together as a ZIP convenience bundle
 - Generating materials from sample College Algebra learning objectives for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics
 
@@ -68,14 +70,14 @@ MathForge is organized around small, testable Python modules:
 - `app/` contains the Streamlit MVP interface and built-in generation presets.
 - `generator/` contains deterministic worksheet, resource pack, and curriculum-aligned generation.
 - `models/` contains dataclasses for worksheets, problems, solutions, exports, curriculum objects, and resource packs.
-- `exporters/` contains Markdown and accessible HTML exporters for worksheets and resource packs, standard-library ZIP bundle helpers, and deterministic download filename helpers.
+- `exporters/` contains Markdown, accessible HTML, Canvas-friendly manual-entry CSV exporters, standard-library ZIP bundle helpers, and deterministic download filename helpers.
 - `validators/` contains SymPy-based validation helpers.
 - `templates/` contains the deterministic College Algebra course template.
 - `topics/` contains the supported-topic registry for topic labels, routing, defaults, and curriculum metadata.
 - `tests/` contains unit and smoke tests for the implemented MVP behavior.
 - `docs/` contains supplemental guides for topic additions and manual QA.
 
-The app is intentionally deterministic and instructor-reviewable. It does not call AI services, persist user data, publish to Canvas, expose an API, or run as a deployed production service.
+The app is intentionally deterministic and instructor-reviewable. It does not call AI services, persist user data, publish to Canvas, call the Canvas API, expose an API, or run as a deployed production service.
 
 ## Supported Topic Registry
 
@@ -131,7 +133,7 @@ Screenshots will be added as the MVP interface stabilizes.
 
 ## Current Status
 
-MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics, built-in generation presets, resource pack generation with practice quizzes, SymPy validation, Markdown export, HTML export, optional ZIP export bundles, and demo-ready Streamlit UI are implemented and covered by automated tests.
+MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics, built-in generation presets, resource pack generation with practice quizzes, SymPy validation, Markdown export, HTML export, Canvas-friendly manual-entry CSV export, optional ZIP export bundles, and demo-ready Streamlit UI are implemented and covered by automated tests.
 
 Current work includes a curriculum-alignment milestone with a deterministic College Algebra template. Next work should focus on hardening, documentation, accessibility review, careful topic expansion, and keeping the implementation small and maintainable.
 
@@ -139,12 +141,13 @@ Current work includes a curriculum-alignment milestone with a deterministic Coll
 
 - Example files should be periodically checked against current generated output as topics and resource-pack sections evolve.
 - ZIP export bundles are convenience downloads for already-rendered Markdown and HTML files; individual export buttons remain the source of each format.
+- Canvas-friendly CSV exports are manual-entry/import-friendly files only; compatibility with Canvas quiz import workflows can vary by institution and may require instructor cleanup.
 - Built-in presets provide starting defaults only; there are no saved custom presets or file-based preset configuration.
 - Continuous integration currently runs the pytest suite on Python 3.11 and Python 3.12.
 - There is no deployment workflow or production hosting configuration.
 - Accessibility and browser behavior need broader manual QA beyond automated exporter tests.
 - Some topic-specific generator internals remain explicit and topic-specific; the central registry now handles top-level topic discovery and routing.
-- There is no AI or LLM integration, Canvas integration, database, authentication, external API, or production deployment.
+- There is no AI or LLM integration, direct Canvas API integration, database, authentication, external API, or production deployment.
 
 ## Contributing
 

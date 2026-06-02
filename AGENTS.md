@@ -2,7 +2,7 @@
 
 This repository contains a working Python/Streamlit MVP for deterministic College Algebra instructional material generation.
 
-Agents and contributors must preserve the implemented MVP unless the project owner explicitly requests behavior changes. Do not add AI integration, Canvas integration, persistence, authentication, APIs, deployment workflows, or new product features unless they are specifically requested.
+Agents and contributors must preserve the implemented MVP unless the project owner explicitly requests behavior changes. Do not add AI integration, direct Canvas API integration, persistence, authentication, APIs, deployment workflows, or new product features unless they are specifically requested.
 
 ## Current Scope
 
@@ -27,6 +27,7 @@ Out of scope unless explicitly requested:
 - Dependency installation or dependency changes.
 - AI or LLM integration.
 - Canvas integration.
+- Canvas API calls, OAuth, tokens, or network publishing.
 - Database, authentication, API, or deployment code.
 
 ## Project Direction
@@ -45,6 +46,7 @@ The MVP supports:
 - Detailed solution key generation.
 - Accessible HTML export.
 - Markdown export.
+- Canvas-friendly manual-entry CSV export for worksheet problems and practice quizzes.
 - Answer validation using SymPy.
 - Instructional resource packs with study guides, common mistakes, tutor notes, and practice quizzes.
 - Curriculum-aligned generation from a deterministic College Algebra template.
@@ -56,7 +58,7 @@ The MVP supports:
 - `app/` contains the Streamlit MVP interface and built-in generation presets.
 - `generator/` contains deterministic worksheet, resource-pack, and curriculum-aligned generation.
 - `models/` contains dataclasses for content, resource packs, and curriculum structures.
-- `exporters/` contains Markdown, HTML, and ZIP bundle exporters.
+- `exporters/` contains Markdown, HTML, Canvas manual-entry CSV, and ZIP bundle exporters.
 - `validators/` contains SymPy validation helpers.
 - `templates/` contains the College Algebra course template.
 - `topics/` contains the supported-topic registry for labels, defaults, routing, difficulty support, and curriculum metadata.
@@ -127,8 +129,9 @@ For implementation tasks:
 
 - Example exports should be periodically checked against current generated output.
 - ZIP bundles are convenience downloads for already-rendered exports; individual Markdown and HTML exports remain available.
+- Canvas-friendly CSV export is manual/import-friendly only and is not a Canvas API integration.
 - Built-in generation presets are fixed starting defaults only; there are no saved custom presets or file-based preset configuration.
 - CI runs the pytest suite on Python 3.11 and Python 3.12; deployment workflows are not configured.
 - Accessibility and browser QA remain limited.
 - Top-level topic routing now uses `topics/registry.py`; topic-specific generator internals remain explicit.
-- There is no AI or LLM integration, Canvas integration, database, authentication, API, or production deployment.
+- There is no AI or LLM integration, direct Canvas API integration, database, authentication, API, or production deployment.

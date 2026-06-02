@@ -1,6 +1,6 @@
 # MathForge Architecture
 
-MathForge is a Python and Streamlit MVP with deterministic College Algebra generation, SymPy-powered validation helpers, and export support for Markdown and accessible HTML.
+MathForge is a Python and Streamlit MVP with deterministic College Algebra generation, SymPy-powered validation helpers, and export support for Markdown, accessible HTML, and Canvas-friendly manual-entry CSV.
 
 This document describes the current implemented architecture. MathForge is no longer a planning-only repository: it has working generators, models, exporters, validators, a Streamlit interface, curriculum templates, and automated tests.
 
@@ -20,6 +20,7 @@ This document describes the current implemented architecture. MathForge is no lo
 - SymPy for symbolic answer validation.
 - Markdown for portable text exports.
 - Semantic HTML for accessible browser-based exports.
+- CSV for instructor-reviewable Canvas manual-entry quiz exports.
 
 ## Current Architecture
 
@@ -36,6 +37,7 @@ Purpose:
 - Display a compact generated-output summary before export downloads.
 - Display selected Learning Objective mode course, module, objective, and mapped-topic context before generation.
 - Trigger Markdown and HTML export actions.
+- Trigger Canvas-friendly manual-entry CSV export actions without Canvas API calls.
 
 Current implementation:
 
@@ -115,6 +117,7 @@ Current implementation:
 
 - `exporters/markdown_exporter.py` renders worksheets and full resource packs to Markdown.
 - `exporters/html_exporter.py` renders worksheets and full resource packs to portable semantic HTML.
+- `exporters/canvas_exporter.py` renders worksheet problems and resource-pack practice quizzes to a Canvas-friendly manual-entry CSV format.
 - `exporters/bundle_exporter.py` packages already-rendered exports into ZIP convenience downloads using Python standard-library tools.
 - `exporters/download_filenames.py` creates instructor-friendly download filenames from export metadata without changing rendered export content.
 - Exporters do not generate problems and reuse worksheet rendering behavior where appropriate. ZIP bundles do not replace individual Markdown or HTML exports.
@@ -168,9 +171,10 @@ Current implementation:
 5. The validation layer checks generated answers with SymPy where practical.
 6. Resource-pack generators optionally assemble study guides, common mistakes, tutor notes, and practice quizzes.
 7. Exporters render Markdown or semantic HTML.
-8. Download filename helpers derive clear filenames from export metadata.
-9. Optional ZIP bundle helpers group related rendered exports.
-10. The UI offers previews, Learning Objective context, generated-output summaries, and download actions.
+8. Canvas-friendly CSV exporters render inspectable manual-entry quiz rows without network calls.
+9. Download filename helpers derive clear filenames from export metadata.
+10. Optional ZIP bundle helpers group related rendered exports.
+11. The UI offers previews, Learning Objective context, generated-output summaries, and download actions.
 
 ## Core Data Concepts
 
@@ -223,6 +227,7 @@ The MVP intentionally has no:
 
 - AI or LLM integration.
 - Canvas LMS integration.
+- Canvas API calls, OAuth, token handling, or direct LMS publishing.
 - Database or persistence layer.
 - Authentication or authorization.
 - External API.
@@ -234,6 +239,7 @@ Generated content is deterministic and instructor-reviewable. Future AI-assisted
 
 - Example exports should be periodically checked against current generated output.
 - ZIP bundles currently include the rendered exports already available in the active export panel; they do not add separate generated artifacts.
+- Canvas manual-entry CSV exports are offered as separate downloads and are not included in ZIP bundles.
 - Built-in generation presets are fixed metadata only; there are no custom saved presets, accounts, persistence, or file-based configuration.
 - Continuous integration runs the pytest suite on Python 3.11 and Python 3.12.
 - There is no deployment workflow.

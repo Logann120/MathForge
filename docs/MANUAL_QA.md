@@ -68,7 +68,9 @@ Review both generation modes and both output types.
 - Confirm the summary includes output type, context, difficulty, problem count, problem ID prefix, export filenames, and available download types.
 - Confirm Markdown and HTML download buttons are present.
 - Confirm the worksheet export bundle download is present and does not replace the individual downloads.
+- Confirm the Canvas manual-entry CSV download is present as a separate optional export.
 - Expand raw Markdown and HTML export text areas and confirm they are readable.
+- Expand the raw Canvas CSV text area and confirm it is readable as CSV.
 
 ### Full Resource Pack
 
@@ -83,17 +85,21 @@ Review both generation modes and both output types.
 - Confirm the summary identifies `Full Resource Pack` and includes resource-pack export filenames.
 - Confirm Resource Pack Markdown and HTML download buttons are present.
 - Confirm the resource-pack export bundle download is present and does not replace the individual downloads.
+- Confirm the Resource Pack Canvas manual-entry quiz CSV download is present when a practice quiz exists.
 - Expand raw export text areas and confirm the content includes all resource-pack sections.
 
 ### Downloads
 
 - Download worksheet Markdown and HTML.
 - Download resource-pack Markdown and HTML.
+- Download worksheet and resource-pack Canvas manual-entry CSV files.
 - Download worksheet and resource-pack ZIP bundles.
 - Confirm filenames are clear and deterministic.
 - Confirm filenames identify MathForge, the topic or learning-objective context, the output type, the problem ID prefix, and the file format.
 - Confirm custom problem ID prefixes with spaces, punctuation, or path-like characters are sanitized in filenames.
 - Confirm ZIP bundles contain the same Markdown and HTML files offered by the individual buttons.
+- Confirm Canvas CSV files include question title, prompt, answer, explanation, topic, difficulty, problem ID, source type, and source ID columns.
+- Confirm Canvas CSV files are labeled as manual-entry/import-friendly exports, not direct Canvas publishing.
 - Open downloaded HTML in a browser and confirm it renders without obvious broken markup.
 - Open downloaded Markdown in a text editor and confirm it is readable as plain text.
 
@@ -169,6 +175,7 @@ Use a browser and basic keyboard navigation. When practical, also inspect the HT
 - [ ] Generated-output summaries appear before export downloads and include filename/download context.
 - [ ] Markdown export text areas and downloads work for worksheet-only and resource-pack output.
 - [ ] HTML export text areas and downloads work for worksheet-only and resource-pack output.
+- [ ] Canvas manual-entry CSV text areas and downloads work for worksheet-only and resource-pack output.
 - [ ] ZIP export bundles download for worksheet-only and resource-pack output.
 - [ ] Downloaded HTML opens in a browser and has sensible semantic structure.
 - [ ] Downloaded Markdown is readable when opened as plain text.
@@ -183,3 +190,4 @@ Use a browser and basic keyboard navigation. When practical, also inspect the HT
 - There is no screen-reader-specific test script yet.
 - Plain-text math notation is readable but not equivalent to MathML or fully accessible equation rendering.
 - Streamlit component accessibility depends partly on Streamlit itself.
+- Canvas CSV compatibility may vary by institution and may require manual cleanup before import or quiz creation.

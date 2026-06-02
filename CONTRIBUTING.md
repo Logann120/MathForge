@@ -16,7 +16,7 @@ Useful contributions include:
 - Proposing maintainable approaches for new supported topics.
 - Refreshing examples and supplemental documentation.
 
-Do not add or change business logic, Streamlit UI behavior, AI integration, Canvas integration, persistence, authentication, APIs, or deployment code unless that implementation work is explicitly requested.
+Do not add or change business logic, Streamlit UI behavior, AI integration, direct Canvas API integration, persistence, authentication, APIs, or deployment code unless that implementation work is explicitly requested.
 
 ## Project Principles
 
@@ -36,7 +36,7 @@ The structure is organized around current MVP responsibilities:
 - `generator/` for deterministic worksheet, resource-pack, and curriculum-aligned generation.
 - `models/` for dataclasses representing content, resource packs, and curriculum structures.
 - `validators/` for answer validation, including SymPy-based checks.
-- `exporters/` for HTML, Markdown, and ZIP bundle exports.
+- `exporters/` for HTML, Markdown, Canvas manual-entry CSV, and ZIP bundle exports.
 - `templates/` for the College Algebra course template.
 - `topics/` for the supported-topic registry.
 - `tests/` for automated tests.
@@ -75,12 +75,13 @@ Use [docs/MANUAL_QA.md](docs/MANUAL_QA.md) before major UI, exporter, or topic c
 
 ## Current Non-Features
 
-The MVP intentionally has no AI or LLM integration, Canvas integration, database, authentication, external API, production deployment workflow, or production hosting configuration.
+The MVP intentionally has no AI or LLM integration, direct Canvas API integration, database, authentication, external API, production deployment workflow, or production hosting configuration.
 
 ## Known Limitations
 
 - Example outputs should be periodically checked against current generated output.
 - ZIP export bundles are convenience downloads for already-rendered Markdown and HTML files and should not replace individual export buttons.
+- Canvas-friendly CSV exports are manual-entry/import-friendly files only; do not add Canvas API calls, OAuth, tokens, secrets, or network behavior without an explicit request.
 - Built-in generation presets are fixed defaults only; do not add persistence, accounts, or file-based preset configuration without an explicit request.
 - CI runs the pytest suite on Python 3.11 and Python 3.12; deployment workflows are not configured.
 - Accessibility and browser QA need more coverage before broader release.

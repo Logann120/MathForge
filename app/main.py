@@ -8,6 +8,10 @@ from typing import Any
 
 from app.presets import find_generation_preset, generation_preset_labels
 from exporters.bundle_exporter import create_export_bundle
+from exporters.canvas_exporter import (
+    export_resource_pack_quiz_to_canvas_csv,
+    export_worksheet_to_canvas_csv,
+)
 from exporters.download_filenames import (
     build_bundle_download_filename,
     with_download_filename,
@@ -393,6 +397,7 @@ def _render_worksheet(
     """Render previews and exports for a generated worksheet."""
     markdown_export = export_worksheet_to_markdown(worksheet, include_solutions=True)
     html_export = export_worksheet_to_html(worksheet, include_solutions=True)
+    canvas_export = export_worksheet_to_canvas_csv(worksheet)
 
     worksheet_tab, solution_tab, exports_tab = st.tabs(
         ("Worksheet", "Solution Key", "Exports")
@@ -403,18 +408,26 @@ def _render_worksheet(
     with solution_tab:
         _render_solution_key_preview(st, worksheet)
     with exports_tab:
-        _render_worksheet_exports(st, markdown_export, html_export, generation_context)
+        _render_worksheet_exports(
+            st,
+            markdown_export,
+            html_export,
+            canvas_export,
+            generation_context,
+        )
 
 
 def _render_worksheet_exports(
     st: Any,
     markdown_export: ExportResult,
     html_export: ExportResult,
+    canvas_export: ExportResult,
     generation_context: GenerationContext,
 ) -> None:
     """Render worksheet export controls."""
     markdown_download = with_download_filename(markdown_export)
     html_download = with_download_filename(html_export)
+    canvas_download = with_download_filename(canvas_export)
     export_bundle = create_export_bundle(
         (markdown_download, html_download),
         bundle_filename=build_bundle_download_filename(markdown_download),
@@ -429,6 +442,7 @@ def _render_worksheet_exports(
         markdown_filename=markdown_download.filename,
         html_filename=html_download.filename,
         bundle_filename=export_bundle.filename,
+        canvas_filename=canvas_download.filename,
     )
     st.download_button(
         label="Download Worksheet Markdown",
@@ -448,6 +462,12 @@ def _render_worksheet_exports(
         file_name=export_bundle.filename,
         mime=export_bundle.mime_type,
     )
+    st.download_button(
+        label="Download Worksheet Canvas Manual-Entry CSV",
+        data=canvas_download.content,
+        file_name=canvas_download.filename,
+        mime="text/csv",
+    )
 
     with st.expander("Markdown export text"):
         st.text_area(
@@ -465,6 +485,14 @@ def _render_worksheet_exports(
             label_visibility="collapsed",
         )
 
+    with st.expander("Canvas manual-entry CSV text"):
+        st.text_area(
+            "Canvas Manual-Entry CSV",
+            value=canvas_export.content,
+            height=220,
+            label_visibility="collapsed",
+        )
+
 
 def _render_resource_pack(
     st: Any,
@@ -479,6 +507,11 @@ def _render_resource_pack(
     html_export = export_resource_pack_to_html(
         resource_pack,
         include_solutions=True,
+    )
+    canvas_export = (
+        export_resource_pack_quiz_to_canvas_csv(resource_pack)
+        if resource_pack.practice_quiz is not None
+        else None
     )
 
     (
@@ -525,6 +558,7 @@ def _render_resource_pack(
             st,
             markdown_export,
             html_export,
+            canvas_export,
             generation_context,
         )
 
@@ -533,11 +567,17 @@ def _render_resource_pack_exports(
     st: Any,
     markdown_export: ExportResult,
     html_export: ExportResult,
+    canvas_export: ExportResult | None,
     generation_context: GenerationContext,
 ) -> None:
     """Render resource pack export controls."""
     markdown_download = with_download_filename(markdown_export)
     html_download = with_download_filename(html_export)
+    canvas_download = (
+        with_download_filename(canvas_export)
+        if canvas_export is not None
+        else None
+    )
     export_bundle = create_export_bundle(
         (markdown_download, html_download),
         bundle_filename=build_bundle_download_filename(markdown_download),
@@ -552,6 +592,7 @@ def _render_resource_pack_exports(
         markdown_filename=markdown_download.filename,
         html_filename=html_download.filename,
         bundle_filename=export_bundle.filename,
+        canvas_filename=canvas_download.filename if canvas_download else "",
     )
     st.download_button(
         label="Download Resource Pack Markdown",
@@ -571,6 +612,13 @@ def _render_resource_pack_exports(
         file_name=export_bundle.filename,
         mime=export_bundle.mime_type,
     )
+    if canvas_download is not None:
+        st.download_button(
+            label="Download Resource Pack Canvas Manual-Entry Quiz CSV",
+            data=canvas_download.content,
+            file_name=canvas_download.filename,
+            mime="text/csv",
+        )
 
     with st.expander("Resource pack Markdown export text"):
         st.text_area(
@@ -588,6 +636,15 @@ def _render_resource_pack_exports(
             label_visibility="collapsed",
         )
 
+    if canvas_export is not None:
+        with st.expander("Resource pack Canvas manual-entry quiz CSV text"):
+            st.text_area(
+                "Resource Pack Canvas Manual-Entry Quiz CSV",
+                value=canvas_export.content,
+                height=220,
+                label_visibility="collapsed",
+            )
+
 
 def _render_generated_output_summary(
     st: Any,
@@ -598,6 +655,7 @@ def _render_generated_output_summary(
     markdown_filename: str,
     html_filename: str,
     bundle_filename: str,
+    canvas_filename: str = "",
 ) -> None:
     """Render a compact summary of generated output and downloads."""
     st.subheader("Generated Output Summary")
@@ -610,6 +668,7 @@ def _render_generated_output_summary(
                 markdown_filename=markdown_filename,
                 html_filename=html_filename,
                 bundle_filename=bundle_filename,
+                canvas_filename=canvas_filename,
             )
         )
     )
@@ -623,8 +682,20 @@ def _generated_output_summary_lines(
     markdown_filename: str,
     html_filename: str,
     bundle_filename: str,
+    canvas_filename: str = "",
 ) -> tuple[str, ...]:
     """Return Markdown lines for the generated output summary."""
+    filename_lines = [
+        "- **Generated export filenames:**",
+        f"  - Markdown: `{markdown_filename}`",
+        f"  - HTML: `{html_filename}`",
+        f"  - ZIP bundle: `{bundle_filename}`",
+    ]
+    download_types = ["Markdown", "HTML", "ZIP bundle"]
+    if canvas_filename:
+        filename_lines.append(f"  - Canvas manual-entry CSV: `{canvas_filename}`")
+        download_types.append("Canvas manual-entry CSV")
+
     lines = [
         f"- **Output type:** {output_type}",
         f"- **Generation mode:** {generation_context.mode}",
@@ -632,11 +703,8 @@ def _generated_output_summary_lines(
         f"- **Difficulty:** {worksheet.difficulty}",
         f"- **Problem count:** {worksheet.problem_count}",
         f"- **Problem ID prefix:** `{worksheet.problem_id_prefix}`",
-        "- **Generated export filenames:**",
-        f"  - Markdown: `{markdown_filename}`",
-        f"  - HTML: `{html_filename}`",
-        f"  - ZIP bundle: `{bundle_filename}`",
-        "- **Available downloads:** Markdown, HTML, ZIP bundle",
+        *filename_lines,
+        f"- **Available downloads:** {', '.join(download_types)}",
     ]
     return tuple(lines)
 

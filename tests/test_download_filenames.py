@@ -71,6 +71,24 @@ def test_build_bundle_download_filename_includes_bundle_format() -> None:
     )
 
 
+def test_build_canvas_csv_download_filename_uses_csv_extension() -> None:
+    export = ExportResult(
+        content="question_title,question_prompt\n",
+        format_name="canvas_csv",
+        filename="linear-worksheet-worksheet-canvas.csv",
+        metadata={
+            "topic": "Linear equations",
+            "resource_type": "worksheet",
+            "problem_id_prefix": "linear",
+        },
+    )
+
+    assert (
+        build_export_download_filename(export)
+        == "mathforge-linear-equations-worksheet-linear-canvas-csv.csv"
+    )
+
+
 def test_sanitize_filename_part_handles_spaces_punctuation_case_and_paths() -> None:
     assert (
         sanitize_filename_part(
