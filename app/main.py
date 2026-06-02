@@ -27,7 +27,13 @@ from generator.resource_pack_generator import (
 )
 from models.curriculum import CourseModule, CourseTemplate, LearningObjective
 from models.content_models import ExportResult, Solution, Worksheet
-from models.resource_pack import CommonMistakes, ResourcePack, StudyGuide, TutorNotes
+from models.resource_pack import (
+    CommonMistakes,
+    PracticeQuiz,
+    ResourcePack,
+    StudyGuide,
+    TutorNotes,
+)
 from templates.course_templates import college_algebra_template
 
 
@@ -402,6 +408,7 @@ def _render_resource_pack(st: Any, resource_pack: ResourcePack) -> None:
         study_guide_tab,
         common_mistakes_tab,
         tutor_notes_tab,
+        practice_quiz_tab,
         exports_tab,
     ) = st.tabs(
         (
@@ -410,6 +417,7 @@ def _render_resource_pack(st: Any, resource_pack: ResourcePack) -> None:
             "Study Guide",
             "Common Mistakes",
             "Tutor Notes",
+            "Practice Quiz",
             "Exports",
         )
     )
@@ -427,6 +435,12 @@ def _render_resource_pack(st: Any, resource_pack: ResourcePack) -> None:
     with tutor_notes_tab:
         st.header("Tutor Notes")
         _render_tutor_notes(st, resource_pack.tutor_notes)
+    with practice_quiz_tab:
+        st.header("Practice Quiz")
+        if resource_pack.practice_quiz is None:
+            st.write("No practice quiz provided.")
+        else:
+            _render_practice_quiz(st, resource_pack.practice_quiz)
     with exports_tab:
         _render_resource_pack_exports(st, markdown_export, html_export)
 
@@ -523,6 +537,13 @@ def _render_tutor_notes(st: Any, tutor_notes: TutorNotes) -> None:
     _render_bullets(st, "Discussion Prompts", tutor_notes.discussion_prompts)
 
 
+def _render_practice_quiz(st: Any, practice_quiz: PracticeQuiz) -> None:
+    """Render practice quiz content."""
+    st.subheader(practice_quiz.title)
+    _render_numbered_items(st, "Questions", practice_quiz.questions)
+    _render_bullets(st, "Answer Key", practice_quiz.answer_key)
+
+
 def _render_bullets(st: Any, label: str, items: tuple[str, ...]) -> None:
     """Render a labeled list of text items."""
     if not items:
@@ -531,6 +552,16 @@ def _render_bullets(st: Any, label: str, items: tuple[str, ...]) -> None:
     st.subheader(label)
     for item in items:
         st.write(f"- {item}")
+
+
+def _render_numbered_items(st: Any, label: str, items: tuple[str, ...]) -> None:
+    """Render a labeled numbered list of text items."""
+    if not items:
+        return
+
+    st.subheader(label)
+    for index, item in enumerate(items, start=1):
+        st.write(f"{index}. {item}")
 
 
 if __name__ == "__main__":

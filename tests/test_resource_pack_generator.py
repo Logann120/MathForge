@@ -115,6 +115,8 @@ def test_resource_pack_metadata_describes_generator() -> None:
     assert resource_pack.study_guide.metadata["resource_type"] == "study_guide"
     assert resource_pack.common_mistakes.metadata["resource_type"] == "common_mistakes"
     assert resource_pack.tutor_notes.metadata["resource_type"] == "tutor_notes"
+    assert resource_pack.practice_quiz is not None
+    assert resource_pack.practice_quiz.metadata["resource_type"] == "practice_quiz"
 
 
 def test_generate_linear_equation_resource_pack_rejects_invalid_count() -> None:
@@ -334,3 +336,45 @@ def test_functions_resource_pack_includes_function_notation_guidance() -> None:
         "multiplication" in mistake
         for mistake in resource_pack.common_mistakes.mistakes
     )
+
+
+def test_supported_resource_packs_include_practice_quizzes() -> None:
+    resource_packs = (
+        generate_linear_equation_resource_pack(
+            "Linear equations",
+            "easy",
+            1,
+            "linear",
+        ),
+        generate_quadratic_factoring_resource_pack(
+            "Quadratic equations by factoring",
+            "easy",
+            1,
+            "quadratic",
+        ),
+        generate_systems_of_equations_resource_pack(
+            "Systems of linear equations",
+            "easy",
+            1,
+            "systems",
+        ),
+        generate_factoring_techniques_resource_pack(
+            "Factoring techniques",
+            "easy",
+            1,
+            "factoring",
+        ),
+        generate_functions_basics_resource_pack(
+            "Functions basics",
+            "easy",
+            1,
+            "functions",
+        ),
+    )
+
+    for resource_pack in resource_packs:
+        assert resource_pack.practice_quiz is not None
+        assert resource_pack.practice_quiz.title.endswith("Practice Quiz")
+        assert len(resource_pack.practice_quiz.questions) == 2
+        assert len(resource_pack.practice_quiz.answer_key) == 2
+        assert resource_pack.practice_quiz.metadata["resource_type"] == "practice_quiz"

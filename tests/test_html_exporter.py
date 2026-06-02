@@ -9,6 +9,7 @@ from exporters.html_exporter import (
 from generator.problem_generator import generate_linear_equation_worksheet
 from generator.resource_pack_generator import generate_linear_equation_resource_pack
 from models.content_models import ExportResult, MathProblem, Worksheet
+from models.resource_pack import ResourcePack
 
 
 def test_export_worksheet_to_html_returns_export_result() -> None:
@@ -141,6 +142,9 @@ def test_export_resource_pack_to_html_includes_all_sections() -> None:
     assert "<h3>Corrections and Interventions</h3>" in result.content
     assert "<h2>Tutor Notes</h2>" in result.content
     assert "<h3>Discussion Prompts</h3>" in result.content
+    assert '<section class="mathforge-practice-quiz">' in result.content
+    assert "<h2>Practice Quiz</h2>" in result.content
+    assert "<h3>Answer Key</h3>" in result.content
 
 
 def test_export_resource_pack_to_html_can_omit_solution_key() -> None:
@@ -170,6 +174,25 @@ def test_export_resource_pack_to_html_escapes_resource_text() -> None:
 
     assert "<h2>Linear &lt;equations&gt; Worksheet</h2>" in result.content
     assert "<h3>Linear &lt;equations&gt; Study Guide</h3>" in result.content
+
+
+def test_export_resource_pack_to_html_omits_absent_practice_quiz() -> None:
+    generated_resource_pack = generate_linear_equation_resource_pack(
+        topic="Linear equations",
+        difficulty="easy",
+        count=1,
+        start_id="linear",
+    )
+    resource_pack = ResourcePack(
+        worksheet=generated_resource_pack.worksheet,
+        study_guide=generated_resource_pack.study_guide,
+        common_mistakes=generated_resource_pack.common_mistakes,
+        tutor_notes=generated_resource_pack.tutor_notes,
+    )
+
+    result = export_resource_pack_to_html(resource_pack)
+
+    assert '<section class="mathforge-practice-quiz">' not in result.content
 
 
 def test_export_resource_pack_to_html_rejects_non_resource_pack() -> None:

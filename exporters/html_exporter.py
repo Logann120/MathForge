@@ -5,7 +5,13 @@ from __future__ import annotations
 from html import escape
 
 from models.content_models import ExportResult, Solution, Worksheet
-from models.resource_pack import CommonMistakes, ResourcePack, StudyGuide, TutorNotes
+from models.resource_pack import (
+    CommonMistakes,
+    PracticeQuiz,
+    ResourcePack,
+    StudyGuide,
+    TutorNotes,
+)
 
 
 def export_worksheet_to_html(
@@ -84,6 +90,8 @@ def export_resource_pack_to_html(
     lines.extend(_format_study_guide(resource_pack.study_guide))
     lines.extend(_format_common_mistakes(resource_pack.common_mistakes))
     lines.extend(_format_tutor_notes(resource_pack.tutor_notes))
+    if resource_pack.practice_quiz is not None:
+        lines.extend(_format_practice_quiz(resource_pack.practice_quiz))
     lines.append("</section>")
 
     content = "\n".join(lines) + "\n"
@@ -194,6 +202,24 @@ def _format_tutor_notes(tutor_notes: TutorNotes) -> list[str]:
         )
 
     lines.append("  </section>")
+    return lines
+
+
+def _format_practice_quiz(practice_quiz: PracticeQuiz) -> list[str]:
+    """Format a practice quiz section."""
+    lines = [
+        '  <section class="mathforge-practice-quiz">',
+        "    <h2>Practice Quiz</h2>",
+        f"    <h3>{_escape_text(practice_quiz.title)}</h3>",
+        "    <h3>Questions</h3>",
+        "    <ol>",
+    ]
+    for question in practice_quiz.questions:
+        lines.append(f"      <li>{_escape_text(question)}</li>")
+    lines.extend(["    </ol>", "    <h3>Answer Key</h3>", "    <ul>"])
+    for answer in practice_quiz.answer_key:
+        lines.append(f"      <li>{_escape_text(answer)}</li>")
+    lines.extend(["    </ul>", "  </section>"])
     return lines
 
 

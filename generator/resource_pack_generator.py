@@ -9,7 +9,9 @@ from generator.problem_generator import (
     generate_quadratic_factoring_worksheet,
     generate_systems_of_equations_worksheet,
 )
+from models.content_models import Worksheet
 from models.resource_pack import CommonMistakes, ResourcePack, StudyGuide, TutorNotes
+from models.resource_pack import PracticeQuiz
 
 
 def generate_linear_equation_resource_pack(
@@ -31,6 +33,7 @@ def generate_linear_equation_resource_pack(
         study_guide=_build_study_guide(topic, difficulty),
         common_mistakes=_build_common_mistakes(topic, difficulty),
         tutor_notes=_build_tutor_notes(topic, difficulty),
+        practice_quiz=_build_practice_quiz(topic, worksheet),
         metadata={
             "topic": topic,
             "difficulty": difficulty,
@@ -58,6 +61,7 @@ def generate_quadratic_factoring_resource_pack(
         study_guide=_build_quadratic_study_guide(topic, difficulty),
         common_mistakes=_build_quadratic_common_mistakes(topic, difficulty),
         tutor_notes=_build_quadratic_tutor_notes(topic, difficulty),
+        practice_quiz=_build_practice_quiz(topic, worksheet),
         metadata={
             "topic": topic,
             "difficulty": difficulty,
@@ -85,6 +89,7 @@ def generate_systems_of_equations_resource_pack(
         study_guide=_build_systems_study_guide(topic, difficulty),
         common_mistakes=_build_systems_common_mistakes(topic, difficulty),
         tutor_notes=_build_systems_tutor_notes(topic, difficulty),
+        practice_quiz=_build_practice_quiz(topic, worksheet),
         metadata={
             "topic": topic,
             "difficulty": difficulty,
@@ -112,6 +117,7 @@ def generate_factoring_techniques_resource_pack(
         study_guide=_build_factoring_study_guide(topic, difficulty),
         common_mistakes=_build_factoring_common_mistakes(topic, difficulty),
         tutor_notes=_build_factoring_tutor_notes(topic, difficulty),
+        practice_quiz=_build_practice_quiz(topic, worksheet),
         metadata={
             "topic": topic,
             "difficulty": difficulty,
@@ -139,12 +145,66 @@ def generate_functions_basics_resource_pack(
         study_guide=_build_functions_study_guide(topic, difficulty),
         common_mistakes=_build_functions_common_mistakes(topic, difficulty),
         tutor_notes=_build_functions_tutor_notes(topic, difficulty),
+        practice_quiz=_build_practice_quiz(topic, worksheet),
         metadata={
             "topic": topic,
             "difficulty": difficulty,
             "generator": "functions_basics_resource_pack",
         },
     )
+
+
+def _build_practice_quiz(topic: str, worksheet: Worksheet) -> PracticeQuiz:
+    """Build a deterministic practice quiz from a generated worksheet."""
+    questions = tuple(
+        f"Quiz question {index}: {problem.prompt}"
+        for index, problem in enumerate(worksheet.problems[:3], start=1)
+    )
+    answer_key = tuple(
+        f"{index}. {problem.answer}"
+        for index, problem in enumerate(worksheet.problems[:3], start=1)
+    )
+
+    return PracticeQuiz(
+        title=f"{topic} Practice Quiz",
+        questions=questions + (_topic_review_question(topic),),
+        answer_key=answer_key + (_topic_review_answer(topic),),
+        metadata={
+            "topic": topic,
+            "resource_type": "practice_quiz",
+            "source_worksheet_id": worksheet.worksheet_id or "",
+        },
+    )
+
+
+def _topic_review_question(topic: str) -> str:
+    """Return a deterministic conceptual quiz question for a topic."""
+    normalized_topic = topic.strip().lower()
+
+    if "quadratic" in normalized_topic:
+        return "Concept check: What property is used after factoring a quadratic equation?"
+    if "systems" in normalized_topic:
+        return "Concept check: What does the ordered pair solution represent?"
+    if "factoring" in normalized_topic:
+        return "Concept check: What should you check before using a special factoring pattern?"
+    if "functions" in normalized_topic:
+        return "Concept check: In f(a), what does a represent?"
+    return "Concept check: How can you verify that a solution is correct?"
+
+
+def _topic_review_answer(topic: str) -> str:
+    """Return a deterministic conceptual quiz answer for a topic."""
+    normalized_topic = topic.strip().lower()
+
+    if "quadratic" in normalized_topic:
+        return "4. The zero product property."
+    if "systems" in normalized_topic:
+        return "4. It is the point that satisfies both equations."
+    if "factoring" in normalized_topic:
+        return "4. Check for a greatest common factor first."
+    if "functions" in normalized_topic:
+        return "4. It represents the input value."
+    return "4. Substitute the solution back into the original equation."
 
 
 def _build_study_guide(topic: str, difficulty: str) -> StudyGuide:

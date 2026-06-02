@@ -31,6 +31,7 @@ The current MVP supports:
 - Exporting worksheets to Markdown
 - Exporting worksheets to accessible HTML
 - Generating full instructional resource packs with study guides, common mistakes, and tutor notes
+- Generating practice quizzes inside full instructional resource packs
 - Exporting full resource packs to Markdown
 - Exporting full resource packs to accessible HTML
 - Generating materials from sample College Algebra learning objectives for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics
@@ -95,7 +96,7 @@ Screenshots will be added as the MVP interface stabilizes.
 
 ## Current Status
 
-MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics, resource pack generation, SymPy validation, Markdown export, HTML export, and demo-ready Streamlit UI are implemented and covered by automated tests.
+MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics, resource pack generation with practice quizzes, SymPy validation, Markdown export, HTML export, and demo-ready Streamlit UI are implemented and covered by automated tests.
 
 Current work includes a curriculum-alignment milestone with a deterministic College Algebra template. Next work should focus on hardening, documentation, accessibility review, careful topic expansion, and keeping the implementation small and maintainable.
 

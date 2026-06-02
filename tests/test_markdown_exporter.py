@@ -9,6 +9,7 @@ from exporters.markdown_exporter import (
 from generator.problem_generator import generate_linear_equation_worksheet
 from generator.resource_pack_generator import generate_linear_equation_resource_pack
 from models.content_models import ExportResult, MathProblem, Worksheet
+from models.resource_pack import ResourcePack
 
 
 def test_export_worksheet_to_markdown_returns_export_result() -> None:
@@ -136,6 +137,8 @@ def test_export_resource_pack_to_markdown_includes_all_sections() -> None:
     assert "### Corrections and Interventions" in result.content
     assert "## Tutor Notes" in result.content
     assert "### Discussion Prompts" in result.content
+    assert "## Practice Quiz" in result.content
+    assert "#### Answer Key" in result.content
 
 
 def test_export_resource_pack_to_markdown_can_omit_solution_key() -> None:
@@ -170,6 +173,27 @@ def test_export_resource_pack_to_markdown_includes_instructional_content() -> No
     assert "- Changing only one side of the equation" in result.content
     assert "- Tutoring prompt: ask the learner" in result.content
     assert "- How do you know which operation to undo first?" in result.content
+    assert "### Linear equations Practice Quiz" in result.content
+    assert "Concept check" in result.content
+
+
+def test_export_resource_pack_to_markdown_omits_absent_practice_quiz() -> None:
+    generated_resource_pack = generate_linear_equation_resource_pack(
+        topic="Linear equations",
+        difficulty="easy",
+        count=1,
+        start_id="linear",
+    )
+    resource_pack = ResourcePack(
+        worksheet=generated_resource_pack.worksheet,
+        study_guide=generated_resource_pack.study_guide,
+        common_mistakes=generated_resource_pack.common_mistakes,
+        tutor_notes=generated_resource_pack.tutor_notes,
+    )
+
+    result = export_resource_pack_to_markdown(resource_pack)
+
+    assert "## Practice Quiz" not in result.content
 
 
 def test_export_resource_pack_to_markdown_rejects_non_resource_pack() -> None:

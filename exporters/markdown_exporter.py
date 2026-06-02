@@ -3,7 +3,13 @@
 from __future__ import annotations
 
 from models.content_models import ExportResult, Solution, Worksheet
-from models.resource_pack import CommonMistakes, ResourcePack, StudyGuide, TutorNotes
+from models.resource_pack import (
+    CommonMistakes,
+    PracticeQuiz,
+    ResourcePack,
+    StudyGuide,
+    TutorNotes,
+)
 
 
 def export_worksheet_to_markdown(
@@ -87,6 +93,9 @@ def export_resource_pack_to_markdown(
     lines.extend(_format_common_mistakes(resource_pack.common_mistakes))
     lines.extend(["", "## Tutor Notes", ""])
     lines.extend(_format_tutor_notes(resource_pack.tutor_notes))
+    if resource_pack.practice_quiz is not None:
+        lines.extend(["", "## Practice Quiz", ""])
+        lines.extend(_format_practice_quiz(resource_pack.practice_quiz))
 
     content = "\n".join(lines).rstrip() + "\n"
     return ExportResult(
@@ -158,9 +167,31 @@ def _format_tutor_notes(tutor_notes: TutorNotes) -> list[str]:
     return lines
 
 
+def _format_practice_quiz(practice_quiz: PracticeQuiz) -> list[str]:
+    """Format a practice quiz section."""
+    lines = [
+        f"### {_escape_markdown_text(practice_quiz.title)}",
+        "",
+        "#### Questions",
+        "",
+    ]
+    lines.extend(_format_numbered_items(practice_quiz.questions))
+    lines.extend(["", "#### Answer Key", ""])
+    lines.extend(_format_bullets(practice_quiz.answer_key))
+    return lines
+
+
 def _format_bullets(items: tuple[str, ...]) -> list[str]:
     """Format text items as escaped Markdown bullets."""
     return [f"- {_escape_markdown_text(item)}" for item in items]
+
+
+def _format_numbered_items(items: tuple[str, ...]) -> list[str]:
+    """Format text items as escaped Markdown numbered items."""
+    return [
+        f"{index}. {_escape_markdown_text(item)}"
+        for index, item in enumerate(items, start=1)
+    ]
 
 
 def _markdown_filename(worksheet: Worksheet) -> str:

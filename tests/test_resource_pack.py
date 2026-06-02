@@ -5,6 +5,7 @@ import pytest
 from generator.problem_generator import generate_linear_equation_worksheet
 from models.resource_pack import (
     CommonMistakes,
+    PracticeQuiz,
     ResourcePack,
     StudyGuide,
     TutorNotes,
@@ -50,6 +51,57 @@ def test_resource_pack_creation() -> None:
         "Ask learners to explain each inverse operation.",
     )
     assert resource_pack.metadata["topic"] == "linear equations"
+    assert resource_pack.practice_quiz is None
+
+
+def test_practice_quiz_creation() -> None:
+    practice_quiz = PracticeQuiz(
+        title="Linear Equations Practice Quiz",
+        questions=("Solve x + 1 = 3.",),
+        answer_key=("1. x = 2",),
+        metadata={"topic": "linear equations"},
+    )
+
+    assert practice_quiz.title == "Linear Equations Practice Quiz"
+    assert practice_quiz.questions == ("Solve x + 1 = 3.",)
+    assert practice_quiz.answer_key == ("1. x = 2",)
+    assert practice_quiz.metadata["topic"] == "linear equations"
+
+
+def test_resource_pack_can_include_practice_quiz() -> None:
+    resource_pack = _sample_resource_pack()
+    practice_quiz = PracticeQuiz(
+        title="Quiz",
+        questions=("What is x?",),
+        answer_key=("1. x = 1",),
+    )
+
+    resource_pack_with_quiz = ResourcePack(
+        worksheet=resource_pack.worksheet,
+        study_guide=resource_pack.study_guide,
+        common_mistakes=resource_pack.common_mistakes,
+        tutor_notes=resource_pack.tutor_notes,
+        practice_quiz=practice_quiz,
+    )
+
+    assert resource_pack_with_quiz.practice_quiz == practice_quiz
+
+
+def test_resource_pack_preserves_positional_metadata_compatibility() -> None:
+    resource_pack = _sample_resource_pack()
+
+    resource_pack_with_positional_metadata = ResourcePack(
+        resource_pack.worksheet,
+        resource_pack.study_guide,
+        resource_pack.common_mistakes,
+        resource_pack.tutor_notes,
+        {"topic": "linear equations"},
+    )
+
+    assert resource_pack_with_positional_metadata.metadata["topic"] == (
+        "linear equations"
+    )
+    assert resource_pack_with_positional_metadata.practice_quiz is None
 
 
 def test_study_guide_requires_title() -> None:
@@ -67,6 +119,30 @@ def test_tutor_notes_requires_at_least_one_note() -> None:
         TutorNotes(notes=())
 
 
+def test_practice_quiz_requires_title() -> None:
+    with pytest.raises(ValueError, match="title"):
+        PracticeQuiz(title=" ", questions=("Question",), answer_key=("Answer",))
+
+
+def test_practice_quiz_requires_questions() -> None:
+    with pytest.raises(ValueError, match="questions"):
+        PracticeQuiz(title="Quiz", questions=(), answer_key=("Answer",))
+
+
+def test_practice_quiz_requires_answer_key() -> None:
+    with pytest.raises(ValueError, match="answer_key"):
+        PracticeQuiz(title="Quiz", questions=("Question",), answer_key=())
+
+
+def test_practice_quiz_requires_answer_key_for_each_question() -> None:
+    with pytest.raises(ValueError, match="one entry per question"):
+        PracticeQuiz(
+            title="Quiz",
+            questions=("Question 1", "Question 2"),
+            answer_key=("1. Answer",),
+        )
+
+
 def test_resource_pack_requires_worksheet() -> None:
     resource_pack = _sample_resource_pack()
 
@@ -76,6 +152,19 @@ def test_resource_pack_requires_worksheet() -> None:
             study_guide=resource_pack.study_guide,
             common_mistakes=resource_pack.common_mistakes,
             tutor_notes=resource_pack.tutor_notes,
+        )
+
+
+def test_resource_pack_rejects_invalid_practice_quiz() -> None:
+    resource_pack = _sample_resource_pack()
+
+    with pytest.raises(TypeError, match="practice_quiz"):
+        ResourcePack(
+            worksheet=resource_pack.worksheet,
+            study_guide=resource_pack.study_guide,
+            common_mistakes=resource_pack.common_mistakes,
+            tutor_notes=resource_pack.tutor_notes,
+            practice_quiz="not a quiz",
         )
 
 

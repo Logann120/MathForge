@@ -60,6 +60,7 @@ Goals:
 - Completed: Expand College Algebra coverage to systems of linear equations.
 - Completed: Expand College Algebra coverage to factoring techniques.
 - Completed: Expand College Algebra coverage to functions basics.
+- Completed: Add practice quizzes to instructional resource packs.
 - Completed: Polish the Streamlit UI for MVP demo readiness.
 - Continue careful topic expansion beyond the current College Algebra topics.
 - Continue focused automated tests for generation, validation, resource packs, and export workflows.

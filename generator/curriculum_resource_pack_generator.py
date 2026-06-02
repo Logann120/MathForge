@@ -35,6 +35,7 @@ def generate_resource_pack_from_learning_objective(
             study_guide=resource_pack.study_guide,
             common_mistakes=resource_pack.common_mistakes,
             tutor_notes=resource_pack.tutor_notes,
+            practice_quiz=resource_pack.practice_quiz,
             metadata={
                 **dict(resource_pack.metadata),
                 "learning_objective_id": learning_objective.objective_id,
@@ -54,6 +55,7 @@ def generate_resource_pack_from_learning_objective(
             study_guide=resource_pack.study_guide,
             common_mistakes=resource_pack.common_mistakes,
             tutor_notes=resource_pack.tutor_notes,
+            practice_quiz=resource_pack.practice_quiz,
             metadata={
                 **dict(resource_pack.metadata),
                 "learning_objective_id": learning_objective.objective_id,
@@ -73,6 +75,7 @@ def generate_resource_pack_from_learning_objective(
             study_guide=resource_pack.study_guide,
             common_mistakes=resource_pack.common_mistakes,
             tutor_notes=resource_pack.tutor_notes,
+            practice_quiz=resource_pack.practice_quiz,
             metadata={
                 **dict(resource_pack.metadata),
                 "learning_objective_id": learning_objective.objective_id,
@@ -92,6 +95,7 @@ def generate_resource_pack_from_learning_objective(
             study_guide=resource_pack.study_guide,
             common_mistakes=resource_pack.common_mistakes,
             tutor_notes=resource_pack.tutor_notes,
+            practice_quiz=resource_pack.practice_quiz,
             metadata={
                 **dict(resource_pack.metadata),
                 "learning_objective_id": learning_objective.objective_id,
@@ -111,6 +115,7 @@ def generate_resource_pack_from_learning_objective(
             study_guide=resource_pack.study_guide,
             common_mistakes=resource_pack.common_mistakes,
             tutor_notes=resource_pack.tutor_notes,
+            practice_quiz=resource_pack.practice_quiz,
             metadata={
                 **dict(resource_pack.metadata),
                 "learning_objective_id": learning_objective.objective_id,

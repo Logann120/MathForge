@@ -25,6 +25,7 @@ def test_generate_resource_pack_from_learning_objective() -> None:
     assert len(resource_pack.worksheet.problems) == 2
     assert resource_pack.metadata["learning_objective_id"] == objective.objective_id
     assert resource_pack.metadata["learning_objective"] == objective.description
+    assert resource_pack.practice_quiz is not None
 
 
 def test_generate_resource_pack_from_learning_objective_is_deterministic() -> None:

@@ -196,6 +196,7 @@ def test_full_resource_pack_ui_exposes_resource_pack_exports() -> None:
         "Study Guide",
         "Common Mistakes",
         "Tutor Notes",
+        "Practice Quiz",
         "Exports",
     ]
     assert _download_labels(test_app) == [
@@ -205,7 +206,9 @@ def test_full_resource_pack_ui_exposes_resource_pack_exports() -> None:
     assert test_app.text_area[0].label == "Resource Pack Markdown"
     assert test_app.text_area[1].label == "Resource Pack HTML"
     assert "## Study Guide" in test_app.text_area[0].value
+    assert "## Practice Quiz" in test_app.text_area[0].value
     assert "mathforge-resource-pack" in test_app.text_area[1].value
+    assert "mathforge-practice-quiz" in test_app.text_area[1].value
 
 
 def _run_app() -> AppTest:

@@ -128,6 +128,36 @@ class TutorNotes:
 
 
 @dataclass(frozen=True, slots=True)
+class PracticeQuiz:
+    """Short formative quiz bundled with an instructional resource pack."""
+
+    title: str
+    questions: tuple[str, ...]
+    answer_key: tuple[str, ...]
+    metadata: Metadata = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        _require_text(self.title, "title")
+        object.__setattr__(
+            self,
+            "questions",
+            _normalize_text_tuple(self.questions, "questions"),
+        )
+        if not self.questions:
+            raise ValueError("questions must contain at least one item.")
+        object.__setattr__(
+            self,
+            "answer_key",
+            _normalize_text_tuple(self.answer_key, "answer_key"),
+        )
+        if not self.answer_key:
+            raise ValueError("answer_key must contain at least one item.")
+        if len(self.answer_key) != len(self.questions):
+            raise ValueError("answer_key must contain one entry per question.")
+        object.__setattr__(self, "metadata", _normalize_metadata(self.metadata))
+
+
+@dataclass(frozen=True, slots=True)
 class ResourcePack:
     """A worksheet bundled with companion instructional resources."""
 
@@ -136,6 +166,7 @@ class ResourcePack:
     common_mistakes: CommonMistakes
     tutor_notes: TutorNotes
     metadata: Metadata = field(default_factory=dict)
+    practice_quiz: PracticeQuiz | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.worksheet, Worksheet):
@@ -146,4 +177,9 @@ class ResourcePack:
             raise TypeError("common_mistakes must be a CommonMistakes.")
         if not isinstance(self.tutor_notes, TutorNotes):
             raise TypeError("tutor_notes must be a TutorNotes.")
+        if self.practice_quiz is not None and not isinstance(
+            self.practice_quiz,
+            PracticeQuiz,
+        ):
+            raise TypeError("practice_quiz must be a PracticeQuiz or None.")
         object.__setattr__(self, "metadata", _normalize_metadata(self.metadata))
