@@ -5,6 +5,7 @@ from __future__ import annotations
 from generator.problem_generator import (
     generate_linear_equation_worksheet,
     generate_quadratic_factoring_worksheet,
+    generate_systems_of_equations_worksheet,
 )
 from models.resource_pack import CommonMistakes, ResourcePack, StudyGuide, TutorNotes
 
@@ -59,6 +60,33 @@ def generate_quadratic_factoring_resource_pack(
             "topic": topic,
             "difficulty": difficulty,
             "generator": "quadratic_factoring_resource_pack",
+        },
+    )
+
+
+def generate_systems_of_equations_resource_pack(
+    topic: str,
+    difficulty: str,
+    count: int,
+    start_id: str,
+) -> ResourcePack:
+    """Generate a deterministic systems of equations worksheet resource pack."""
+    worksheet = generate_systems_of_equations_worksheet(
+        topic=topic,
+        difficulty=difficulty,
+        count=count,
+        start_id=start_id,
+    )
+
+    return ResourcePack(
+        worksheet=worksheet,
+        study_guide=_build_systems_study_guide(topic, difficulty),
+        common_mistakes=_build_systems_common_mistakes(topic, difficulty),
+        tutor_notes=_build_systems_tutor_notes(topic, difficulty),
+        metadata={
+            "topic": topic,
+            "difficulty": difficulty,
+            "generator": "systems_of_equations_resource_pack",
         },
     )
 
@@ -119,6 +147,34 @@ def _build_quadratic_study_guide(topic: str, difficulty: str) -> StudyGuide:
     )
 
 
+def _build_systems_study_guide(topic: str, difficulty: str) -> StudyGuide:
+    """Build deterministic student-facing guidance for systems of equations."""
+    return StudyGuide(
+        title=f"{topic} Study Guide",
+        overview=(
+            "Solve a system by finding the ordered pair that makes both "
+            "linear equations true at the same time."
+        ),
+        key_points=(
+            "Learning objective: solve systems of linear equations in two variables.",
+            "Key idea: the solution is an ordered pair (x, y).",
+            "Key idea: elimination can remove one variable by adding equations.",
+            "Key idea: check the solution in both original equations.",
+        ),
+        practice_tips=(
+            "Worked-example guidance: line up like variables before eliminating.",
+            "Worked-example guidance: add or subtract equations to solve for one variable.",
+            "Worked-example guidance: substitute the known value to find the other variable.",
+            "Worked-example guidance: verify the ordered pair in both equations.",
+        ),
+        metadata={
+            "topic": topic,
+            "difficulty": difficulty,
+            "resource_type": "study_guide",
+        },
+    )
+
+
 def _build_common_mistakes(topic: str, difficulty: str) -> CommonMistakes:
     """Build deterministic common-mistake guidance."""
     return CommonMistakes(
@@ -165,6 +221,29 @@ def _build_quadratic_common_mistakes(topic: str, difficulty: str) -> CommonMista
     )
 
 
+def _build_systems_common_mistakes(topic: str, difficulty: str) -> CommonMistakes:
+    """Build deterministic common-mistake guidance for systems of equations."""
+    return CommonMistakes(
+        mistakes=(
+            "Treating x and y values as separate answers instead of an ordered pair.",
+            "Eliminating a variable but forgetting to solve for the second variable.",
+            "Changing signs incorrectly when subtracting equations.",
+            "Checking the ordered pair in only one equation.",
+        ),
+        corrections=(
+            "Write the final answer as an ordered pair (x, y).",
+            "After finding one variable, substitute it into either original equation.",
+            "Keep columns aligned and distribute negative signs carefully.",
+            "Substitute the ordered pair into both equations before finishing.",
+        ),
+        metadata={
+            "topic": topic,
+            "difficulty": difficulty,
+            "resource_type": "common_mistakes",
+        },
+    )
+
+
 def _build_tutor_notes(topic: str, difficulty: str) -> TutorNotes:
     """Build deterministic tutor-facing prompts and interventions."""
     return TutorNotes(
@@ -180,6 +259,29 @@ def _build_tutor_notes(topic: str, difficulty: str) -> TutorNotes:
             "How do you know which operation to undo first?",
             "What does it mean for both sides of an equation to stay balanced?",
             "How can substitution help you catch arithmetic mistakes?",
+        ),
+        metadata={
+            "topic": topic,
+            "difficulty": difficulty,
+            "resource_type": "tutor_notes",
+        },
+    )
+
+
+def _build_systems_tutor_notes(topic: str, difficulty: str) -> TutorNotes:
+    """Build deterministic tutor-facing prompts for systems of equations."""
+    return TutorNotes(
+        notes=(
+            "Tutoring prompt: ask the learner what an ordered pair represents.",
+            "Diagnostic question: which variable is easiest to eliminate first?",
+            "Diagnostic question: did the learner check both equations?",
+            "Intervention suggestion: have the learner stack equations in columns.",
+            "Intervention suggestion: graph the intersection concept verbally before solving.",
+        ),
+        discussion_prompts=(
+            "Why must the same ordered pair satisfy both equations?",
+            "How does elimination reduce two equations to one variable?",
+            "What can checking both equations reveal about arithmetic mistakes?",
         ),
         metadata={
             "topic": topic,

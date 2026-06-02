@@ -8,7 +8,7 @@ def test_college_algebra_template_contains_linear_equations_module() -> None:
 
     assert course_template.course_id == "college-algebra"
     assert course_template.title == "College Algebra"
-    assert len(course_template.modules) == 2
+    assert len(course_template.modules) == 3
     assert course_template.modules[0].title == "Linear Equations"
 
 
@@ -34,6 +34,18 @@ def test_college_algebra_template_contains_quadratic_factoring_objective() -> No
     assert objective.standards == (
         "College Algebra: Quadratic Equations by Factoring",
     )
+
+
+def test_college_algebra_template_contains_systems_objective() -> None:
+    course_template = college_algebra_template()
+    module = course_template.modules[2]
+    objective = module.learning_objectives[0]
+
+    assert module.title == "Systems of Equations"
+    assert objective.objective_id == "college-algebra-systems-equations-001"
+    assert objective.description == "Solve systems of linear equations in two variables"
+    assert objective.topic == "Systems of linear equations"
+    assert objective.standards == ("College Algebra: Systems of Linear Equations",)
 
 
 def test_college_algebra_template_is_deterministic() -> None:

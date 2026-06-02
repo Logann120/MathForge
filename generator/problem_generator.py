@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from sympy import Symbol, simplify, sympify
+
 from models.content_models import MathProblem, Solution, Worksheet
 from validators.sympy_validator import validate_equation_solution
 
@@ -163,6 +165,87 @@ def generate_quadratic_factoring_worksheet(
     )
 
 
+def generate_systems_of_equations_worksheet(
+    topic: str,
+    difficulty: str,
+    count: int,
+    start_id: str,
+) -> Worksheet:
+    """Generate deterministic systems of two linear equations in two variables."""
+    _require_text(topic, "topic")
+    _require_text(difficulty, "difficulty")
+    _require_text(start_id, "start_id")
+
+    if not isinstance(count, int):
+        raise TypeError("count must be an integer.")
+    if count <= 0:
+        raise ValueError("count must be positive.")
+
+    problems: list[MathProblem] = []
+    solutions: list[Solution] = []
+
+    for index in range(count):
+        problem_id = f"{start_id}-{index + 1:03d}"
+        x_value, y_value = _system_solution(difficulty, index)
+        first_equation, second_equation = _system_equations(x_value, y_value)
+        answer_text = f"({x_value}, {y_value})"
+
+        if not _validate_system_solution(
+            (first_equation, second_equation),
+            x_value,
+            y_value,
+        ):
+            raise ValueError(f"generated system failed validation for {problem_id}.")
+
+        problems.append(
+            MathProblem(
+                problem_id=problem_id,
+                prompt=(
+                    "Solve the system of equations:\n"
+                    f"{first_equation}\n"
+                    f"{second_equation}"
+                ),
+                answer=answer_text,
+                topic=topic,
+                difficulty=difficulty,
+                metadata={
+                    "equation_1": first_equation,
+                    "equation_2": second_equation,
+                    "variable_1": "x",
+                    "variable_2": "y",
+                    "x_value": str(x_value),
+                    "y_value": str(y_value),
+                },
+            )
+        )
+        solutions.append(
+            Solution(
+                problem_id=problem_id,
+                final_answer=answer_text,
+                steps=(
+                    f"Start with the system {first_equation} and {second_equation}.",
+                    "Add the equations to eliminate y.",
+                    f"Solve for x to get x = {x_value}.",
+                    f"Substitute x = {x_value} into one equation to get y = {y_value}.",
+                    f"The solution is {answer_text}.",
+                ),
+            )
+        )
+
+    return Worksheet(
+        title=f"{topic} Worksheet",
+        worksheet_id=f"{start_id}-worksheet",
+        instructions="Solve each system of equations for x and y.",
+        problems=tuple(problems),
+        solutions=tuple(solutions),
+        metadata={
+            "topic": topic,
+            "difficulty": difficulty,
+            "generator": "systems_of_equations",
+        },
+    )
+
+
 def _linear_equation_terms(difficulty: str, index: int) -> tuple[int, int, int]:
     """Return deterministic ``a``, ``b``, and solution values."""
     normalized_difficulty = difficulty.strip().lower()
@@ -239,6 +322,56 @@ def _factor_for_root(root: int) -> str:
     if root < 0:
         return f"(x + {abs(root)})"
     return f"(x - {root})"
+
+
+def _system_solution(difficulty: str, index: int) -> tuple[int, int]:
+    """Return deterministic integer solutions for a linear system."""
+    normalized_difficulty = difficulty.strip().lower()
+
+    if normalized_difficulty in {"easy", "introductory", "beginner"}:
+        return index + 1, index + 2
+    if normalized_difficulty in {"hard", "advanced"}:
+        return index + 3, -(index + 1)
+    return index + 2, index + 3
+
+
+def _system_equations(x_value: int, y_value: int) -> tuple[str, str]:
+    """Return an elimination-friendly system for a known solution."""
+    return (
+        f"x + y = {x_value + y_value}",
+        f"x - y = {x_value - y_value}",
+    )
+
+
+def _validate_system_solution(
+    equations: tuple[str, str],
+    x_value: int,
+    y_value: int,
+) -> bool:
+    """Validate that a solution satisfies both equations in a system."""
+    x_symbol = Symbol("x")
+    y_symbol = Symbol("y")
+
+    for equation in equations:
+        left_text, right_text = _split_equation_text(equation)
+        left_expr = sympify(left_text).subs(
+            {x_symbol: x_value, y_symbol: y_value}
+        )
+        right_expr = sympify(right_text).subs(
+            {x_symbol: x_value, y_symbol: y_value}
+        )
+        if simplify(left_expr - right_expr) != 0:
+            return False
+
+    return True
+
+
+def _split_equation_text(equation: str) -> tuple[str, str]:
+    """Split simple equation text into left and right sides."""
+    parts = equation.split("=")
+    if len(parts) != 2:
+        raise ValueError("equation must contain exactly one equals sign.")
+    return parts[0].strip(), parts[1].strip()
 
 
 def _require_text(value: str, field_name: str) -> None:

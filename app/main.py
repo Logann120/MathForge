@@ -15,9 +15,11 @@ from generator.curriculum_resource_pack_generator import (
 )
 from generator.problem_generator import generate_linear_equation_worksheet
 from generator.problem_generator import generate_quadratic_factoring_worksheet
+from generator.problem_generator import generate_systems_of_equations_worksheet
 from generator.resource_pack_generator import (
     generate_linear_equation_resource_pack,
     generate_quadratic_factoring_resource_pack,
+    generate_systems_of_equations_resource_pack,
 )
 from models.curriculum import CourseModule, CourseTemplate, LearningObjective
 from models.content_models import ExportResult, Solution, Worksheet
@@ -30,12 +32,14 @@ LOGGER = logging.getLogger(__name__)
 TOPIC_OPTIONS = (
     "Linear equations",
     "Quadratic equations by factoring",
+    "Systems of linear equations",
 )
 DIFFICULTY_OPTIONS = ("Easy",)
 
 _TOPIC_PREFIXES = {
     "Linear equations": "linear",
     "Quadratic equations by factoring": "quadratic",
+    "Systems of linear equations": "systems",
 }
 
 
@@ -50,7 +54,7 @@ def main() -> None:
     )
     st.caption(
         "MathForge currently supports deterministic generation for linear equations "
-        "and quadratic equations by factoring."
+        "quadratic equations by factoring, and systems of linear equations."
     )
 
     output_type = st.radio(
@@ -159,6 +163,14 @@ def _generate_worksheet_for_topic(
             start_id=start_id,
         )
 
+    if _is_systems_of_equations_topic(topic):
+        return generate_systems_of_equations_worksheet(
+            topic=topic,
+            difficulty=difficulty,
+            count=count,
+            start_id=start_id,
+        )
+
     raise ValueError(f"unsupported topic: {topic}")
 
 
@@ -185,12 +197,25 @@ def _generate_resource_pack_for_topic(
             start_id=start_id,
         )
 
+    if _is_systems_of_equations_topic(topic):
+        return generate_systems_of_equations_resource_pack(
+            topic=topic,
+            difficulty=difficulty,
+            count=count,
+            start_id=start_id,
+        )
+
     raise ValueError(f"unsupported topic: {topic}")
 
 
 def _is_quadratic_factoring_topic(topic: str) -> bool:
     """Return whether the selected topic is quadratic factoring."""
     return topic.strip().lower() == "quadratic equations by factoring"
+
+
+def _is_systems_of_equations_topic(topic: str) -> bool:
+    """Return whether the selected topic is systems of equations."""
+    return topic.strip().lower() == "systems of linear equations"
 
 
 def _default_problem_id_prefix(topic: str) -> str:

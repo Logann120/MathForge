@@ -1,10 +1,14 @@
 """Tests for deterministic worksheet problem generation."""
 
+from collections.abc import Mapping
+
 import pytest
+from sympy import Symbol, simplify, sympify
 
 from generator.problem_generator import (
     generate_linear_equation_worksheet,
     generate_quadratic_factoring_worksheet,
+    generate_systems_of_equations_worksheet,
 )
 from models.content_models import MathProblem, Solution, Worksheet
 from validators.sympy_validator import validate_equation_solution
@@ -174,3 +178,105 @@ def test_generate_quadratic_factoring_worksheet_rejects_invalid_count() -> None:
             0,
             "quadratic",
         )
+
+
+def test_generate_systems_of_equations_worksheet_returns_worksheet() -> None:
+    worksheet = generate_systems_of_equations_worksheet(
+        topic="Systems of linear equations",
+        difficulty="easy",
+        count=2,
+        start_id="systems",
+    )
+
+    assert isinstance(worksheet, Worksheet)
+    assert worksheet.title == "Systems of linear equations Worksheet"
+    assert worksheet.worksheet_id == "systems-worksheet"
+    assert len(worksheet.problems) == 2
+    assert len(worksheet.solutions) == 2
+    assert worksheet.metadata["generator"] == "systems_of_equations"
+
+
+def test_generate_systems_of_equations_worksheet_is_deterministic() -> None:
+    first = generate_systems_of_equations_worksheet(
+        "Systems of linear equations",
+        "easy",
+        3,
+        "systems",
+    )
+    second = generate_systems_of_equations_worksheet(
+        "Systems of linear equations",
+        "easy",
+        3,
+        "systems",
+    )
+
+    assert first == second
+    assert [problem.problem_id for problem in first.problems] == [
+        "systems-001",
+        "systems-002",
+        "systems-003",
+    ]
+
+
+def test_generate_systems_of_equations_worksheet_creates_expected_easy_problem() -> None:
+    worksheet = generate_systems_of_equations_worksheet(
+        "Systems of linear equations",
+        "easy",
+        1,
+        "sys",
+    )
+
+    problem = worksheet.problems[0]
+    solution = worksheet.solutions[0]
+
+    assert isinstance(problem, MathProblem)
+    assert isinstance(solution, Solution)
+    assert problem.prompt == (
+        "Solve the system of equations:\n"
+        "x + y = 3\n"
+        "x - y = -1"
+    )
+    assert problem.answer == "(1, 2)"
+    assert problem.metadata["equation_1"] == "x + y = 3"
+    assert problem.metadata["equation_2"] == "x - y = -1"
+    assert solution.problem_id == problem.problem_id
+    assert solution.final_answer == problem.answer
+
+
+def test_generated_system_solutions_satisfy_generated_equations() -> None:
+    worksheet = generate_systems_of_equations_worksheet(
+        topic="Systems of linear equations",
+        difficulty="advanced",
+        count=4,
+        start_id="advanced-systems",
+    )
+
+    for problem in worksheet.problems:
+        assert _system_solution_is_valid(problem.metadata)
+
+
+def test_generate_systems_of_equations_worksheet_rejects_invalid_count() -> None:
+    with pytest.raises(ValueError, match="count must be positive"):
+        generate_systems_of_equations_worksheet(
+            "Systems of linear equations",
+            "easy",
+            0,
+            "systems",
+        )
+
+
+def _system_solution_is_valid(metadata: Mapping[str, str]) -> bool:
+    """Return whether generated system metadata describes a valid solution."""
+    x_symbol = Symbol("x")
+    y_symbol = Symbol("y")
+    x_value = int(metadata["x_value"])
+    y_value = int(metadata["y_value"])
+
+    for equation_key in ("equation_1", "equation_2"):
+        left_text, right_text = metadata[equation_key].split("=")
+        left_expr = sympify(left_text).subs({x_symbol: x_value, y_symbol: y_value})
+        right_expr = sympify(right_text).subs({x_symbol: x_value, y_symbol: y_value})
+        if simplify(left_expr - right_expr) != 0:
+            return False
+
+    return True
