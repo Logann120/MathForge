@@ -26,6 +26,7 @@ The current MVP supports:
 - Generating systems of linear equations worksheets
 - Generating factoring techniques worksheets
 - Generating functions basics worksheets
+- Selecting built-in generation presets for common instructor workflows
 - Generating detailed solution keys
 - Validating generated answers using SymPy
 - Exporting worksheets to Markdown
@@ -64,7 +65,7 @@ Implementation should prioritize maintainability, clear module boundaries, autom
 
 MathForge is organized around small, testable Python modules:
 
-- `app/` contains the Streamlit MVP interface.
+- `app/` contains the Streamlit MVP interface and built-in generation presets.
 - `generator/` contains deterministic worksheet, resource pack, and curriculum-aligned generation.
 - `models/` contains dataclasses for worksheets, problems, solutions, exports, curriculum objects, and resource packs.
 - `exporters/` contains Markdown and accessible HTML exporters for worksheets and resource packs, plus standard-library ZIP bundle helpers for grouping already-rendered exports.
@@ -130,7 +131,7 @@ Screenshots will be added as the MVP interface stabilizes.
 
 ## Current Status
 
-MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics, resource pack generation with practice quizzes, SymPy validation, Markdown export, HTML export, optional ZIP export bundles, and demo-ready Streamlit UI are implemented and covered by automated tests.
+MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics, built-in generation presets, resource pack generation with practice quizzes, SymPy validation, Markdown export, HTML export, optional ZIP export bundles, and demo-ready Streamlit UI are implemented and covered by automated tests.
 
 Current work includes a curriculum-alignment milestone with a deterministic College Algebra template. Next work should focus on hardening, documentation, accessibility review, careful topic expansion, and keeping the implementation small and maintainable.
 
@@ -138,6 +139,7 @@ Current work includes a curriculum-alignment milestone with a deterministic Coll
 
 - Example files should be periodically checked against current generated output as topics and resource-pack sections evolve.
 - ZIP export bundles are convenience downloads for already-rendered Markdown and HTML files; individual export buttons remain the source of each format.
+- Built-in presets provide starting defaults only; there are no saved custom presets or file-based preset configuration.
 - Continuous integration currently runs the pytest suite on Python 3.11 and Python 3.12.
 - There is no deployment workflow or production hosting configuration.
 - Accessibility and browser behavior need broader manual QA beyond automated exporter tests.

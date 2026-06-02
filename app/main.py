@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from app.presets import find_generation_preset, generation_preset_labels
 from exporters.bundle_exporter import create_export_bundle
 from exporters.html_exporter import export_resource_pack_to_html, export_worksheet_to_html
 from exporters.markdown_exporter import (
@@ -36,8 +37,11 @@ from topics.registry import find_topic_by_label, supported_topic_labels
 
 LOGGER = logging.getLogger(__name__)
 
+OUTPUT_TYPE_OPTIONS = ("Worksheet only", "Full Resource Pack")
+GENERATION_MODE_OPTIONS = ("Topic mode", "Learning Objective mode")
 TOPIC_OPTIONS = supported_topic_labels()
 DIFFICULTY_OPTIONS = ("Easy",)
+GENERATION_PRESET_OPTIONS = generation_preset_labels()
 
 
 def main() -> None:
@@ -55,24 +59,41 @@ def main() -> None:
         "factoring techniques, and functions basics."
     )
 
+    preset_label = st.selectbox(
+        "Generation preset",
+        options=GENERATION_PRESET_OPTIONS,
+        help=(
+            "Presets choose sensible starting defaults only. You can still edit "
+            "the output type, generation mode, topic or objective, difficulty, "
+            "problem count, and problem ID prefix before generating."
+        ),
+    )
+    preset = find_generation_preset(preset_label)
+    preset_key = _widget_key(preset.label)
+    st.caption(f"Preset: {preset.description}")
+
     output_type = st.radio(
         "Output type",
-        options=("Worksheet only", "Full Resource Pack"),
+        options=OUTPUT_TYPE_OPTIONS,
+        index=_option_index(OUTPUT_TYPE_OPTIONS, preset.output_type),
         horizontal=True,
         help=(
             "Worksheet only = problems, solution key, Markdown export, HTML export. "
             "Full Resource Pack = worksheet, solution key, study guide, common "
             "mistakes, tutor notes, Markdown export, HTML export."
         ),
+        key=f"output_type_{preset_key}",
     )
     generation_mode = st.radio(
         "Generation mode",
-        options=("Topic mode", "Learning Objective mode"),
+        options=GENERATION_MODE_OPTIONS,
+        index=_option_index(GENERATION_MODE_OPTIONS, preset.generation_mode),
         horizontal=True,
         help=(
             "Topic mode generates from a selected math topic. Learning Objective "
             "mode generates from the College Algebra course template."
         ),
+        key=f"generation_mode_{preset_key}",
     )
 
     learning_objective: LearningObjective | None = None
@@ -80,17 +101,28 @@ def main() -> None:
         learning_objective = _select_learning_objective(st, college_algebra_template())
         topic = learning_objective.topic
     else:
-        topic = st.selectbox("Topic", options=TOPIC_OPTIONS)
+        topic = st.selectbox(
+            "Topic",
+            options=TOPIC_OPTIONS,
+            index=_option_index(TOPIC_OPTIONS, preset.topic_label),
+            key=f"topic_{preset_key}",
+        )
 
-    difficulty_label = st.selectbox("Difficulty", options=DIFFICULTY_OPTIONS)
+    difficulty_label = st.selectbox(
+        "Difficulty",
+        options=DIFFICULTY_OPTIONS,
+        index=_option_index(DIFFICULTY_OPTIONS, preset.difficulty_label),
+        key=f"difficulty_{preset_key}",
+    )
     st.caption("Additional difficulty levels are planned.")
     count = st.number_input(
         "Problem count",
         min_value=1,
         max_value=25,
-        value=5,
+        value=preset.problem_count,
         step=1,
         help="Number of practice problems to generate.",
+        key=f"problem_count_{preset_key}",
     )
 
     with st.expander("Advanced options"):
@@ -188,6 +220,22 @@ def _difficulty_value(label: str) -> str:
     if label == "Easy":
         return "easy"
     raise ValueError(f"unsupported difficulty: {label}")
+
+
+def _option_index(options: tuple[str, ...], value: str) -> int:
+    """Return the index for a default option value."""
+    try:
+        return options.index(value)
+    except ValueError:
+        return 0
+
+
+def _widget_key(value: str) -> str:
+    """Return a stable widget-key fragment."""
+    return "".join(
+        character.lower() if character.isalnum() else "_"
+        for character in value.strip()
+    ).strip("_")
 
 
 def _select_learning_objective(

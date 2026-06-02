@@ -30,6 +30,7 @@ The application separates responsibilities into clear modules so contributors an
 Purpose:
 
 - Present worksheet and resource-pack generation options.
+- Offer built-in presets for common instructor workflows.
 - Collect user configuration.
 - Display worksheet, solution, and instructional resource previews.
 - Trigger Markdown and HTML export actions.
@@ -37,6 +38,7 @@ Purpose:
 Current implementation:
 
 - `app/main.py` contains the Streamlit MVP.
+- `app/presets.py` contains built-in preset metadata for default UI settings.
 - Topic mode generates from a supported topic label.
 - Learning Objective mode generates from the College Algebra template.
 - The UI hands off to generator and exporter functions rather than embedding generation logic.
@@ -157,13 +159,14 @@ Current implementation:
 ## Conceptual Data Flow
 
 1. A user selects worksheet or resource-pack options in Streamlit.
-2. The UI passes structured options to the generation layer.
-3. Problem generators create structured problem objects.
-4. The validation layer checks generated answers with SymPy where practical.
-5. Resource-pack generators optionally assemble study guides, common mistakes, tutor notes, and practice quizzes.
-6. Exporters render Markdown or semantic HTML.
-7. Optional ZIP bundle helpers group related rendered exports.
-8. The UI offers previews and download actions.
+2. A built-in preset can provide editable starting defaults.
+3. The UI passes structured options to the generation layer.
+4. Problem generators create structured problem objects.
+5. The validation layer checks generated answers with SymPy where practical.
+6. Resource-pack generators optionally assemble study guides, common mistakes, tutor notes, and practice quizzes.
+7. Exporters render Markdown or semantic HTML.
+8. Optional ZIP bundle helpers group related rendered exports.
+9. The UI offers previews and download actions.
 
 ## Core Data Concepts
 
@@ -227,6 +230,7 @@ Generated content is deterministic and instructor-reviewable. Future AI-assisted
 
 - Example exports should be periodically checked against current generated output.
 - ZIP bundles currently include the rendered exports already available in the active export panel; they do not add separate generated artifacts.
+- Built-in generation presets are fixed metadata only; there are no custom saved presets, accounts, persistence, or file-based configuration.
 - Continuous integration runs the pytest suite on Python 3.11 and Python 3.12.
 - There is no deployment workflow.
 - Accessibility and browser QA are limited and should be expanded before broader release.

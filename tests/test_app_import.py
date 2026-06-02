@@ -5,6 +5,7 @@ from collections.abc import Callable
 from streamlit.testing.v1 import AppTest
 
 import app.main
+from app.presets import generation_preset_labels
 from topics.registry import supported_topic_labels
 
 
@@ -20,6 +21,7 @@ def test_app_main_imports_without_running_streamlit_app() -> None:
     assert isinstance(app.main.export_resource_pack_to_html, Callable)
     assert isinstance(app.main.college_algebra_template, Callable)
     assert app.main.TOPIC_OPTIONS == supported_topic_labels()
+    assert app.main.GENERATION_PRESET_OPTIONS == generation_preset_labels()
 
 
 def test_topic_mode_generates_linear_worksheet() -> None:
@@ -39,7 +41,7 @@ def test_topic_mode_generates_linear_worksheet() -> None:
 def test_topic_mode_generates_quadratic_factoring_worksheet() -> None:
     test_app = _run_app()
 
-    test_app.selectbox[0].set_value("Quadratic equations by factoring").run()
+    test_app.selectbox[1].set_value("Quadratic equations by factoring").run()
     test_app.button[0].click().run()
 
     assert not test_app.exception
@@ -53,7 +55,7 @@ def test_topic_mode_generates_quadratic_factoring_worksheet() -> None:
 def test_topic_mode_generates_systems_of_equations_worksheet() -> None:
     test_app = _run_app()
 
-    test_app.selectbox[0].set_value("Systems of linear equations").run()
+    test_app.selectbox[1].set_value("Systems of linear equations").run()
     test_app.button[0].click().run()
 
     assert not test_app.exception
@@ -67,7 +69,7 @@ def test_topic_mode_generates_systems_of_equations_worksheet() -> None:
 def test_topic_mode_generates_factoring_techniques_worksheet() -> None:
     test_app = _run_app()
 
-    test_app.selectbox[0].set_value("Factoring techniques").run()
+    test_app.selectbox[1].set_value("Factoring techniques").run()
     test_app.button[0].click().run()
 
     assert not test_app.exception
@@ -81,7 +83,7 @@ def test_topic_mode_generates_factoring_techniques_worksheet() -> None:
 def test_topic_mode_generates_functions_basics_worksheet() -> None:
     test_app = _run_app()
 
-    test_app.selectbox[0].set_value("Functions basics").run()
+    test_app.selectbox[1].set_value("Functions basics").run()
     test_app.button[0].click().run()
 
     assert not test_app.exception
@@ -98,16 +100,16 @@ def test_learning_objective_mode_exposes_college_algebra_objectives() -> None:
     test_app.radio[1].set_value("Learning Objective mode").run()
 
     assert not test_app.exception
-    assert test_app.selectbox[0].label == "Course"
-    assert test_app.selectbox[0].value == "College Algebra"
-    assert test_app.selectbox[1].label == "Module"
-    assert "Linear Equations" in test_app.selectbox[1].options
-    assert "Quadratic Equations" in test_app.selectbox[1].options
-    assert "Systems of Equations" in test_app.selectbox[1].options
-    assert "Factoring Techniques" in test_app.selectbox[1].options
-    assert "Functions" in test_app.selectbox[1].options
-    assert test_app.selectbox[2].label == "Learning Objective"
-    assert "Solve linear equations in one variable" in test_app.selectbox[2].options
+    assert test_app.selectbox[1].label == "Course"
+    assert test_app.selectbox[1].value == "College Algebra"
+    assert test_app.selectbox[2].label == "Module"
+    assert "Linear Equations" in test_app.selectbox[2].options
+    assert "Quadratic Equations" in test_app.selectbox[2].options
+    assert "Systems of Equations" in test_app.selectbox[2].options
+    assert "Factoring Techniques" in test_app.selectbox[2].options
+    assert "Functions" in test_app.selectbox[2].options
+    assert test_app.selectbox[3].label == "Learning Objective"
+    assert "Solve linear equations in one variable" in test_app.selectbox[3].options
     assert any(
         "Selected learning objective: Solve linear equations in one variable"
         in caption.value
@@ -119,10 +121,10 @@ def test_learning_objective_mode_exposes_quadratic_objective() -> None:
     test_app = _run_app()
 
     test_app.radio[1].set_value("Learning Objective mode").run()
-    test_app.selectbox[1].set_value("Quadratic Equations").run()
+    test_app.selectbox[2].set_value("Quadratic Equations").run()
 
     assert not test_app.exception
-    assert test_app.selectbox[2].options == [
+    assert test_app.selectbox[3].options == [
         "Solve quadratic equations by factoring",
     ]
     assert test_app.text_input[0].value == "quadratic"
@@ -132,10 +134,10 @@ def test_learning_objective_mode_exposes_systems_objective() -> None:
     test_app = _run_app()
 
     test_app.radio[1].set_value("Learning Objective mode").run()
-    test_app.selectbox[1].set_value("Systems of Equations").run()
+    test_app.selectbox[2].set_value("Systems of Equations").run()
 
     assert not test_app.exception
-    assert test_app.selectbox[2].options == [
+    assert test_app.selectbox[3].options == [
         "Solve systems of linear equations in two variables",
     ]
     assert test_app.text_input[0].value == "systems"
@@ -145,10 +147,10 @@ def test_learning_objective_mode_exposes_factoring_objective() -> None:
     test_app = _run_app()
 
     test_app.radio[1].set_value("Learning Objective mode").run()
-    test_app.selectbox[1].set_value("Factoring Techniques").run()
+    test_app.selectbox[2].set_value("Factoring Techniques").run()
 
     assert not test_app.exception
-    assert test_app.selectbox[2].options == [
+    assert test_app.selectbox[3].options == [
         "Factor polynomial expressions using common factoring strategies",
     ]
     assert test_app.text_input[0].value == "factoring"
@@ -158,10 +160,10 @@ def test_learning_objective_mode_exposes_functions_objective() -> None:
     test_app = _run_app()
 
     test_app.radio[1].set_value("Learning Objective mode").run()
-    test_app.selectbox[1].set_value("Functions").run()
+    test_app.selectbox[2].set_value("Functions").run()
 
     assert not test_app.exception
-    assert test_app.selectbox[2].options == [
+    assert test_app.selectbox[3].options == [
         "Evaluate and interpret functions using function notation",
     ]
     assert test_app.text_input[0].value == "functions"
@@ -180,6 +182,54 @@ def test_worksheet_only_ui_exposes_worksheet_exports() -> None:
     ]
     assert test_app.text_area[0].label == "Markdown"
     assert test_app.text_area[1].label == "HTML"
+
+
+def test_generation_preset_selector_exposes_built_in_presets() -> None:
+    test_app = _run_app()
+
+    assert test_app.selectbox[0].label == "Generation preset"
+    assert test_app.selectbox[0].options == [
+        "Quick Worksheet",
+        "Standard Practice Set",
+        "Full Tutor Resource Pack",
+    ]
+    assert test_app.selectbox[0].value == "Quick Worksheet"
+    assert any(
+        "Presets choose sensible starting defaults only" in selectbox.help
+        for selectbox in test_app.selectbox
+        if selectbox.label == "Generation preset"
+    )
+
+
+def test_standard_practice_set_preset_applies_editable_defaults() -> None:
+    test_app = _run_app()
+
+    test_app.selectbox[0].set_value("Standard Practice Set").run()
+
+    assert not test_app.exception
+    assert test_app.radio[0].value == "Worksheet only"
+    assert test_app.radio[1].value == "Topic mode"
+    assert test_app.selectbox[1].value == "Linear equations"
+    assert test_app.selectbox[2].value == "Easy"
+    assert test_app.number_input[0].value == 10
+
+    test_app.number_input[0].set_value(7).run()
+
+    assert not test_app.exception
+    assert test_app.number_input[0].value == 7
+
+
+def test_full_tutor_resource_pack_preset_generates_resource_pack() -> None:
+    test_app = _run_app()
+
+    test_app.selectbox[0].set_value("Full Tutor Resource Pack").run()
+    test_app.button[0].click().run()
+
+    assert not test_app.exception
+    assert test_app.radio[0].value == "Full Resource Pack"
+    assert test_app.number_input[0].value == 5
+    assert "Study Guide" in _tab_labels(test_app)
+    assert "Download Resource Pack Export Bundle" in _download_labels(test_app)
 
 
 def test_full_resource_pack_ui_exposes_resource_pack_exports() -> None:

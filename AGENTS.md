@@ -49,10 +49,11 @@ The MVP supports:
 - Instructional resource packs with study guides, common mistakes, tutor notes, and practice quizzes.
 - Curriculum-aligned generation from a deterministic College Algebra template.
 - Optional ZIP export bundles for already-rendered Markdown and HTML outputs.
+- Built-in generation presets for common instructor workflows.
 
 ## Current Architecture
 
-- `app/` contains the Streamlit MVP interface.
+- `app/` contains the Streamlit MVP interface and built-in generation presets.
 - `generator/` contains deterministic worksheet, resource-pack, and curriculum-aligned generation.
 - `models/` contains dataclasses for content, resource packs, and curriculum structures.
 - `exporters/` contains Markdown, HTML, and ZIP bundle exporters.
@@ -126,6 +127,7 @@ For implementation tasks:
 
 - Example exports should be periodically checked against current generated output.
 - ZIP bundles are convenience downloads for already-rendered exports; individual Markdown and HTML exports remain available.
+- Built-in generation presets are fixed starting defaults only; there are no saved custom presets or file-based preset configuration.
 - CI runs the pytest suite on Python 3.11 and Python 3.12; deployment workflows are not configured.
 - Accessibility and browser QA remain limited.
 - Top-level topic routing now uses `topics/registry.py`; topic-specific generator internals remain explicit.

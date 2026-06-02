@@ -32,7 +32,7 @@ Contributions should prioritize:
 
 The structure is organized around current MVP responsibilities:
 
-- `app/` for the Streamlit interface.
+- `app/` for the Streamlit interface and built-in generation presets.
 - `generator/` for deterministic worksheet, resource-pack, and curriculum-aligned generation.
 - `models/` for dataclasses representing content, resource packs, and curriculum structures.
 - `validators/` for answer validation, including SymPy-based checks.
@@ -81,6 +81,7 @@ The MVP intentionally has no AI or LLM integration, Canvas integration, database
 
 - Example outputs should be periodically checked against current generated output.
 - ZIP export bundles are convenience downloads for already-rendered Markdown and HTML files and should not replace individual export buttons.
+- Built-in generation presets are fixed defaults only; do not add persistence, accounts, or file-based preset configuration without an explicit request.
 - CI runs the pytest suite on Python 3.11 and Python 3.12; deployment workflows are not configured.
 - Accessibility and browser QA need more coverage before broader release.
 - Top-level topic routing now uses `topics/registry.py`; topic-specific generator internals remain explicit and should stay small.

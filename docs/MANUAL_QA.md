@@ -28,6 +28,13 @@ python -B -m pytest -p no:cacheprovider tests
 
 Review both generation modes and both output types.
 
+### Presets
+
+- Confirm the built-in presets appear: `Quick Worksheet`, `Standard Practice Set`, and `Full Tutor Resource Pack`.
+- Select each preset and confirm it updates the starting defaults for output type and problem count.
+- Confirm preset-selected values can still be manually changed before clicking `Generate`.
+- Confirm presets do not add saved custom presets, accounts, persistence, or file-based configuration.
+
 ### Topic Mode
 
 - Select `Topic mode`.
@@ -142,6 +149,7 @@ Use a browser and basic keyboard navigation. When practical, also inspect the HT
 
 - [ ] Full automated test suite passes locally.
 - [ ] Streamlit app launches with `streamlit run app/main.py`.
+- [ ] Built-in presets provide editable defaults for common workflows.
 - [ ] Topic mode generates worksheet-only output for every supported topic.
 - [ ] Topic mode generates full resource packs for every supported topic.
 - [ ] Learning Objective mode exposes College Algebra modules and objectives.
