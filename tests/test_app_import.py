@@ -8,7 +8,9 @@ import app.main
 def test_app_main_imports_without_running_streamlit_app() -> None:
     assert isinstance(app.main.main, Callable)
     assert isinstance(app.main.generate_linear_equation_resource_pack, Callable)
+    assert isinstance(app.main.generate_quadratic_factoring_resource_pack, Callable)
     assert isinstance(app.main.generate_resource_pack_from_learning_objective, Callable)
     assert isinstance(app.main.export_resource_pack_to_markdown, Callable)
     assert isinstance(app.main.export_resource_pack_to_html, Callable)
     assert isinstance(app.main.college_algebra_template, Callable)
+    assert "Quadratic equations by factoring" in app.main.TOPIC_OPTIONS

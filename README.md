@@ -2,7 +2,7 @@
 
 MathForge is an open-source platform for helping mathematics instructors generate high-quality instructional materials.
 
-MathForge MVP 0.1 includes a small Streamlit application for generating deterministic linear equation worksheets and instructional resource packs. The project remains intentionally focused: no AI integration, no Canvas integration, and no account system are included in the current MVP.
+MathForge MVP 0.1 includes a small Streamlit application for generating deterministic worksheets and instructional resource packs for linear equations and quadratic equations by factoring. The project remains intentionally focused: no AI integration, no Canvas integration, and no account system are included in the current MVP.
 
 ## Mission
 
@@ -22,6 +22,7 @@ The initial focus is on worksheet generation, detailed solution keys, accessible
 The current MVP supports:
 
 - Generating linear equation worksheets of the form `ax + b = c`
+- Generating factorable quadratic equation worksheets
 - Generating detailed solution keys
 - Validating generated answers using SymPy
 - Exporting worksheets to Markdown
@@ -29,7 +30,7 @@ The current MVP supports:
 - Generating full instructional resource packs with study guides, common mistakes, and tutor notes
 - Exporting full resource packs to Markdown
 - Exporting full resource packs to accessible HTML
-- Generating materials from a sample College Algebra learning objective for linear equations
+- Generating materials from sample College Algebra learning objectives for linear equations and quadratic equations by factoring
 
 ## Future Direction
 
@@ -91,9 +92,9 @@ Screenshots will be added as the MVP interface stabilizes.
 
 ## Current Status
 
-MathForge is at MVP 0.1 readiness review. The core linear equation worksheet flow, resource pack generation, SymPy validation, Markdown export, HTML export, and minimal Streamlit UI are implemented and covered by automated tests.
+MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations and quadratic equations by factoring, resource pack generation, SymPy validation, Markdown export, HTML export, and minimal Streamlit UI are implemented and covered by automated tests.
 
-Current work includes an initial curriculum-alignment milestone with a deterministic College Algebra template. Next work should focus on hardening, documentation, accessibility review, topic expansion, and keeping the implementation small and maintainable.
+Current work includes a curriculum-alignment milestone with a deterministic College Algebra template. Next work should focus on hardening, documentation, accessibility review, careful topic expansion, and keeping the implementation small and maintainable.
 
 ## Contributing
 

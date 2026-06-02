@@ -46,19 +46,37 @@ def test_generate_resource_pack_from_learning_objective_is_deterministic() -> No
     assert first == second
 
 
-def test_generate_resource_pack_from_learning_objective_rejects_unsupported_topic() -> None:
-    objective = LearningObjective(
-        objective_id="quadratic-001",
-        description="Solve quadratic equations",
-        topic="Quadratic equations",
+def test_generate_quadratic_resource_pack_from_learning_objective() -> None:
+    objective = college_algebra_template().modules[1].learning_objectives[0]
+
+    resource_pack = generate_resource_pack_from_learning_objective(
+        learning_objective=objective,
+        difficulty="easy",
+        count=2,
+        start_id="quadratic-objective",
     )
 
-    with pytest.raises(ValueError, match="only linear equations"):
+    assert isinstance(resource_pack, ResourcePack)
+    assert resource_pack.worksheet.worksheet_id == "quadratic-objective-worksheet"
+    assert len(resource_pack.worksheet.problems) == 2
+    assert resource_pack.worksheet.metadata["generator"] == "quadratic_factoring"
+    assert resource_pack.metadata["learning_objective_id"] == objective.objective_id
+    assert resource_pack.metadata["learning_objective"] == objective.description
+
+
+def test_generate_resource_pack_from_learning_objective_rejects_unsupported_topic() -> None:
+    objective = LearningObjective(
+        objective_id="exponential-001",
+        description="Solve exponential equations",
+        topic="Exponential equations",
+    )
+
+    with pytest.raises(ValueError, match="linear equations and quadratic factoring"):
         generate_resource_pack_from_learning_objective(
             learning_objective=objective,
             difficulty="easy",
             count=1,
-            start_id="quadratic",
+            start_id="exponential",
         )
 
 

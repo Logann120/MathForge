@@ -2,7 +2,10 @@
 
 import pytest
 
-from generator.resource_pack_generator import generate_linear_equation_resource_pack
+from generator.resource_pack_generator import (
+    generate_linear_equation_resource_pack,
+    generate_quadratic_factoring_resource_pack,
+)
 from models.resource_pack import CommonMistakes, ResourcePack, StudyGuide, TutorNotes
 
 
@@ -119,3 +122,56 @@ def test_generate_linear_equation_resource_pack_rejects_invalid_count() -> None:
             count=0,
             start_id="linear",
         )
+
+
+def test_generate_quadratic_factoring_resource_pack_returns_resource_pack() -> None:
+    resource_pack = generate_quadratic_factoring_resource_pack(
+        topic="Quadratic equations by factoring",
+        difficulty="easy",
+        count=2,
+        start_id="quadratic",
+    )
+
+    assert isinstance(resource_pack, ResourcePack)
+    assert isinstance(resource_pack.study_guide, StudyGuide)
+    assert isinstance(resource_pack.common_mistakes, CommonMistakes)
+    assert isinstance(resource_pack.tutor_notes, TutorNotes)
+    assert resource_pack.worksheet.worksheet_id == "quadratic-worksheet"
+    assert len(resource_pack.worksheet.problems) == 2
+    assert resource_pack.metadata["generator"] == "quadratic_factoring_resource_pack"
+
+
+def test_generate_quadratic_factoring_resource_pack_is_deterministic() -> None:
+    first = generate_quadratic_factoring_resource_pack(
+        "Quadratic equations by factoring",
+        "easy",
+        2,
+        "quadratic",
+    )
+    second = generate_quadratic_factoring_resource_pack(
+        "Quadratic equations by factoring",
+        "easy",
+        2,
+        "quadratic",
+    )
+
+    assert first == second
+
+
+def test_quadratic_resource_pack_includes_factoring_guidance() -> None:
+    resource_pack = generate_quadratic_factoring_resource_pack(
+        topic="Quadratic equations by factoring",
+        difficulty="easy",
+        count=1,
+        start_id="quadratic",
+    )
+
+    assert "zero product property" in resource_pack.study_guide.overview
+    assert any("factorable" in point for point in resource_pack.study_guide.key_points)
+    assert any(
+        "product-sum table" in note for note in resource_pack.tutor_notes.notes
+    )
+    assert any(
+        "only one solution" in mistake
+        for mistake in resource_pack.common_mistakes.mistakes
+    )

@@ -56,7 +56,8 @@ Status: Next
 Goals:
 
 - Completed: Add initial curriculum-aligned generation with a College Algebra linear equations objective.
-- Expand topic coverage beyond linear equations.
+- Completed: Expand topic coverage to quadratic equations by factoring.
+- Continue careful topic expansion beyond linear equations and quadratic factoring.
 - Continue focused automated tests for generation, validation, resource packs, and export workflows.
 - Review accessibility of the Streamlit interface and exported HTML.
 - Refine error messages and validation feedback.

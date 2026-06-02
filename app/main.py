@@ -13,11 +13,21 @@ from generator.curriculum_resource_pack_generator import (
     generate_resource_pack_from_learning_objective,
 )
 from generator.problem_generator import generate_linear_equation_worksheet
-from generator.resource_pack_generator import generate_linear_equation_resource_pack
+from generator.problem_generator import generate_quadratic_factoring_worksheet
+from generator.resource_pack_generator import (
+    generate_linear_equation_resource_pack,
+    generate_quadratic_factoring_resource_pack,
+)
 from models.curriculum import CourseModule, CourseTemplate, LearningObjective
 from models.content_models import Solution, Worksheet
 from models.resource_pack import CommonMistakes, ResourcePack, StudyGuide, TutorNotes
 from templates.course_templates import college_algebra_template
+
+
+TOPIC_OPTIONS = (
+    "Linear equations",
+    "Quadratic equations by factoring",
+)
 
 
 def main() -> None:
@@ -26,7 +36,7 @@ def main() -> None:
 
     st.set_page_config(page_title="MathForge", page_icon="M")
     st.title("MathForge")
-    st.subheader("Linear equation worksheet generator")
+    st.subheader("Instructional material generator")
 
     output_type = st.radio(
         "Output type",
@@ -44,7 +54,7 @@ def main() -> None:
         learning_objective = _select_learning_objective(st, college_algebra_template())
         topic = learning_objective.topic
     else:
-        topic = st.text_input("Topic", value="Linear equations")
+        topic = st.selectbox("Topic", options=TOPIC_OPTIONS)
 
     difficulty = st.text_input("Difficulty", value="easy")
     count = st.number_input("Problem count", min_value=1, max_value=50, value=5, step=1)
@@ -61,7 +71,7 @@ def main() -> None:
                         start_id=start_id,
                     )
                 else:
-                    resource_pack = generate_linear_equation_resource_pack(
+                    resource_pack = _generate_resource_pack_for_topic(
                         topic=topic,
                         difficulty=difficulty,
                         count=int(count),
@@ -70,7 +80,7 @@ def main() -> None:
                 _render_resource_pack(st, resource_pack)
                 return
 
-            worksheet = generate_linear_equation_worksheet(
+            worksheet = _generate_worksheet_for_topic(
                 topic=topic,
                 difficulty=difficulty,
                 count=int(count),
@@ -80,6 +90,57 @@ def main() -> None:
         except (TypeError, ValueError) as exc:
             st.error(str(exc))
             return
+
+
+def _generate_worksheet_for_topic(
+    topic: str,
+    difficulty: str,
+    count: int,
+    start_id: str,
+) -> Worksheet:
+    """Generate a worksheet for a supported topic."""
+    if _is_quadratic_factoring_topic(topic):
+        return generate_quadratic_factoring_worksheet(
+            topic=topic,
+            difficulty=difficulty,
+            count=count,
+            start_id=start_id,
+        )
+
+    return generate_linear_equation_worksheet(
+        topic=topic,
+        difficulty=difficulty,
+        count=count,
+        start_id=start_id,
+    )
+
+
+def _generate_resource_pack_for_topic(
+    topic: str,
+    difficulty: str,
+    count: int,
+    start_id: str,
+) -> ResourcePack:
+    """Generate a resource pack for a supported topic."""
+    if _is_quadratic_factoring_topic(topic):
+        return generate_quadratic_factoring_resource_pack(
+            topic=topic,
+            difficulty=difficulty,
+            count=count,
+            start_id=start_id,
+        )
+
+    return generate_linear_equation_resource_pack(
+        topic=topic,
+        difficulty=difficulty,
+        count=count,
+        start_id=start_id,
+    )
+
+
+def _is_quadratic_factoring_topic(topic: str) -> bool:
+    """Return whether the selected topic is quadratic factoring."""
+    return topic.strip().lower() == "quadratic equations by factoring"
 
 
 def _select_learning_objective(
