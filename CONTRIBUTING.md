@@ -36,7 +36,7 @@ The structure is organized around current MVP responsibilities:
 - `generator/` for deterministic worksheet, resource-pack, curriculum-aligned generation, and topic-focused generator modules.
 - `models/` for dataclasses representing content, resource packs, and curriculum structures.
 - `validators/` for answer validation, including SymPy-based checks.
-- `exporters/` for HTML, LibGuides-safe HTML, Markdown, Canvas manual-entry CSV, and ZIP bundle exports.
+- `exporters/` for print-friendly standard HTML, LibGuides-safe HTML, Markdown, Canvas manual-entry CSV, and ZIP bundle exports.
 - `templates/` for the College Algebra course template.
 - `topics/` for the supported-topic registry.
 - `tests/` for automated tests.
@@ -69,7 +69,7 @@ GitHub Actions runs the pytest suite on Python 3.11 and Python 3.12 for pushes a
 
 When adding a supported topic, keep routing centralized in `topics/registry.py`. Add deterministic generator behavior, resource-pack behavior if supported, registry metadata, curriculum metadata, and tests together.
 
-Preserve public generator imports in `generator/problem_generator.py` and `generator/resource_pack_generator.py`. Preserve existing export formats unless an exporter-format change is explicitly requested.
+Preserve public generator imports in `generator/problem_generator.py` and `generator/resource_pack_generator.py`. Preserve existing export formats, including standard HTML print behavior, unless an exporter-format change is explicitly requested.
 
 Use [docs/ADDING_TOPICS.md](docs/ADDING_TOPICS.md) as the checklist for future topic additions.
 

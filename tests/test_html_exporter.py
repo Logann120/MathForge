@@ -73,6 +73,25 @@ def test_export_worksheet_to_html_can_include_solution_key() -> None:
     assert result.metadata["include_solutions"] == "True"
 
 
+def test_export_worksheet_to_html_includes_print_styles() -> None:
+    worksheet = generate_linear_equation_worksheet(
+        topic="Linear equations",
+        difficulty="easy",
+        count=1,
+        start_id="linear",
+    )
+
+    result = export_worksheet_to_html(worksheet, include_solutions=True)
+
+    assert "<style>" in result.content
+    assert "@media print" in result.content
+    assert ".mathforge-worksheet li" in result.content
+    assert "break-inside: avoid" in result.content
+    assert "page-break-inside: avoid" in result.content
+    assert ".mathforge-worksheet .mathforge-solution-key" in result.content
+    assert "page-break-before: always" in result.content
+
+
 def test_export_worksheet_to_html_omits_empty_instructions_section() -> None:
     problem = MathProblem(
         problem_id="p1",
@@ -154,6 +173,24 @@ def test_export_resource_pack_to_html_includes_all_sections() -> None:
     assert '<section class="mathforge-practice-quiz">' in result.content
     assert "<h2>Practice Quiz</h2>" in result.content
     assert "<h3>Answer Key</h3>" in result.content
+
+
+def test_export_resource_pack_to_html_includes_resource_pack_print_styles() -> None:
+    resource_pack = generate_linear_equation_resource_pack(
+        topic="Linear equations",
+        difficulty="easy",
+        count=1,
+        start_id="linear",
+    )
+
+    result = export_resource_pack_to_html(resource_pack)
+
+    assert result.content.count("<style>") == 1
+    assert "@media print" in result.content
+    assert ".mathforge-resource-pack > .mathforge-study-guide" in result.content
+    assert ".mathforge-resource-pack > .mathforge-common-mistakes" in result.content
+    assert ".mathforge-resource-pack > .mathforge-tutor-notes" in result.content
+    assert ".mathforge-resource-pack > .mathforge-practice-quiz" in result.content
 
 
 def test_export_resource_pack_to_html_can_omit_solution_key() -> None:

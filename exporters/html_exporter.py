@@ -20,44 +20,17 @@ def export_worksheet_to_html(
 ) -> ExportResult:
     """Render a worksheet as a clean, portable HTML fragment.
 
-    The export starts with an ``h2`` so it can be embedded in systems such as
-    Canvas or LibGuides without creating duplicate page-level ``h1`` headings.
+    Export headings start at ``h2`` so the fragment can be embedded in systems
+    such as Canvas without creating duplicate page-level ``h1`` headings.
     """
     if not isinstance(worksheet, Worksheet):
         raise TypeError("worksheet must be a Worksheet.")
 
-    lines: list[str] = [
-        '<section class="mathforge-worksheet">',
-        f"  <h2>{_escape_text(worksheet.title)}</h2>",
-    ]
-
-    if worksheet.instructions.strip():
-        lines.extend(
-            [
-                '  <section class="mathforge-instructions">',
-                "    <h3>Instructions</h3>",
-                f"    <p>{_escape_text(worksheet.instructions)}</p>",
-                "  </section>",
-            ]
-        )
-
-    lines.extend(
-        [
-            '  <section class="mathforge-problems">',
-            "    <h3>Problems</h3>",
-            "    <ol>",
-        ]
+    lines = _format_worksheet_html(
+        worksheet,
+        include_solutions=include_solutions,
+        include_styles=True,
     )
-
-    for problem in worksheet.problems:
-        lines.append(f"      <li>{_escape_text(problem.prompt)}</li>")
-
-    lines.extend(["    </ol>", "  </section>"])
-
-    if include_solutions:
-        lines.extend(_format_solution_key(worksheet))
-
-    lines.append("</section>")
 
     content = "\n".join(lines) + "\n"
     return ExportResult(
@@ -84,13 +57,14 @@ def export_resource_pack_to_html(
     if not isinstance(resource_pack, ResourcePack):
         raise TypeError("resource_pack must be a ResourcePack.")
 
-    worksheet_export = export_worksheet_to_html(
-        resource_pack.worksheet,
-        include_solutions=include_solutions,
-    )
     lines: list[str] = [
         '<section class="mathforge-resource-pack">',
-        worksheet_export.content.rstrip(),
+        *_standard_html_styles(),
+        *_format_worksheet_html(
+            resource_pack.worksheet,
+            include_solutions=include_solutions,
+            include_styles=False,
+        ),
     ]
     lines.extend(_format_study_guide(resource_pack.study_guide))
     lines.extend(_format_common_mistakes(resource_pack.common_mistakes))
@@ -128,6 +102,68 @@ def export_resource_pack_to_html(
             ),
         },
     )
+
+
+def _format_worksheet_html(
+    worksheet: Worksheet,
+    *,
+    include_solutions: bool,
+    include_styles: bool,
+) -> list[str]:
+    """Format worksheet HTML with optional standard export styles."""
+    lines: list[str] = [
+        '<section class="mathforge-worksheet">',
+    ]
+    if include_styles:
+        lines.extend(_standard_html_styles())
+    lines.append(f"  <h2>{_escape_text(worksheet.title)}</h2>")
+
+    if worksheet.instructions.strip():
+        lines.extend(
+            [
+                '  <section class="mathforge-instructions">',
+                "    <h3>Instructions</h3>",
+                f"    <p>{_escape_text(worksheet.instructions)}</p>",
+                "  </section>",
+            ]
+        )
+
+    lines.extend(
+        [
+            '  <section class="mathforge-problems">',
+            "    <h3>Problems</h3>",
+            "    <ol>",
+        ]
+    )
+
+    for problem in worksheet.problems:
+        lines.append(f"      <li>{_escape_text(problem.prompt)}</li>")
+
+    lines.extend(["    </ol>", "  </section>"])
+
+    if include_solutions:
+        lines.extend(_format_solution_key(worksheet))
+
+    lines.append("</section>")
+    return lines
+
+
+def _standard_html_styles() -> list[str]:
+    """Return CSS for readable browser display and print output."""
+    return [
+        "  <style>",
+        "    .mathforge-worksheet, .mathforge-resource-pack { line-height: 1.5; }",
+        "    .mathforge-worksheet section, .mathforge-resource-pack section { margin: 1rem 0; }",
+        "    .mathforge-worksheet li, .mathforge-resource-pack li { margin: 0.25rem 0; }",
+        "    @media print {",
+        "      .mathforge-worksheet, .mathforge-resource-pack { color: #000; font-size: 11pt; line-height: 1.35; }",
+        "      .mathforge-worksheet h2, .mathforge-resource-pack h2, .mathforge-worksheet h3, .mathforge-resource-pack h3 { break-after: avoid; page-break-after: avoid; }",
+        "      .mathforge-worksheet li, .mathforge-resource-pack li { break-inside: avoid; page-break-inside: avoid; }",
+        "      .mathforge-worksheet .mathforge-solution-key, .mathforge-resource-pack > .mathforge-study-guide { break-before: page; page-break-before: always; }",
+        "      .mathforge-resource-pack > .mathforge-common-mistakes, .mathforge-resource-pack > .mathforge-tutor-notes, .mathforge-resource-pack > .mathforge-practice-quiz { break-before: auto; page-break-before: auto; }",
+        "    }",
+        "  </style>",
+    ]
 
 
 def _format_solution_key(worksheet: Worksheet) -> list[str]:

@@ -161,7 +161,10 @@ def test_standard_html_export_remains_separate_from_libguides_export() -> None:
     assert standard_result.format_name == "html"
     assert standard_result.filename == "linear-worksheet.html"
     assert '<section class="mathforge-worksheet">' in standard_result.content
+    assert "@media print" in standard_result.content
     assert '<div class="mathforge-libguides-export"' not in standard_result.content
+    assert "@media print" not in libguides_result.content
+    assert "page-break-before" not in libguides_result.content
     assert standard_result.content != libguides_result.content
 
 

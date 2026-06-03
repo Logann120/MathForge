@@ -51,7 +51,7 @@ Generation is deterministic for the same inputs and remains instructor-reviewabl
 MathForge currently supports:
 
 - Markdown exports for worksheets and resource packs.
-- Standard HTML exports for worksheets and resource packs.
+- Print-friendly standard HTML exports for worksheets and resource packs.
 - LibGuides-safe HTML exports for paste-friendly institutional-page embeds.
 - ZIP bundles containing Markdown plus standard HTML.
 - Canvas-friendly manual-entry CSV exports for worksheet problems and resource-pack practice quizzes.
@@ -59,6 +59,7 @@ MathForge currently supports:
 Important export boundaries:
 
 - Standard HTML and LibGuides-safe HTML are separate export paths.
+- Standard HTML is browser print-friendly HTML, not PDF generation.
 - LibGuides-safe HTML is a paste-friendly fragment, not a direct LibGuides integration.
 - Canvas-friendly CSV is manual-entry/import-friendly only, not Canvas API integration.
 - ZIP bundles include Markdown plus standard HTML only.
@@ -126,7 +127,7 @@ Current MVP quality expectations:
 - Each worksheet includes matching solution data.
 - Resource packs include study guides, common mistakes, tutor notes, and practice quizzes.
 - SymPy validation is used where practical for generated math content.
-- Markdown, standard HTML, LibGuides-safe HTML, Canvas-friendly CSV, and ZIP bundle behavior are covered by focused tests.
+- Markdown, print-friendly standard HTML, LibGuides-safe HTML, Canvas-friendly CSV, and ZIP bundle behavior are covered by focused tests.
 - Streamlit app behavior is covered by smoke tests.
 - Manual QA guidance exists for UI workflow, exports, accessibility, and institutional paste workflows.
 - CI runs pytest on Python 3.11 and Python 3.12.
@@ -137,6 +138,7 @@ Current MVP quality expectations:
 - Topic coverage is limited to five College Algebra topics.
 - Plain-text math notation is readable but not equivalent to MathML or fully accessible equation rendering.
 - Browser and accessibility QA remain primarily manual.
+- Print behavior is implemented with ordinary browser HTML/CSS and should be checked manually in browser print preview.
 - LibGuides-safe HTML compatibility can vary by institutional editor policies.
 - Canvas CSV compatibility can vary by institution and may require instructor cleanup.
 - ZIP bundles intentionally omit Canvas CSV and LibGuides-safe HTML.
@@ -145,9 +147,8 @@ Current MVP quality expectations:
 
 ## Future Directions
 
-Near-term work should focus on export and usability hardening rather than broad platform expansion:
+Near-term work should focus on export QA and usability hardening rather than broad platform expansion:
 
-- Print-friendly standard HTML improvements.
 - More explicit browser/print manual QA.
 - Continued documentation and example refreshes.
 - Careful accessibility improvements.

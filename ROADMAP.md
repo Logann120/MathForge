@@ -4,7 +4,7 @@ This roadmap reflects the current implemented MathForge MVP. Dates are intention
 
 ## Current Status
 
-Status: Working MVP / early Phase 5 export-hardening checkpoint
+Status: Working MVP / Phase 5C export-hardening checkpoint
 
 MathForge currently supports deterministic College Algebra worksheet and resource-pack generation for:
 
@@ -17,7 +17,7 @@ MathForge currently supports deterministic College Algebra worksheet and resourc
 Current export paths:
 
 - Markdown.
-- Standard HTML.
+- Print-friendly standard HTML.
 - LibGuides-safe HTML.
 - ZIP bundles containing Markdown plus standard HTML.
 - Canvas-friendly manual-entry CSV.
@@ -131,15 +131,31 @@ Scope boundaries:
 - LibGuides-safe HTML is not direct LibGuides integration.
 - ZIP bundles remain Markdown plus standard HTML only.
 
-## Recommended Next Phase: Print-Friendly Export Polish
+## Phase 5C: Print-Friendly Standard HTML Polish
+
+Status: Completed for current scope
+
+Completed work:
+
+- Print-focused CSS in the standard HTML exporter.
+- Page-break handling for headings, list items, solution keys, and major resource-pack sections.
+- Tests confirming standard HTML print CSS and LibGuides-safe separation.
+- Manual QA guidance for browser print preview.
+
+Scope boundaries:
+
+- This is not PDF generation.
+- ZIP bundles remain Markdown plus standard HTML only.
+- Markdown, Canvas CSV, and LibGuides-safe HTML formats remain separate.
+
+## Recommended Next Phase: Accessibility and Example Maintenance
 
 Status: Recommended next implementation direction
 
 Recommended goals:
 
-- Improve standard HTML print readability.
-- Add or refine print-focused CSS in the standard HTML export only if it preserves existing tests or is explicitly accepted as an output-format change.
-- Add manual QA checks for browser print preview.
+- Run manual browser, print-preview, and accessibility review against representative generated outputs.
+- Refresh examples only when exporter behavior or topic coverage changes.
 - Keep PDF generation out of scope unless explicitly requested.
 - Keep ZIP bundle behavior unchanged unless explicitly requested.
 
@@ -147,7 +163,7 @@ Why this is next:
 
 - It fits existing export-first instructor workflows.
 - It avoids new dependencies and service integrations.
-- It improves classroom usability without adding persistence, accounts, APIs, or platform complexity.
+- It improves confidence in classroom usability without adding persistence, accounts, APIs, or platform complexity.
 
 ## Later Possible Direction: Difficulty Expansion
 

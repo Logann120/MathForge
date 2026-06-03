@@ -44,7 +44,7 @@ The MVP supports:
 
 - Math worksheet generation.
 - Detailed solution key generation.
-- Accessible HTML export.
+- Print-friendly standard HTML export.
 - LibGuides-safe embedded HTML export.
 - Markdown export.
 - Canvas-friendly manual-entry CSV export for worksheet problems and practice quizzes.
@@ -59,7 +59,7 @@ The MVP supports:
 - `app/` contains the Streamlit MVP interface, built-in generation presets, input controls, preview rendering, download orchestration, and generated-output summary view models.
 - `generator/` contains deterministic worksheet, resource-pack, curriculum-aligned generation, and topic-focused generator modules.
 - `models/` contains dataclasses for content, resource packs, and curriculum structures.
-- `exporters/` contains Markdown, standard HTML, LibGuides-safe HTML, Canvas manual-entry CSV, and ZIP bundle exporters.
+- `exporters/` contains Markdown, print-friendly standard HTML, LibGuides-safe HTML, Canvas manual-entry CSV, and ZIP bundle exporters.
 - `validators/` contains SymPy validation helpers.
 - `templates/` contains the College Algebra course template.
 - `topics/` contains the supported-topic registry for labels, defaults, routing, difficulty support, and curriculum metadata.
@@ -83,7 +83,7 @@ Documentation and implementation should treat accessibility as a core requiremen
 
 Agents should preserve or improve guidance related to:
 
-- Semantic HTML export.
+- Print-friendly semantic HTML export.
 - Scoped LibGuides-safe HTML export that avoids page-level headings and global CSS.
 - Logical heading structure.
 - Readable Markdown.
@@ -128,7 +128,7 @@ For implementation tasks:
 - Keep UI behavior separate from reusable domain logic.
 - Keep `app/main.py` focused on entry-point and high-level page flow; place control helpers in `app/controls.py`, preview rendering in `app/rendering.py`, download/export UI orchestration in `app/downloads.py`, and summary/context view models in `app/generation_context.py`.
 - Preserve public generator API modules in `generator/problem_generator.py` and `generator/resource_pack_generator.py`; place topic-specific implementation in `generator/topics/`.
-- Do not change existing Markdown, standard HTML, LibGuides-safe HTML, Canvas CSV, or ZIP output formats unless explicitly requested.
+- Do not change existing Markdown, print-friendly standard HTML, LibGuides-safe HTML, Canvas CSV, or ZIP output formats unless explicitly requested.
 - Document any accessibility limitations that cannot be resolved immediately.
 
 ## Known Limitations

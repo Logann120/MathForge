@@ -1,6 +1,6 @@
 # MathForge Architecture
 
-MathForge is a Python and Streamlit MVP with deterministic College Algebra generation, SymPy-powered validation helpers, and export support for Markdown, accessible HTML, LibGuides-safe HTML, and Canvas-friendly manual-entry CSV.
+MathForge is a Python and Streamlit MVP with deterministic College Algebra generation, SymPy-powered validation helpers, and export support for Markdown, print-friendly accessible HTML, LibGuides-safe HTML, and Canvas-friendly manual-entry CSV.
 
 This document describes the current implemented architecture. MathForge is no longer a planning-only repository: it has working generators, models, exporters, validators, a Streamlit interface, curriculum templates, and automated tests.
 
@@ -19,7 +19,7 @@ This document describes the current implemented architecture. MathForge is no lo
 - Streamlit for the web interface.
 - SymPy for symbolic answer validation.
 - Markdown for portable text exports.
-- Semantic HTML for accessible browser-based exports.
+- Semantic HTML for accessible browser-based and browser-printable exports.
 - Scoped embedded HTML for LibGuides-style content areas.
 - CSV for instructor-reviewable Canvas manual-entry quiz exports.
 
@@ -37,7 +37,7 @@ Purpose:
 - Display worksheet, solution, and instructional resource previews.
 - Display a compact generated-output summary before export downloads.
 - Display selected Learning Objective mode course, module, objective, and mapped-topic context before generation.
-- Trigger Markdown, standard HTML, LibGuides-safe HTML, ZIP bundle, and Canvas-friendly CSV export actions.
+- Trigger Markdown, print-friendly standard HTML, LibGuides-safe HTML, ZIP bundle, and Canvas-friendly CSV export actions.
 - Trigger Canvas-friendly manual-entry CSV export actions without Canvas API calls.
 
 Current implementation:
@@ -45,7 +45,7 @@ Current implementation:
 - `app/main.py` contains the Streamlit entry point and high-level page flow.
 - `app/controls.py` contains Streamlit input controls, topic routing helpers, difficulty mapping, and Learning Objective mode selection.
 - `app/rendering.py` contains worksheet, solution key, resource-pack, practice-quiz, and context-summary preview rendering.
-- `app/downloads.py` contains Markdown, standard HTML, LibGuides-safe HTML, ZIP bundle, and Canvas manual-entry CSV download orchestration.
+- `app/downloads.py` contains Markdown, print-friendly standard HTML, LibGuides-safe HTML, ZIP bundle, and Canvas manual-entry CSV download orchestration.
 - `app/generation_context.py` contains small view models for Learning Objective selections and generated-output summaries.
 - `app/presets.py` contains built-in preset metadata for default UI settings.
 - Topic mode generates from a supported topic label.
@@ -141,7 +141,7 @@ Purpose:
 Current implementation:
 
 - `exporters/markdown_exporter.py` renders worksheets and full resource packs to Markdown.
-- `exporters/html_exporter.py` renders worksheets and full resource packs to portable semantic HTML.
+- `exporters/html_exporter.py` renders worksheets and full resource packs to portable, print-friendly semantic HTML with browser print CSS.
 - `exporters/libguides_html_exporter.py` renders worksheets and full resource packs to scoped embed-safe HTML for LibGuides-style pages.
 - `exporters/canvas_exporter.py` renders worksheet problems and resource-pack practice quizzes to a Canvas-friendly manual-entry CSV format.
 - `exporters/bundle_exporter.py` packages already-rendered exports into ZIP convenience downloads using Python standard-library tools.
@@ -196,7 +196,7 @@ Current implementation:
 4. Problem generators create structured problem objects.
 5. The validation layer checks generated answers with SymPy where practical.
 6. Resource-pack generators optionally assemble study guides, common mistakes, tutor notes, and practice quizzes.
-7. Exporters render Markdown, standard semantic HTML, or scoped LibGuides-safe HTML.
+7. Exporters render Markdown, print-friendly standard semantic HTML, or scoped LibGuides-safe HTML.
 8. Canvas-friendly CSV exporters render inspectable manual-entry quiz rows without network calls.
 9. Download filename helpers derive clear filenames from export metadata.
 10. Optional ZIP bundle helpers group related rendered Markdown and standard HTML exports.
@@ -223,6 +223,7 @@ HTML exporters should:
 - Use semantic headings.
 - Preserve logical reading order.
 - Keep problem and solution sections clearly labeled.
+- Include scoped print CSS for browser print preview in standard HTML.
 - Avoid layout structures that confuse assistive technologies.
 - Avoid color-only meaning.
 - Include document language and metadata when practical.

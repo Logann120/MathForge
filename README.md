@@ -30,14 +30,14 @@ The current MVP supports:
 - Generating detailed solution keys
 - Validating generated answers using SymPy
 - Exporting worksheets to Markdown
-- Exporting worksheets to accessible HTML
+- Exporting worksheets to print-friendly accessible HTML
 - Exporting worksheets to LibGuides-safe embedded HTML
 - Exporting worksheet problems to a Canvas-friendly manual-entry CSV
 - Downloading worksheet Markdown and HTML together as a ZIP convenience bundle
 - Generating full instructional resource packs with study guides, common mistakes, and tutor notes
 - Generating practice quizzes inside full instructional resource packs
 - Exporting full resource packs to Markdown
-- Exporting full resource packs to accessible HTML
+- Exporting full resource packs to print-friendly accessible HTML
 - Exporting full resource packs to LibGuides-safe embedded HTML
 - Exporting resource-pack practice quizzes to a Canvas-friendly manual-entry CSV
 - Downloading resource-pack Markdown and HTML together as a ZIP convenience bundle
@@ -45,7 +45,7 @@ The current MVP supports:
 
 ## Future Direction
 
-Near-term future work should focus on print-friendly export polish, accessibility review, examples, and maintainability. Later work may include richer difficulty levels, additional College Algebra topics, local question-bank experiments, or broader course templates.
+Near-term future work should focus on accessibility review, example maintenance, and maintainability. Later work may include richer difficulty levels, additional College Algebra topics, local question-bank experiments, or broader course templates.
 
 AI features, direct Canvas API integration, direct LibGuides integration, persistence, databases, authentication, external APIs, deployment infrastructure, Docker, and plugin architecture remain out of scope unless explicitly requested.
 
@@ -68,7 +68,7 @@ MathForge is organized around small, testable Python modules:
 - `app/` contains the Streamlit MVP interface, built-in generation presets, controls, rendering, downloads, and summary helpers.
 - `generator/` contains deterministic worksheet, resource pack, curriculum-aligned generation, and topic-focused generator modules.
 - `models/` contains dataclasses for worksheets, problems, solutions, exports, curriculum objects, and resource packs.
-- `exporters/` contains Markdown, accessible HTML, LibGuides-safe HTML, Canvas-friendly manual-entry CSV exporters, standard-library ZIP bundle helpers, and deterministic download filename helpers.
+- `exporters/` contains Markdown, print-friendly standard HTML, LibGuides-safe HTML, Canvas-friendly manual-entry CSV exporters, standard-library ZIP bundle helpers, and deterministic download filename helpers.
 - `validators/` contains SymPy-based validation helpers.
 - `templates/` contains the deterministic College Algebra course template.
 - `topics/` contains the supported-topic registry for topic labels, routing, defaults, and curriculum metadata.
@@ -131,14 +131,15 @@ Screenshots will be added as the MVP interface stabilizes.
 
 ## Current Status
 
-MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics, built-in generation presets, resource pack generation with practice quizzes, SymPy validation, Markdown export, standard HTML export, LibGuides-safe HTML export, Canvas-friendly manual-entry CSV export, optional ZIP export bundles, and demo-ready Streamlit UI are implemented and covered by automated tests.
+MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics, built-in generation presets, resource pack generation with practice quizzes, SymPy validation, Markdown export, print-friendly standard HTML export, LibGuides-safe HTML export, Canvas-friendly manual-entry CSV export, optional ZIP export bundles, and demo-ready Streamlit UI are implemented and covered by automated tests.
 
-Next work should focus on print-friendly export polish, accessibility review, examples, and keeping the implementation small and maintainable. Medium/hard difficulty expansion and additional topics should come later after explicit design and tests.
+Next work should focus on accessibility review, examples, and keeping the implementation small and maintainable. Medium/hard difficulty expansion and additional topics should come later after explicit design and tests.
 
 ## Known Limitations
 
 - Example files should be periodically checked against current generated output as topics and resource-pack sections evolve.
 - ZIP export bundles are convenience downloads for already-rendered Markdown and HTML files; individual export buttons remain the source of each format.
+- Standard HTML is designed to print cleanly from browser print preview, but MathForge does not generate PDF files.
 - LibGuides-safe HTML is an embed-focused copy/paste format, not a direct LibGuides integration, and does not replace the standard HTML export.
 - Canvas-friendly CSV exports are manual-entry/import-friendly files only; compatibility with Canvas quiz import workflows can vary by institution and may require instructor cleanup.
 - Built-in presets provide starting defaults only; there are no saved custom presets or file-based preset configuration.

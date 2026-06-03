@@ -104,6 +104,7 @@ Review both generation modes and both output types.
 - Confirm Canvas CSV files include question title, prompt, answer, explanation, topic, difficulty, problem ID, source type, and source ID columns.
 - Confirm Canvas CSV files are labeled as manual-entry/import-friendly exports, not direct Canvas publishing.
 - Open downloaded HTML in a browser and confirm it renders without obvious broken markup.
+- Open standard HTML in browser print preview and confirm worksheet, solution key, and resource-pack sections remain readable.
 - Paste LibGuides-safe HTML into a test LibGuides-style content area or HTML sandbox and confirm it does not alter page/global headings or surrounding content.
 - Open downloaded Markdown in a text editor and confirm it is readable as plain text.
 
@@ -145,6 +146,14 @@ Use a browser and basic keyboard navigation. When practical, also inspect the HT
 - Confirm text can be selected and copied.
 - Confirm links or buttons are not required inside exported content.
 - Confirm browser print preview is readable and does not hide important sections.
+
+### Standard HTML Print Review
+
+- Confirm standard HTML, not LibGuides-safe HTML, contains print-focused CSS.
+- Confirm browser print preview keeps headings with the content that follows where practical.
+- Confirm individual problems, solution entries, and quiz questions do not split awkwardly across pages where practical.
+- Confirm solution keys and major resource-pack sections start and flow legibly in print preview.
+- Confirm print behavior uses ordinary browser HTML/CSS only; MathForge does not generate PDF files.
 
 ### Accessibility Considerations
 
@@ -193,6 +202,7 @@ Use a browser and basic keyboard navigation. When practical, also inspect the HT
 - [ ] Canvas manual-entry CSV text areas and downloads work for worksheet-only and resource-pack output.
 - [ ] ZIP export bundles download for worksheet-only and resource-pack output.
 - [ ] Downloaded HTML opens in a browser and has sensible semantic structure.
+- [ ] Standard HTML print preview keeps worksheet and resource-pack sections readable.
 - [ ] Downloaded Markdown is readable when opened as plain text.
 - [ ] Browser zoom and print preview remain readable.
 - [ ] No normal workflow exposes a stack trace to the user.
