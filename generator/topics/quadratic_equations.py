@@ -26,8 +26,11 @@ def generate_quadratic_factoring_worksheet(
 
     for index in range(count):
         problem_id = f"{start_id}-{index + 1:03d}"
-        first_root, second_root = _quadratic_roots(difficulty, index)
-        equation = _quadratic_equation_text(first_root, second_root)
+        equation, roots, factored_form, metadata = _quadratic_problem(
+            difficulty,
+            index,
+        )
+        first_root, second_root = roots
         answer_text = _quadratic_answer_text(first_root, second_root)
 
         for root in (first_root, second_root):
@@ -45,13 +48,7 @@ def generate_quadratic_factoring_worksheet(
                 answer=answer_text,
                 topic=topic,
                 difficulty=difficulty,
-                metadata={
-                    "equation": equation,
-                    "variable": "x",
-                    "root_1": str(first_root),
-                    "root_2": str(second_root),
-                    "factored_form": _factored_form(first_root, second_root),
-                },
+                metadata=metadata,
             )
         )
         solutions.append(
@@ -60,7 +57,7 @@ def generate_quadratic_factoring_worksheet(
                 final_answer=answer_text,
                 steps=(
                     f"Start with {equation}.",
-                    f"Factor the quadratic as {_factored_form(first_root, second_root)} = 0.",
+                    f"Factor the quadratic as {factored_form} = 0.",
                     "Set each factor equal to zero.",
                     f"x = {first_root} or x = {second_root}.",
                 ),
@@ -109,22 +106,129 @@ def generate_quadratic_factoring_resource_pack(
     )
 
 
-def _quadratic_roots(difficulty: str, index: int) -> tuple[int, int]:
-    """Return deterministic integer roots for a factorable quadratic."""
+def _quadratic_problem(
+    difficulty: str,
+    index: int,
+) -> tuple[str, tuple[int, int], str, dict[str, str]]:
+    """Return deterministic quadratic equation data for a difficulty level."""
     normalized_difficulty = difficulty.strip().lower()
 
     if normalized_difficulty in {"easy", "introductory", "beginner"}:
-        return index + 1, index + 2
-    if normalized_difficulty in {"hard", "advanced"}:
-        return -(index + 1), index + 3
-    return index + 2, index + 4
+        return _monic_quadratic_problem(index + 1, index + 2)
+    if normalized_difficulty == "medium":
+        return _medium_quadratic_problem(index)
+    if normalized_difficulty == "hard":
+        return _hard_quadratic_problem(index)
+    if normalized_difficulty == "advanced":
+        return _monic_quadratic_problem(-(index + 1), index + 3)
+    return _monic_quadratic_problem(index + 2, index + 4)
+
+
+def _medium_quadratic_problem(
+    index: int,
+) -> tuple[str, tuple[int, int], str, dict[str, str]]:
+    """Return a monic quadratic with mixed-sign integer roots."""
+    first_root = -(index + 1)
+    second_root = index + 3
+    equation, roots, factored_form, metadata = _monic_quadratic_problem(
+        first_root,
+        second_root,
+    )
+    metadata = {
+        **metadata,
+        "leading_coefficient": "1",
+        "difficulty_pattern": "mixed_sign_monic_roots",
+    }
+    return equation, roots, factored_form, metadata
+
+
+def _hard_quadratic_problem(
+    index: int,
+) -> tuple[str, tuple[int, int], str, dict[str, str]]:
+    """Return a non-monic factorable quadratic with integer roots."""
+    first_factor_coefficient = 2 + (index % 3)
+    second_factor_coefficient = 1
+    first_root = index + 1
+    second_root = index + 3
+    leading_coefficient = first_factor_coefficient * second_factor_coefficient
+    linear_coefficient = -(
+        (first_factor_coefficient * second_factor_coefficient * second_root)
+        + (second_factor_coefficient * first_factor_coefficient * first_root)
+    )
+    constant = (
+        first_factor_coefficient
+        * second_factor_coefficient
+        * first_root
+        * second_root
+    )
+    equation = _quadratic_equation_from_coefficients(
+        leading_coefficient,
+        linear_coefficient,
+        constant,
+    )
+    factored_form = (
+        _factor_for_root(first_root, first_factor_coefficient)
+        + _factor_for_root(second_root, second_factor_coefficient)
+    )
+    return (
+        equation,
+        (first_root, second_root),
+        factored_form,
+        {
+            "equation": equation,
+            "variable": "x",
+            "root_1": str(first_root),
+            "root_2": str(second_root),
+            "factored_form": factored_form,
+            "leading_coefficient": str(leading_coefficient),
+            "first_factor_coefficient": str(first_factor_coefficient),
+            "second_factor_coefficient": str(second_factor_coefficient),
+            "difficulty_pattern": "non_monic_integer_roots",
+        },
+    )
+
+
+def _monic_quadratic_problem(
+    first_root: int,
+    second_root: int,
+) -> tuple[str, tuple[int, int], str, dict[str, str]]:
+    """Return equation data for a monic factorable quadratic."""
+    equation = _quadratic_equation_text(first_root, second_root)
+    factored_form = _factored_form(first_root, second_root)
+    return (
+        equation,
+        (first_root, second_root),
+        factored_form,
+        {
+            "equation": equation,
+            "variable": "x",
+            "root_1": str(first_root),
+            "root_2": str(second_root),
+            "factored_form": factored_form,
+        },
+    )
 
 
 def _quadratic_equation_text(first_root: int, second_root: int) -> str:
     """Return expanded equation text for roots of a monic quadratic."""
     linear_coefficient = -(first_root + second_root)
     constant = first_root * second_root
-    terms = ["x**2"]
+    return _quadratic_equation_from_coefficients(
+        1,
+        linear_coefficient,
+        constant,
+    )
+
+
+def _quadratic_equation_from_coefficients(
+    leading_coefficient: int,
+    linear_coefficient: int,
+    constant: int,
+) -> str:
+    """Return expanded equation text from integer coefficients."""
+    terms = [
+        "x**2" if leading_coefficient == 1 else f"{leading_coefficient}*x**2"
+    ]
 
     if linear_coefficient:
         terms.append(_signed_term(linear_coefficient, "x"))
@@ -157,11 +261,12 @@ def _factored_form(first_root: int, second_root: int) -> str:
     return f"{_factor_for_root(first_root)}{_factor_for_root(second_root)}"
 
 
-def _factor_for_root(root: int) -> str:
+def _factor_for_root(root: int, coefficient: int = 1) -> str:
     """Return a linear factor for a root."""
-    if root < 0:
-        return f"(x + {abs(root)})"
-    return f"(x - {root})"
+    variable_term = "x" if coefficient == 1 else f"{coefficient}*x"
+    constant = -(coefficient * root)
+    sign = "+" if constant > 0 else "-"
+    return f"({variable_term} {sign} {abs(constant)})"
 
 
 def _build_quadratic_study_guide(topic: str, difficulty: str) -> StudyGuide:

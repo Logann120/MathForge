@@ -23,7 +23,7 @@ Linear equations currently support Easy, Medium, and Hard at the generator, regi
 - `linear_equations_medium_worksheet.md`: medium linear equations with negative constants and negative integer solutions.
 - `linear_equations_hard_worksheet.md`: hard linear equations with variables on both sides.
 
-Other supported topics remain Easy-only. Do not add Medium/Hard examples for other topics until those topics have explicit deterministic generator behavior, registry metadata, UI exposure, and tests.
+Quadratic equations by factoring also supports Easy, Medium, and Hard in the generator, registry, and Streamlit UI, but Medium/Hard quadratic examples are deferred. Systems of linear equations, factoring techniques, and functions basics remain Easy-only. Do not add Medium/Hard examples for a topic until that topic has explicit deterministic generator behavior, registry metadata, UI exposure, and tests.
 
 ## Resource Pack Example
 

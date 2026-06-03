@@ -75,7 +75,7 @@ The Streamlit app supports:
 - Full Resource Pack output.
 - Configurable problem count.
 - Topic-aware difficulty selection: Easy for all supported topics, with Medium
-  and Hard exposed for linear equations.
+  and Hard exposed for linear equations and quadratic equations by factoring.
 - Advanced problem ID prefix editing.
 - Generated-output summaries.
 - Download controls for all current export paths.
@@ -134,9 +134,10 @@ Current MVP quality expectations:
 
 ## Known Limitations
 
-- Medium and hard difficulty are currently exposed only for linear equations.
-- Other topics remain Easy-only until each topic has explicit deterministic
-  Medium/Hard behavior and tests.
+- Medium and hard difficulty are currently exposed only for linear equations
+  and quadratic equations by factoring.
+- Systems, factoring techniques, and functions basics remain Easy-only until
+  each topic has explicit deterministic Medium/Hard behavior and tests.
 - Topic coverage is limited to five College Algebra topics.
 - Plain-text math notation is readable but not equivalent to MathML or fully accessible equation rendering.
 - Browser and accessibility QA remain primarily manual.

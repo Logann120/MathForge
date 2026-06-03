@@ -103,7 +103,7 @@ For each new difficulty level:
 - Avoid broad export snapshots for every difficulty unless exporter behavior changes.
 - Do not expose the difficulty in Streamlit until UI behavior can be supported cleanly for the relevant topic or topics.
 
-The current Medium/Hard pilot is limited to linear equations. The Streamlit UI exposes Medium and Hard only when the selected topic or mapped learning objective is Linear equations. Built-in presets remain Easy-only.
+The current Medium/Hard pilot is limited to linear equations and quadratic equations by factoring. The Streamlit UI exposes Medium and Hard only when the selected topic or mapped learning objective advertises those levels in the supported-topic registry. Built-in presets remain Easy-only.
 
 ### Examples
 

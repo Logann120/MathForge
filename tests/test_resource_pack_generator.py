@@ -163,6 +163,29 @@ def test_generate_quadratic_factoring_resource_pack_is_deterministic() -> None:
     assert first == second
 
 
+@pytest.mark.parametrize("difficulty", ("medium", "hard"))
+def test_generate_quadratic_factoring_resource_pack_passes_through_difficulty(
+    difficulty: str,
+) -> None:
+    resource_pack = generate_quadratic_factoring_resource_pack(
+        topic="Quadratic equations by factoring",
+        difficulty=difficulty,
+        count=2,
+        start_id=f"{difficulty}-quadratic",
+    )
+
+    assert resource_pack.metadata["difficulty"] == difficulty
+    assert resource_pack.worksheet.metadata["difficulty"] == difficulty
+    assert resource_pack.study_guide.metadata["difficulty"] == difficulty
+    assert resource_pack.common_mistakes.metadata["difficulty"] == difficulty
+    assert resource_pack.tutor_notes.metadata["difficulty"] == difficulty
+    assert resource_pack.practice_quiz is not None
+    assert len(resource_pack.practice_quiz.questions) >= 2
+    assert len(resource_pack.practice_quiz.answer_key) == len(
+        resource_pack.practice_quiz.questions
+    )
+
+
 def test_quadratic_resource_pack_includes_factoring_guidance() -> None:
     resource_pack = generate_quadratic_factoring_resource_pack(
         topic="Quadratic equations by factoring",

@@ -81,7 +81,10 @@ def test_supported_topic_snapshot_preserves_labels_prefixes_and_objectives() -> 
 def test_supported_topics_use_current_output_types_and_difficulty() -> None:
     for topic in supported_topics():
         assert topic.supported_output_types == ("worksheet", "resource_pack")
-        if topic.slug == "linear-equations":
+        if topic.slug in {
+            "linear-equations",
+            "quadratic-equations-by-factoring",
+        }:
             assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
         else:
             assert topic.supported_difficulty_levels == ("easy",)
@@ -94,7 +97,7 @@ def test_supported_topics_include_expected_metadata() -> None:
     assert topic.slug == "quadratic-equations-by-factoring"
     assert topic.default_problem_id_prefix == "quadratic"
     assert topic.supported_output_types == ("worksheet", "resource_pack")
-    assert topic.supported_difficulty_levels == ("easy",)
+    assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
     assert topic.curriculum_course == "College Algebra"
     assert topic.curriculum_module_title == "Quadratic Equations"
     assert topic.curriculum_objective_description == (
@@ -108,6 +111,12 @@ def test_linear_equations_registry_marks_pilot_difficulty_support() -> None:
     assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
 
 
+def test_quadratic_equations_registry_marks_pilot_difficulty_support() -> None:
+    topic = find_topic_by_label("Quadratic equations by factoring")
+
+    assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
+
+
 def test_registry_difficulty_metadata_is_normalized_lowercase() -> None:
     for topic in supported_topics():
         for difficulty in topic.supported_difficulty_levels:
@@ -115,14 +124,17 @@ def test_registry_difficulty_metadata_is_normalized_lowercase() -> None:
             assert difficulty == difficulty.strip()
 
 
-def test_only_linear_equations_advertises_expanded_difficulty_pilot() -> None:
+def test_only_linear_and_quadratic_advertise_expanded_difficulty_pilot() -> None:
     expanded_topics = tuple(
         topic.slug
         for topic in supported_topics()
         if topic.supported_difficulty_levels != ("easy",)
     )
 
-    assert expanded_topics == ("linear-equations",)
+    assert expanded_topics == (
+        "linear-equations",
+        "quadratic-equations-by-factoring",
+    )
 
 
 def test_find_topic_by_slug() -> None:

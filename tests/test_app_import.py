@@ -61,11 +61,22 @@ def test_topic_mode_linear_exposes_supported_difficulty_options() -> None:
 def test_topic_mode_easy_only_topic_exposes_easy_only_difficulty_options() -> None:
     test_app = _run_app()
 
-    test_app.selectbox[1].set_value("Quadratic equations by factoring").run()
+    test_app.selectbox[1].set_value("Systems of linear equations").run()
 
     assert not test_app.exception
     assert test_app.selectbox[2].label == "Difficulty"
     assert test_app.selectbox[2].options == ["Easy"]
+    assert test_app.selectbox[2].value == "Easy"
+
+
+def test_topic_mode_quadratic_exposes_supported_difficulty_options() -> None:
+    test_app = _run_app()
+
+    test_app.selectbox[1].set_value("Quadratic equations by factoring").run()
+
+    assert not test_app.exception
+    assert test_app.selectbox[2].label == "Difficulty"
+    assert test_app.selectbox[2].options == ["Easy", "Medium", "Hard"]
     assert test_app.selectbox[2].value == "Easy"
 
 
@@ -177,6 +188,13 @@ def test_learning_objective_mode_uses_mapped_topic_difficulty_options() -> None:
     assert test_app.selectbox[4].value == "Easy"
 
     test_app.selectbox[2].set_value("Quadratic Equations").run()
+
+    assert not test_app.exception
+    assert test_app.selectbox[4].label == "Difficulty"
+    assert test_app.selectbox[4].options == ["Easy", "Medium", "Hard"]
+    assert test_app.selectbox[4].value == "Easy"
+
+    test_app.selectbox[2].set_value("Systems of Equations").run()
 
     assert not test_app.exception
     assert test_app.selectbox[4].label == "Difficulty"

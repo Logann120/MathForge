@@ -287,6 +287,139 @@ def test_generate_quadratic_factoring_worksheet_creates_expected_easy_problem() 
     assert problem.metadata["factored_form"] == "(x - 1)(x - 2)"
     assert solution.problem_id == problem.problem_id
     assert solution.final_answer == problem.answer
+    assert solution.steps == (
+        "Start with x**2 - 3*x + 2 = 0.",
+        "Factor the quadratic as (x - 1)(x - 2) = 0.",
+        "Set each factor equal to zero.",
+        "x = 1 or x = 2.",
+    )
+
+
+def test_generate_quadratic_factoring_medium_worksheet_is_deterministic() -> None:
+    first = generate_quadratic_factoring_worksheet(
+        "Quadratic equations by factoring",
+        "medium",
+        3,
+        "medium-quadratic",
+    )
+    second = generate_quadratic_factoring_worksheet(
+        "Quadratic equations by factoring",
+        "medium",
+        3,
+        "medium-quadratic",
+    )
+
+    assert first == second
+    assert [problem.prompt for problem in first.problems] == [
+        "Solve by factoring: x**2 - 2*x - 3 = 0",
+        "Solve by factoring: x**2 - 2*x - 8 = 0",
+        "Solve by factoring: x**2 - 2*x - 15 = 0",
+    ]
+    assert [problem.answer for problem in first.problems] == [
+        "-1, 3",
+        "-2, 4",
+        "-3, 5",
+    ]
+
+
+def test_generate_quadratic_factoring_medium_uses_mixed_sign_monic_roots() -> None:
+    worksheet = generate_quadratic_factoring_worksheet(
+        "Quadratic equations by factoring",
+        "medium",
+        1,
+        "medium-quadratic",
+    )
+
+    problem = worksheet.problems[0]
+    solution = worksheet.solutions[0]
+
+    assert problem.metadata["difficulty_pattern"] == "mixed_sign_monic_roots"
+    assert problem.metadata["leading_coefficient"] == "1"
+    assert int(problem.metadata["root_1"]) < 0
+    assert int(problem.metadata["root_2"]) > 0
+    assert problem.metadata["factored_form"] == "(x + 1)(x - 3)"
+    assert solution.steps == (
+        "Start with x**2 - 2*x - 3 = 0.",
+        "Factor the quadratic as (x + 1)(x - 3) = 0.",
+        "Set each factor equal to zero.",
+        "x = -1 or x = 3.",
+    )
+
+
+def test_generate_quadratic_factoring_hard_worksheet_is_deterministic() -> None:
+    first = generate_quadratic_factoring_worksheet(
+        "Quadratic equations by factoring",
+        "hard",
+        3,
+        "hard-quadratic",
+    )
+    second = generate_quadratic_factoring_worksheet(
+        "Quadratic equations by factoring",
+        "hard",
+        3,
+        "hard-quadratic",
+    )
+
+    assert first == second
+    assert [problem.prompt for problem in first.problems] == [
+        "Solve by factoring: 2*x**2 - 8*x + 6 = 0",
+        "Solve by factoring: 3*x**2 - 18*x + 24 = 0",
+        "Solve by factoring: 4*x**2 - 32*x + 60 = 0",
+    ]
+    assert [problem.answer for problem in first.problems] == [
+        "1, 3",
+        "2, 4",
+        "3, 5",
+    ]
+
+
+def test_generate_quadratic_factoring_hard_uses_non_monic_integer_roots() -> None:
+    worksheet = generate_quadratic_factoring_worksheet(
+        "Quadratic equations by factoring",
+        "hard",
+        1,
+        "hard-quadratic",
+    )
+
+    problem = worksheet.problems[0]
+    solution = worksheet.solutions[0]
+
+    assert problem.metadata["difficulty_pattern"] == "non_monic_integer_roots"
+    assert int(problem.metadata["leading_coefficient"]) > 1
+    assert problem.metadata["root_1"] == "1"
+    assert problem.metadata["root_2"] == "3"
+    assert problem.metadata["factored_form"] == "(2*x - 2)(x - 3)"
+    assert _factored_form_matches_equation(
+        problem.metadata["factored_form"],
+        problem.metadata["equation"],
+    )
+    assert solution.steps == (
+        "Start with 2*x**2 - 8*x + 6 = 0.",
+        "Factor the quadratic as (2*x - 2)(x - 3) = 0.",
+        "Set each factor equal to zero.",
+        "x = 1 or x = 3.",
+    )
+
+
+def test_generate_quadratic_factoring_unknown_difficulty_uses_legacy_fallback() -> None:
+    worksheet = generate_quadratic_factoring_worksheet(
+        "Quadratic equations by factoring",
+        "practice",
+        1,
+        "fallback-quadratic",
+    )
+
+    problem = worksheet.problems[0]
+
+    assert problem.prompt == "Solve by factoring: x**2 - 6*x + 8 = 0"
+    assert problem.answer == "2, 4"
+    assert problem.metadata == {
+        "equation": "x**2 - 6*x + 8 = 0",
+        "variable": "x",
+        "root_1": "2",
+        "root_2": "4",
+        "factored_form": "(x - 2)(x - 4)",
+    }
 
 
 def test_generated_quadratic_roots_satisfy_generated_equations() -> None:
@@ -588,6 +721,19 @@ def _system_solution_is_valid(metadata: Mapping[str, str]) -> bool:
 def _factoring_answer_is_valid(expression: str, factored_form: str) -> bool:
     """Return whether a generated factorization expands correctly."""
     return simplify(sympify(expression) - sympify(factored_form).expand()) == 0
+
+
+def _factored_form_matches_equation(factored_form: str, equation: str) -> bool:
+    """Return whether a displayed factored form expands to equation left side."""
+    left_side, right_side = equation.split("=")
+    parseable_factored_form = factored_form.replace(")(", ")*(")
+    return (
+        simplify(
+            sympify(parseable_factored_form).expand()
+            - (sympify(left_side) - sympify(right_side))
+        )
+        == 0
+    )
 
 
 def _function_evaluation_is_valid(metadata: Mapping[str, str]) -> bool:

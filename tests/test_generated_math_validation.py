@@ -40,12 +40,15 @@ def test_generated_linear_equation_answers_satisfy_equations(
         assert result.is_valid is True
 
 
-def test_generated_quadratic_factoring_roots_satisfy_equations() -> None:
+@pytest.mark.parametrize("difficulty", ("easy", "medium", "hard"))
+def test_generated_quadratic_factoring_roots_satisfy_equations(
+    difficulty: str,
+) -> None:
     worksheet = generate_quadratic_factoring_worksheet(
         topic="Quadratic equations by factoring",
-        difficulty="easy",
+        difficulty=difficulty,
         count=5,
-        start_id="validation-quadratic",
+        start_id=f"validation-quadratic-{difficulty}",
     )
 
     for problem in worksheet.problems:

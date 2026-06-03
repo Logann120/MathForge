@@ -57,9 +57,17 @@ def test_difficulty_labels_for_topic_use_registry_metadata() -> None:
         "Medium",
         "Hard",
     )
+    assert difficulty_labels_for_topic("Quadratic equations by factoring") == (
+        "Easy",
+        "Medium",
+        "Hard",
+    )
 
     for topic_label in supported_topic_labels():
-        if topic_label != "Linear equations":
+        if topic_label not in {
+            "Linear equations",
+            "Quadratic equations by factoring",
+        }:
             assert difficulty_labels_for_topic(topic_label) == ("Easy",)
 
 
