@@ -8,6 +8,79 @@ MathForge is deterministic and instructor-reviewable. Manual QA should confirm b
 
 The current checkpoint covers Markdown, print-friendly standard HTML, ZIP bundles containing Markdown plus standard HTML, Canvas-friendly manual-entry CSV, and separate LibGuides-safe HTML. Automated tests cover exporter structure and deterministic output, but browser print preview, copy/paste behavior, and accessibility review still require manual checks. MathForge does not include a PDF exporter, direct Canvas integration, or direct LibGuides integration.
 
+Status: ready for manual execution. Do not mark this QA pass as passed until a human reviewer completes the scenarios and records results.
+
+## Manual QA Execution Checklist
+
+Use this section for a focused human QA pass. The broader sections below provide additional checks when a release needs deeper review.
+
+### Setup
+
+1. Install dependencies if needed:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. Run the automated suite:
+
+   ```bash
+   python -B -m pytest -p no:cacheprovider tests
+   ```
+
+3. Launch the Streamlit app:
+
+   ```bash
+   streamlit run app/main.py
+   ```
+
+4. Keep the `examples/` directory available for static export review. Representative files include:
+   - `examples/linear_equations_worksheet.md`
+   - `examples/linear_equations_worksheet.html`
+   - `examples/linear_equations_resource_pack.md`
+   - `examples/linear_equations_resource_pack.html`
+   - `examples/linear_equations_worksheet_libguides.html`
+   - `examples/linear_equations_resource_pack_libguides.html`
+
+### Representative Scenarios
+
+| Scenario | Inputs | Expected export buttons | Manual checks |
+| --- | --- | --- | --- |
+| Topic worksheet | Topic mode, `Linear equations`, `Worksheet only`, `Easy`, count `5` | Download Worksheet Markdown, Download Worksheet HTML, Download Worksheet LibGuides-Safe HTML, Download Worksheet Export Bundle, Download Worksheet Canvas Manual-Entry CSV | Worksheet tab shows five problems; solution key tab has matching answers; Markdown is readable when opened as text; standard HTML opens in a browser and includes print-focused CSS; print preview keeps problems and solution key readable; ZIP contains Markdown plus standard HTML only; Canvas CSV has question title, prompt, answer, explanation, topic, difficulty, problem ID, source type, and source ID columns. |
+| Topic resource pack | Topic mode, `Quadratic equations by factoring`, `Full Resource Pack`, `Easy`, count `5` | Download Resource Pack Markdown, Download Resource Pack HTML, Download Resource Pack LibGuides-Safe HTML, Download Resource Pack Export Bundle, Download Resource Pack Canvas Manual-Entry Quiz CSV | Resource-pack tabs show worksheet, solution key, study guide, common mistakes, tutor notes, and practice quiz; Markdown and standard HTML include all resource-pack sections; standard HTML print preview keeps major sections readable; ZIP contains Markdown plus standard HTML only; Canvas CSV is labeled manual-entry/import-friendly and represents the practice quiz. |
+| Learning Objective worksheet | Learning Objective mode, `College Algebra`, any module/objective, `Worksheet only`, count `3` | Download Worksheet Markdown, Download Worksheet HTML, Download Worksheet LibGuides-Safe HTML, Download Worksheet Export Bundle, Download Worksheet Canvas Manual-Entry CSV | Course, module, objective, mapped topic, and planned output type appear before generation; generated-output summary identifies Learning Objective mode; worksheet export filenames are clear and deterministic; raw export text areas remain readable. |
+| Learning Objective resource pack | Learning Objective mode, `College Algebra`, `Systems of Equations`, `Solve systems of linear equations in two variables`, `Full Resource Pack`, count `3` | Download Resource Pack Markdown, Download Resource Pack HTML, Download Resource Pack LibGuides-Safe HTML, Download Resource Pack Export Bundle, Download Resource Pack Canvas Manual-Entry Quiz CSV | Resource pack aligns with the selected objective; study guide, common mistakes, tutor notes, and practice quiz are present; standard HTML browser view and print preview are readable; LibGuides-safe HTML remains a separate scoped fragment and is not included in the ZIP bundle. |
+
+### Cross-Cutting Manual Checks
+
+- Keyboard: tab through controls and export areas; confirm the page can be navigated and scrolled without mouse-only requirements.
+- Browser zoom: check generated previews and downloaded HTML at 125% and 200% zoom.
+- Copy/paste: copy Markdown, standard HTML text, Canvas CSV text, and LibGuides-safe HTML text into a plain-text editor; confirm content remains readable.
+- Standard HTML browser view: confirm headings, lists, worksheet sections, solution keys, and resource-pack sections render without broken markup.
+- Standard HTML print preview: confirm `Worksheet`, `Solution Key`, `Study Guide`, `Common Mistakes`, `Tutor Notes`, and `Practice Quiz` sections remain legible; MathForge does not generate PDF files.
+- ZIP bundles: confirm bundles contain Markdown plus standard HTML only; Canvas CSV and LibGuides-safe HTML remain separate downloads.
+- LibGuides-safe HTML: paste into a LibGuides-style HTML editor or safe HTML sandbox; confirm the `mathforge-libguides-export` wrapper is present and surrounding page styles/headings are not affected.
+- Accessibility/readability: confirm meaning does not rely on color alone, heading text is descriptive, lists match the visual grouping, and plain-text math notation remains understandable.
+- Error/empty state: confirm count bounds, supported-topic-only selectors, supported difficulty selector, and no stack traces during normal workflows.
+
+### QA Results Template
+
+Use this template when the human review is complete:
+
+```text
+Date:
+Reviewer:
+Environment/browser:
+Automated test command/result:
+Scenarios tested:
+Pass/fail summary:
+Issues found:
+Follow-up actions:
+Notes on standard HTML print preview:
+Notes on LibGuides-safe copy/paste:
+Notes on Canvas CSV manual-entry usability:
+```
+
 ## Launch
 
 Install dependencies if needed:
