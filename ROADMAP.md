@@ -26,7 +26,8 @@ Current difficulty exposure:
 
 - Easy is available for every supported topic.
 - Medium and Hard are exposed in the Streamlit UI only for Linear equations,
-  Quadratic equations by factoring, and Systems of linear equations.
+  Quadratic equations by factoring, Systems of linear equations, and Factoring
+  techniques.
 - Built-in presets remain Easy-only.
 
 Current non-features:
@@ -174,7 +175,7 @@ Why this is next:
 
 ## Later Possible Direction: Broader Difficulty Expansion
 
-Status: Linear, quadratic, and systems pilots active; broader topic expansion later
+Status: Linear, quadratic, systems, and factoring pilots active; broader topic expansion later
 
 Potential goals:
 

@@ -748,6 +748,165 @@ def test_generate_factoring_techniques_worksheet_creates_expected_strategies() -
     assert worksheet.problems[0].answer == "2*(3*x + 4)"
     assert worksheet.problems[1].answer == "(x - 2)*(x + 2)"
     assert worksheet.problems[2].answer == "(x + 2)*(x + 3)"
+    assert [problem.prompt for problem in worksheet.problems] == [
+        "Factor completely: 6*x + 8",
+        "Factor completely: x**2 - 4",
+        "Factor completely: x**2 + 5*x + 6",
+    ]
+    assert [dict(problem.metadata) for problem in worksheet.problems] == [
+        {
+            "expression": "6*x + 8",
+            "factored_form": "2*(3*x + 4)",
+            "strategy": "greatest common factor",
+            "variable": "x",
+        },
+        {
+            "expression": "x**2 - 4",
+            "factored_form": "(x - 2)*(x + 2)",
+            "strategy": "difference of squares",
+            "variable": "x",
+        },
+        {
+            "expression": "x**2 + 5*x + 6",
+            "factored_form": "(x + 2)*(x + 3)",
+            "strategy": "simple trinomial",
+            "variable": "x",
+        },
+    ]
+
+
+def test_generate_factoring_techniques_medium_worksheet_is_deterministic() -> None:
+    first = generate_factoring_techniques_worksheet(
+        "Factoring techniques",
+        "medium",
+        3,
+        "medium-factoring",
+    )
+    second = generate_factoring_techniques_worksheet(
+        "Factoring techniques",
+        "medium",
+        3,
+        "medium-factoring",
+    )
+
+    assert first == second
+    assert [problem.prompt for problem in first.problems] == [
+        "Factor completely: 6*x**2 + 8*x",
+        "Factor completely: 4*x**2 - 9",
+        "Factor completely: x**2 + x - 6",
+    ]
+    assert [problem.answer for problem in first.problems] == [
+        "2*x*(3*x + 4)",
+        "(2*x - 3)*(2*x + 3)",
+        "(x - 2)*(x + 3)",
+    ]
+
+
+def test_generate_factoring_techniques_medium_uses_extended_patterns() -> None:
+    worksheet = generate_factoring_techniques_worksheet(
+        "Factoring techniques",
+        "medium",
+        3,
+        "medium-factoring",
+    )
+
+    assert [problem.metadata["difficulty_pattern"] for problem in worksheet.problems] == [
+        "variable_gcf",
+        "coefficient_difference_of_squares",
+        "mixed_sign_trinomial",
+    ]
+    assert worksheet.problems[0].metadata["strategy"] == (
+        "greatest common factor with variable"
+    )
+    assert worksheet.problems[1].metadata["strategy"] == (
+        "coefficient difference of squares"
+    )
+    assert worksheet.problems[2].metadata["strategy"] == "mixed-sign simple trinomial"
+
+
+def test_generate_factoring_techniques_hard_worksheet_is_deterministic() -> None:
+    first = generate_factoring_techniques_worksheet(
+        "Factoring techniques",
+        "hard",
+        4,
+        "hard-factoring",
+    )
+    second = generate_factoring_techniques_worksheet(
+        "Factoring techniques",
+        "hard",
+        4,
+        "hard-factoring",
+    )
+
+    assert first == second
+    assert [problem.prompt for problem in first.problems] == [
+        "Factor completely: x**3 + 3*x**2 + 2*x + 6",
+        "Factor completely: 2*x**2 + 7*x + 3",
+        "Factor completely: x**3 + 4*x**2 + 3*x + 12",
+        "Factor completely: 3*x**2 + 13*x + 4",
+    ]
+    assert [problem.answer for problem in first.problems] == [
+        "(x + 3)*(x**2 + 2)",
+        "(2*x + 1)*(x + 3)",
+        "(x + 4)*(x**2 + 3)",
+        "(3*x + 1)*(x + 4)",
+    ]
+
+
+def test_generate_factoring_techniques_hard_uses_grouping_or_non_monic_patterns() -> None:
+    worksheet = generate_factoring_techniques_worksheet(
+        "Factoring techniques",
+        "hard",
+        2,
+        "hard-factoring",
+    )
+
+    assert [problem.metadata["difficulty_pattern"] for problem in worksheet.problems] == [
+        "grouping",
+        "non_monic_trinomial",
+    ]
+    assert worksheet.problems[0].metadata["strategy"] == "factor by grouping"
+    assert worksheet.problems[1].metadata["strategy"] == "non-monic trinomial"
+
+
+def test_generate_factoring_techniques_unknown_difficulty_uses_legacy_fallback() -> None:
+    worksheet = generate_factoring_techniques_worksheet(
+        "Factoring techniques",
+        "practice",
+        3,
+        "fallback-factoring",
+    )
+
+    assert [problem.prompt for problem in worksheet.problems] == [
+        "Factor completely: 6*x + 8",
+        "Factor completely: x**2 - 4",
+        "Factor completely: x**2 + 5*x + 6",
+    ]
+    assert [problem.answer for problem in worksheet.problems] == [
+        "2*(3*x + 4)",
+        "(x - 2)*(x + 2)",
+        "(x + 2)*(x + 3)",
+    ]
+    assert [dict(problem.metadata) for problem in worksheet.problems] == [
+        {
+            "expression": "6*x + 8",
+            "factored_form": "2*(3*x + 4)",
+            "strategy": "greatest common factor",
+            "variable": "x",
+        },
+        {
+            "expression": "x**2 - 4",
+            "factored_form": "(x - 2)*(x + 2)",
+            "strategy": "difference of squares",
+            "variable": "x",
+        },
+        {
+            "expression": "x**2 + 5*x + 6",
+            "factored_form": "(x + 2)*(x + 3)",
+            "strategy": "simple trinomial",
+            "variable": "x",
+        },
+    ]
 
 
 def test_generated_factoring_answers_expand_to_original_expressions() -> None:

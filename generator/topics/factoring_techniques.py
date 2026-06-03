@@ -27,12 +27,22 @@ def generate_factoring_techniques_worksheet(
 
     for index in range(count):
         problem_id = f"{start_id}-{index + 1:03d}"
-        expression, factored_form, strategy = _factoring_problem(index)
+        expression, factored_form, strategy, metadata_extra = (
+            _factoring_problem_for_difficulty(difficulty, index)
+        )
 
         if not _validate_factored_expression(expression, factored_form):
             raise ValueError(
                 f"generated factorization failed validation for {problem_id}."
             )
+
+        metadata = {
+            "expression": expression,
+            "factored_form": factored_form,
+            "strategy": strategy,
+            "variable": "x",
+        }
+        metadata.update(metadata_extra)
 
         problems.append(
             MathProblem(
@@ -41,12 +51,7 @@ def generate_factoring_techniques_worksheet(
                 answer=factored_form,
                 topic=topic,
                 difficulty=difficulty,
-                metadata={
-                    "expression": expression,
-                    "factored_form": factored_form,
-                    "strategy": strategy,
-                    "variable": "x",
-                },
+                metadata=metadata,
             )
         )
         solutions.append(
@@ -104,6 +109,25 @@ def generate_factoring_techniques_resource_pack(
     )
 
 
+def _factoring_problem_for_difficulty(
+    difficulty: str,
+    index: int,
+) -> tuple[str, str, str, dict[str, str]]:
+    """Return factoring practice content for a supported difficulty."""
+    normalized_difficulty = difficulty.strip().lower()
+
+    if normalized_difficulty == "medium":
+        expression, factored_form, strategy, pattern = _medium_factoring_problem(index)
+        return expression, factored_form, strategy, {"difficulty_pattern": pattern}
+
+    if normalized_difficulty == "hard":
+        expression, factored_form, strategy, pattern = _hard_factoring_problem(index)
+        return expression, factored_form, strategy, {"difficulty_pattern": pattern}
+
+    expression, factored_form, strategy = _factoring_problem(index)
+    return expression, factored_form, strategy, {}
+
+
 def _factoring_problem(index: int) -> tuple[str, str, str]:
     """Return expression, factored form, and strategy for factoring practice."""
     strategy_index = index % 3
@@ -130,6 +154,90 @@ def _factoring_problem(index: int) -> tuple[str, str, str]:
     expression = f"x**2 + {linear_coefficient}*x + {constant}"
     factored_form = f"(x + {first_root})*(x + {second_root})"
     return expression, factored_form, "simple trinomial"
+
+
+def _medium_factoring_problem(index: int) -> tuple[str, str, str, str]:
+    """Return medium factoring practice with readable extensions."""
+    strategy_index = index % 3
+    sequence = index // 3
+
+    if strategy_index == 0:
+        factor = sequence + 2
+        coefficient = sequence + 3
+        constant = sequence + 4
+        expression = f"{factor * coefficient}*x**2 + {factor * constant}*x"
+        factored_form = f"{factor}*x*({coefficient}*x + {constant})"
+        return (
+            expression,
+            factored_form,
+            "greatest common factor with variable",
+            "variable_gcf",
+        )
+
+    if strategy_index == 1:
+        coefficient_root = sequence + 2
+        constant_root = sequence + 3
+        expression = f"{coefficient_root**2}*x**2 - {constant_root**2}"
+        factored_form = (
+            f"({coefficient_root}*x - {constant_root})"
+            f"*({coefficient_root}*x + {constant_root})"
+        )
+        return (
+            expression,
+            factored_form,
+            "coefficient difference of squares",
+            "coefficient_difference_of_squares",
+        )
+
+    first_factor = sequence + 2
+    second_factor = sequence + 3
+    linear_coefficient = second_factor - first_factor
+    constant = -(first_factor * second_factor)
+    if linear_coefficient == 1:
+        expression = f"x**2 + x - {abs(constant)}"
+    else:
+        expression = f"x**2 + {linear_coefficient}*x - {abs(constant)}"
+    factored_form = f"(x - {first_factor})*(x + {second_factor})"
+    return (
+        expression,
+        factored_form,
+        "mixed-sign simple trinomial",
+        "mixed_sign_trinomial",
+    )
+
+
+def _hard_factoring_problem(index: int) -> tuple[str, str, str, str]:
+    """Return hard factoring practice with constrained integer factors."""
+    strategy_index = index % 2
+    sequence = index // 2
+
+    if strategy_index == 0:
+        binomial_constant = sequence + 3
+        remaining_constant = sequence + 2
+        expression = (
+            f"x**3 + {binomial_constant}*x**2 + "
+            f"{remaining_constant}*x + {binomial_constant * remaining_constant}"
+        )
+        factored_form = (
+            f"(x + {binomial_constant})"
+            f"*(x**2 + {remaining_constant})"
+        )
+        return expression, factored_form, "factor by grouping", "grouping"
+
+    leading_coefficient = sequence + 2
+    binomial_constant = sequence + 3
+    middle_coefficient = (leading_coefficient * binomial_constant) + 1
+    constant = binomial_constant
+    expression = (
+        f"{leading_coefficient}*x**2 + {middle_coefficient}*x + {constant}"
+    )
+    factored_form = f"({leading_coefficient}*x + 1)*(x + {binomial_constant})"
+    return (
+        expression,
+        factored_form,
+        "non-monic trinomial",
+        "non_monic_trinomial",
+    )
 
 
 def _validate_factored_expression(expression: str, factored_form: str) -> bool:

@@ -62,12 +62,15 @@ def test_generated_quadratic_factoring_roots_satisfy_equations(
             assert result.is_valid is True
 
 
-def test_generated_factoring_answers_are_expression_equivalent() -> None:
+@pytest.mark.parametrize("difficulty", ("easy", "medium", "hard"))
+def test_generated_factoring_answers_are_expression_equivalent(
+    difficulty: str,
+) -> None:
     worksheet = generate_factoring_techniques_worksheet(
         topic="Factoring techniques",
-        difficulty="easy",
+        difficulty=difficulty,
         count=6,
-        start_id="validation-factoring",
+        start_id=f"validation-factoring-{difficulty}",
     )
 
     for problem in worksheet.problems:

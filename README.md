@@ -28,7 +28,7 @@ The current MVP supports:
 - Generating functions basics worksheets
 - Selecting topic-aware difficulty options: Easy for all topics, plus Medium
   and Hard for linear equations, quadratic equations by factoring, and
-  systems of linear equations
+  systems of linear equations, and factoring techniques
 - Selecting built-in generation presets for common instructor workflows
 - Generating detailed solution keys
 - Validating generated answers using SymPy
@@ -146,7 +146,7 @@ Next work should focus on accessibility review, examples, and keeping the implem
 - LibGuides-safe HTML is an embed-focused copy/paste format, not a direct LibGuides integration, and does not replace the standard HTML export.
 - Canvas-friendly CSV exports are manual-entry/import-friendly files only; compatibility with Canvas quiz import workflows can vary by institution and may require instructor cleanup.
 - Built-in presets provide starting defaults only; there are no saved custom presets or file-based preset configuration.
-- Medium and Hard are currently exposed only for linear equations, quadratic equations by factoring, and systems of linear equations; factoring techniques and functions basics remain Easy-only.
+- Medium and Hard are currently exposed only for linear equations, quadratic equations by factoring, systems of linear equations, and factoring techniques; functions basics remains Easy-only.
 - Continuous integration currently runs the pytest suite on Python 3.11 and Python 3.12.
 - There is no deployment workflow or production hosting configuration.
 - Accessibility and browser behavior need broader manual QA beyond automated exporter tests.

@@ -18,7 +18,7 @@ The older `linear_equations_sample.md` and `linear_equations_sample.html` files 
 
 ### Difficulty Pilot Examples
 
-Linear equations, quadratic equations by factoring, and systems of linear equations currently support Easy, Medium, and Hard at the generator, registry, and Streamlit UI level. The standard worksheet examples above show Easy output. These additional Markdown examples demonstrate the deterministic Medium/Hard pilot without adding a full matrix of export formats:
+Linear equations, quadratic equations by factoring, systems of linear equations, and factoring techniques currently support Easy, Medium, and Hard at the generator, registry, and Streamlit UI level. The standard worksheet examples above show Easy output. These additional Markdown examples demonstrate the deterministic Medium/Hard pilot without adding a full matrix of export formats:
 
 - `linear_equations_medium_worksheet.md`: medium linear equations with negative constants and negative integer solutions.
 - `linear_equations_hard_worksheet.md`: hard linear equations with variables on both sides.
@@ -27,7 +27,7 @@ Linear equations, quadratic equations by factoring, and systems of linear equati
 - `systems_of_linear_equations_medium_worksheet.md`: medium systems requiring one equation scaling before elimination.
 - `systems_of_linear_equations_hard_worksheet.md`: hard systems with negative coefficients and negative integer solutions.
 
-Factoring techniques and functions basics remain Easy-only. Do not add Medium/Hard examples for a topic until that topic has explicit deterministic generator behavior, registry metadata, UI exposure, and tests.
+Factoring Medium/Hard examples are deferred for now. Functions basics remains Easy-only. Do not add Medium/Hard examples for a topic until that topic has explicit deterministic generator behavior, registry metadata, UI exposure, and tests.
 
 ## Resource Pack Example
 
