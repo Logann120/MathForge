@@ -2,7 +2,7 @@
 
 This repository contains a working Python/Streamlit MVP for deterministic College Algebra instructional material generation.
 
-Agents and contributors must preserve the implemented MVP unless the project owner explicitly requests behavior changes. Do not add AI integration, direct Canvas API integration, persistence, authentication, APIs, deployment workflows, or new product features unless they are specifically requested.
+Agents and contributors must preserve the implemented MVP unless the project owner explicitly requests behavior changes. Do not add AI integration, direct Canvas API integration, direct LibGuides integration, persistence, authentication, APIs, deployment workflows, or new product features unless they are specifically requested.
 
 ## Current Scope
 
@@ -26,7 +26,7 @@ Out of scope unless explicitly requested:
 - Model, exporter, or validator behavior changes.
 - Dependency installation or dependency changes.
 - AI or LLM integration.
-- Canvas integration.
+- Direct Canvas API integration.
 - Canvas API calls, OAuth, tokens, or network publishing.
 - Database, authentication, API, or deployment code.
 
@@ -57,7 +57,7 @@ The MVP supports:
 ## Current Architecture
 
 - `app/` contains the Streamlit MVP interface, built-in generation presets, input controls, preview rendering, download orchestration, and generated-output summary view models.
-- `generator/` contains deterministic worksheet, resource-pack, and curriculum-aligned generation.
+- `generator/` contains deterministic worksheet, resource-pack, curriculum-aligned generation, and topic-focused generator modules.
 - `models/` contains dataclasses for content, resource packs, and curriculum structures.
 - `exporters/` contains Markdown, standard HTML, LibGuides-safe HTML, Canvas manual-entry CSV, and ZIP bundle exporters.
 - `validators/` contains SymPy validation helpers.
@@ -100,6 +100,7 @@ Implementation work should preserve clear boundaries between:
 - SymPy validation logic.
 - Worksheet assembly.
 - HTML and Markdown exporters.
+- LibGuides-safe HTML and Canvas-friendly CSV exporters.
 - Curriculum templates and future integrations.
 
 Future topic additions should update deterministic generators, add one `topics/registry.py` entry, update tests, and avoid scattering new label or prefix maps across the app.
@@ -126,6 +127,8 @@ For implementation tasks:
 - Add focused tests for core generation, validation, and export behavior.
 - Keep UI behavior separate from reusable domain logic.
 - Keep `app/main.py` focused on entry-point and high-level page flow; place control helpers in `app/controls.py`, preview rendering in `app/rendering.py`, download/export UI orchestration in `app/downloads.py`, and summary/context view models in `app/generation_context.py`.
+- Preserve public generator API modules in `generator/problem_generator.py` and `generator/resource_pack_generator.py`; place topic-specific implementation in `generator/topics/`.
+- Do not change existing Markdown, standard HTML, LibGuides-safe HTML, Canvas CSV, or ZIP output formats unless explicitly requested.
 - Document any accessibility limitations that cannot be resolved immediately.
 
 ## Known Limitations

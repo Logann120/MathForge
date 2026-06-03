@@ -16,7 +16,7 @@ Useful contributions include:
 - Proposing maintainable approaches for new supported topics.
 - Refreshing examples and supplemental documentation.
 
-Do not add or change business logic, Streamlit UI behavior, AI integration, direct Canvas API integration, persistence, authentication, APIs, or deployment code unless that implementation work is explicitly requested.
+Do not add or change business logic, Streamlit UI behavior, AI integration, direct Canvas API integration, direct LibGuides integration, persistence, authentication, APIs, or deployment code unless that implementation work is explicitly requested.
 
 ## Project Principles
 
@@ -32,8 +32,8 @@ Contributions should prioritize:
 
 The structure is organized around current MVP responsibilities:
 
-- `app/` for the Streamlit interface and built-in generation presets.
-- `generator/` for deterministic worksheet, resource-pack, and curriculum-aligned generation.
+- `app/` for the Streamlit interface, built-in generation presets, input controls, rendering, downloads, and summary helpers.
+- `generator/` for deterministic worksheet, resource-pack, curriculum-aligned generation, and topic-focused generator modules.
 - `models/` for dataclasses representing content, resource packs, and curriculum structures.
 - `validators/` for answer validation, including SymPy-based checks.
 - `exporters/` for HTML, LibGuides-safe HTML, Markdown, Canvas manual-entry CSV, and ZIP bundle exports.
@@ -69,13 +69,15 @@ GitHub Actions runs the pytest suite on Python 3.11 and Python 3.12 for pushes a
 
 When adding a supported topic, keep routing centralized in `topics/registry.py`. Add deterministic generator behavior, resource-pack behavior if supported, registry metadata, curriculum metadata, and tests together.
 
+Preserve public generator imports in `generator/problem_generator.py` and `generator/resource_pack_generator.py`. Preserve existing export formats unless an exporter-format change is explicitly requested.
+
 Use [docs/ADDING_TOPICS.md](docs/ADDING_TOPICS.md) as the checklist for future topic additions.
 
 Use [docs/MANUAL_QA.md](docs/MANUAL_QA.md) before major UI, exporter, or topic changes.
 
 ## Current Non-Features
 
-The MVP intentionally has no AI or LLM integration, direct Canvas API integration, database, authentication, external API, production deployment workflow, or production hosting configuration.
+The MVP intentionally has no AI or LLM integration, direct Canvas API integration, direct LibGuides integration, database, authentication, external API, production deployment workflow, or production hosting configuration.
 
 ## Known Limitations
 

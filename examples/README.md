@@ -2,7 +2,7 @@
 
 This directory contains deterministic example exports generated from the current MathForge MVP. The examples are intended for repository browsing, documentation review, and future AI coding agents that need to understand the current output formats.
 
-All files are generated from existing College Algebra generators and exporters. They do not use AI, Canvas integration, persistence, an API, or a database.
+All files are generated from existing College Algebra generators and exporters. They do not use AI, direct Canvas API integration, direct LibGuides integration, persistence, an API, or a database.
 
 ## Worksheet Examples
 

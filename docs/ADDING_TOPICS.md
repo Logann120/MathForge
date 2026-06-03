@@ -2,7 +2,7 @@
 
 This guide explains how to add a new supported math topic to MathForge using the supported-topic registry. Topic additions should remain deterministic, instructor-reviewable, and small enough to test thoroughly.
 
-MathForge does not use AI, Canvas integration, persistence, authentication, an external API, or plugin loading for topic support.
+MathForge does not use AI, direct Canvas API integration, direct LibGuides integration, persistence, authentication, an external API, or plugin loading for topic support.
 
 ## Guiding Principles
 
@@ -71,7 +71,7 @@ This file usually does not need topic-specific edits because the College Algebra
 
 ### Exporters
 
-Do not change `exporters/markdown_exporter.py` or `exporters/html_exporter.py` for a normal topic addition. The current exporters are generic for worksheets and resource packs.
+Do not change `exporters/markdown_exporter.py`, `exporters/html_exporter.py`, `exporters/libguides_html_exporter.py`, or `exporters/canvas_exporter.py` for a normal topic addition. The current exporters are generic for worksheets and resource packs.
 
 Update exporters only when the new topic introduces content that cannot be represented by the existing `Worksheet` or `ResourcePack` models. Exporter changes should include Markdown and HTML tests.
 
@@ -85,7 +85,7 @@ Add or update focused tests for:
 - Curriculum template/objective coverage, if curriculum-aligned.
 - Curriculum-based resource-pack generation, if curriculum-aligned.
 - Streamlit import or smoke behavior to confirm the topic appears and routes correctly.
-- Markdown and HTML export behavior only if exporter behavior changes.
+- Markdown, standard HTML, LibGuides-safe HTML, Canvas CSV, or ZIP behavior only if exporter behavior changes.
 
 Existing tests should continue to pass without changing expected output for existing topics.
 
@@ -100,7 +100,7 @@ Refresh `examples/README.md` so future contributors know what each example demon
 When adding a topic, do not:
 
 - Add AI or LLM integration.
-- Add Canvas integration.
+- Add direct Canvas API integration.
 - Add a database, authentication, public API, deployment workflow, or plugin architecture.
 - Change existing generated math content.
 - Change existing worksheet or resource-pack export formats unless required by new model needs.

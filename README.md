@@ -2,7 +2,7 @@
 
 MathForge is an open-source platform for helping mathematics instructors generate high-quality instructional materials.
 
-MathForge MVP 0.1 includes a Streamlit application for generating deterministic worksheets and instructional resource packs for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics. The project remains intentionally focused: the current MVP has no AI or LLM integration, no direct Canvas API integration, no database, no authentication, no external API, and no production deployment workflow.
+MathForge MVP 0.1 includes a Streamlit application for generating deterministic worksheets and instructional resource packs for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics. The project remains intentionally focused: the current MVP has no AI or LLM integration, no direct Canvas API integration, no direct LibGuides integration, no database, no authentication, no external API, no Docker setup, no plugin architecture, and no production deployment workflow.
 
 ## Mission
 
@@ -45,13 +45,9 @@ The current MVP supports:
 
 ## Future Direction
 
-Planned future capabilities include:
+Near-term future work should focus on print-friendly export polish, accessibility review, examples, and maintainability. Later work may include richer difficulty levels, additional College Algebra topics, local question-bank experiments, or broader course templates.
 
-- Canvas LMS integration
-- Question banks
-- AI-generated hints
-- AI-generated study guides
-- Course-specific templates
+AI features, direct Canvas API integration, direct LibGuides integration, persistence, databases, authentication, external APIs, deployment infrastructure, Docker, and plugin architecture remain out of scope unless explicitly requested.
 
 ## Technology Direction
 
@@ -69,8 +65,8 @@ Implementation should prioritize maintainability, clear module boundaries, autom
 
 MathForge is organized around small, testable Python modules:
 
-- `app/` contains the Streamlit MVP interface and built-in generation presets.
-- `generator/` contains deterministic worksheet, resource pack, and curriculum-aligned generation.
+- `app/` contains the Streamlit MVP interface, built-in generation presets, controls, rendering, downloads, and summary helpers.
+- `generator/` contains deterministic worksheet, resource pack, curriculum-aligned generation, and topic-focused generator modules.
 - `models/` contains dataclasses for worksheets, problems, solutions, exports, curriculum objects, and resource packs.
 - `exporters/` contains Markdown, accessible HTML, LibGuides-safe HTML, Canvas-friendly manual-entry CSV exporters, standard-library ZIP bundle helpers, and deterministic download filename helpers.
 - `validators/` contains SymPy-based validation helpers.
@@ -104,7 +100,7 @@ streamlit run app/main.py
 Run the test suite:
 
 ```bash
-pytest
+python -B -m pytest -p no:cacheprovider tests
 ```
 
 ## Continuous Integration
@@ -121,7 +117,7 @@ Screenshots will be added as the MVP interface stabilizes.
 
 - Worksheet-only generation
 - Full Resource Pack generation
-- Markdown and HTML export previews
+- Markdown, standard HTML, LibGuides-safe HTML, Canvas CSV, and ZIP export previews
 
 ## Project Documentation
 
@@ -137,7 +133,7 @@ Screenshots will be added as the MVP interface stabilizes.
 
 MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics, built-in generation presets, resource pack generation with practice quizzes, SymPy validation, Markdown export, standard HTML export, LibGuides-safe HTML export, Canvas-friendly manual-entry CSV export, optional ZIP export bundles, and demo-ready Streamlit UI are implemented and covered by automated tests.
 
-Current work includes a curriculum-alignment milestone with a deterministic College Algebra template. Next work should focus on hardening, documentation, accessibility review, careful topic expansion, and keeping the implementation small and maintainable.
+Next work should focus on print-friendly export polish, accessibility review, examples, and keeping the implementation small and maintainable. Medium/hard difficulty expansion and additional topics should come later after explicit design and tests.
 
 ## Known Limitations
 
@@ -150,7 +146,7 @@ Current work includes a curriculum-alignment milestone with a deterministic Coll
 - There is no deployment workflow or production hosting configuration.
 - Accessibility and browser behavior need broader manual QA beyond automated exporter tests.
 - Some topic-specific generator internals remain explicit and topic-specific; the central registry now handles top-level topic discovery and routing.
-- There is no AI or LLM integration, direct Canvas API integration, database, authentication, external API, or production deployment.
+- There is no AI or LLM integration, direct Canvas API integration, direct LibGuides integration, database, authentication, external API, Docker setup, plugin architecture, or production deployment.
 
 ## Contributing
 

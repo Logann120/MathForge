@@ -37,7 +37,7 @@ Purpose:
 - Display worksheet, solution, and instructional resource previews.
 - Display a compact generated-output summary before export downloads.
 - Display selected Learning Objective mode course, module, objective, and mapped-topic context before generation.
-- Trigger Markdown and HTML export actions.
+- Trigger Markdown, standard HTML, LibGuides-safe HTML, ZIP bundle, and Canvas-friendly CSV export actions.
 - Trigger Canvas-friendly manual-entry CSV export actions without Canvas API calls.
 
 Current implementation:
@@ -259,7 +259,7 @@ The validation layer:
 The MVP intentionally has no:
 
 - AI or LLM integration.
-- Canvas LMS integration.
+- Direct Canvas LMS integration.
 - Canvas API calls, OAuth, token handling, or direct LMS publishing.
 - Database or persistence layer.
 - Authentication or authorization.
@@ -296,6 +296,6 @@ Future implementation should:
 
 ## Future Integration Considerations
 
-Future Canvas LMS integration, question banks, AI-generated hints, AI-generated study guides, and broader course-specific templates should build on the same core concepts rather than bypassing them.
+If explicitly requested later, direct integrations, question banks, AI-generated hints, AI-generated study guides, and broader course-specific templates should build on the same core concepts rather than bypassing them.
 
 Integrations should treat validated worksheet content as the source of truth. AI-assisted features should remain reviewable by instructors and should never replace validation or instructor approval.

@@ -1,154 +1,227 @@
 # MathForge Roadmap
 
-This roadmap describes the progression from the completed MVP prototype toward hardening and future platform features. Dates are intentionally omitted until the project has active implementation capacity.
+This roadmap reflects the current implemented MathForge MVP. Dates are intentionally omitted. Future work should preserve deterministic generation, instructor review, local usability, accessibility, and low operational complexity.
 
-## Phase 0: Planning and Project Foundation
+## Current Status
+
+Status: Working MVP / early Phase 5 export-hardening checkpoint
+
+MathForge currently supports deterministic College Algebra worksheet and resource-pack generation for:
+
+- Linear equations.
+- Quadratic equations by factoring.
+- Systems of linear equations.
+- Factoring techniques.
+- Functions basics.
+
+Current export paths:
+
+- Markdown.
+- Standard HTML.
+- LibGuides-safe HTML.
+- ZIP bundles containing Markdown plus standard HTML.
+- Canvas-friendly manual-entry CSV.
+
+Current non-features:
+
+- No AI or LLM integration.
+- No direct Canvas API integration.
+- No direct LibGuides API integration.
+- No persistence, database, authentication, accounts, external API, deployment workflow, Docker, or plugin architecture.
+
+## Phase 0: Foundation
 
 Status: Completed
 
-Goals:
+Completed work:
 
-- Completed: Define the project mission and target users.
-- Completed: Document MVP requirements.
-- Completed: Establish architecture principles before implementation.
-- Completed: Clarify contributor and agent expectations.
-- Completed: Establish the initial repository structure.
+- Project mission and target users.
+- MVP requirements and repository documentation.
+- Initial architecture boundaries.
+- Contributor and agent guidance.
+- Python package structure.
+- Project metadata and MIT license.
 
-Deliverables:
+## Phase 1: Core MVP
 
-- README.md
-- PROJECT_SPEC.md
-- ROADMAP.md
-- ARCHITECTURE.md
-- AGENTS.md
-- CONTRIBUTING.md
-- Initial Python package structure
-- Project metadata and MIT license
+Status: Completed
 
-## Phase 1: MVP Prototype
+Completed work:
 
-Status: Completed for MVP 0.1
+- Streamlit app.
+- Core dataclass models.
+- Deterministic worksheet generation.
+- Detailed solution keys.
+- SymPy validation helpers.
+- Markdown export.
+- Standard HTML export.
+- Initial tests.
 
-Goals:
+## Phase 2: Instructional Resource Packs and Curriculum Alignment
 
-- Completed: Build a minimal Streamlit interface.
-- Completed: Implement a deterministic linear equation worksheet generator.
-- Completed: Generate corresponding detailed solution keys.
-- Completed: Validate generated answers with SymPy.
-- Completed: Export worksheets and solution keys to Markdown.
-- Completed: Export worksheets and solution keys to accessible HTML.
-- Completed: Generate deterministic instructional resource packs.
-- Completed: Export full resource packs to Markdown.
-- Completed: Export full resource packs to accessible HTML.
+Status: Completed
 
-Success criteria:
+Completed work:
 
-- Completed: Instructors can generate a usable linear equation worksheet.
-- Completed: The solution key is accurate and readable.
-- Completed: SymPy validation catches incorrect generated answers.
-- Completed: HTML and Markdown exports are suitable for classroom review.
-- Completed: Resource packs include study guides, common mistakes, and tutor notes.
+- Resource-pack models.
+- Study guides, common mistakes, tutor notes, and practice quizzes.
+- Deterministic resource-pack generation.
+- College Algebra curriculum template.
+- Learning Objective mode.
+- Curriculum-based resource-pack generation.
 
-## Phase 2: MVP Hardening
+## Phase 3: Topic Coverage and Registry Hardening
 
-Status: Next
+Status: Completed
 
-Goals:
+Completed work:
 
-- Completed: Add initial curriculum-aligned generation with a College Algebra linear equations objective.
-- Completed: Expand topic coverage to quadratic equations by factoring.
-- Completed: Expand College Algebra coverage to systems of linear equations.
-- Completed: Expand College Algebra coverage to factoring techniques.
-- Completed: Expand College Algebra coverage to functions basics.
-- Completed: Add practice quizzes to instructional resource packs.
-- Completed: Polish the Streamlit UI for MVP demo readiness.
-- Completed: Add a supported-topic registry for topic discovery and top-level routing.
-- Continue careful topic expansion beyond the current College Algebra topics.
-- Continue focused automated tests for generation, validation, resource packs, and export workflows.
-- Review accessibility of the Streamlit interface and exported HTML.
-- Refine error messages and validation feedback.
-- Stabilize data structures for problems, worksheets, solution keys, and instructional resource packs.
-- Refresh example exports so they reflect current resource-pack and practice-quiz capabilities.
-- Add continuous integration.
-- Add a deployment workflow or clearly document non-deployment status.
-- Continue reducing duplicated topic-specific branching where it remains outside the registry.
+- Quadratic equations by factoring.
+- Systems of linear equations.
+- Factoring techniques.
+- Functions basics.
+- Supported-topic registry.
+- Registry-backed Streamlit routing.
+- Registry-backed curriculum template construction.
+- Topic-registry documentation.
+- Registry tests and snapshot-style safeguards.
 
-Success criteria:
+## Phase 4: Stabilization and Maintainability
 
-- The project has a reliable core workflow.
-- Contributors can add new problem types without changing unrelated systems.
-- Exported materials remain consistent across supported problem types.
+Status: Completed
 
-## Phase 3: Instructor Workflow Improvements
+Completed work:
 
-Status: Planned
+- Refreshed examples.
+- GitHub Actions pytest CI on Python 3.11 and Python 3.12.
+- Export regression tests.
+- Generator regression tests across supported topics.
+- Generated math validation tests.
+- Manual QA and accessibility guide.
+- Topic-focused generator module split.
+- Streamlit app module split.
+- App helper unit tests.
 
-Goals:
+## Phase 5A: Instructor Workflow Improvements
 
-- Add reusable worksheet settings.
-- Support richer difficulty controls.
-- Improve preview and export review flows.
-- Add metadata for topics, learning objectives, and estimated difficulty.
-- Explore import and export conventions for reusable material collections.
+Status: Completed
 
-Success criteria:
+Completed work:
 
-- Instructors can create materials faster across repeated class sessions.
-- Materials are easier to organize and revise.
-- The application remains simple enough for tutors and learning centers.
+- Optional ZIP export bundles.
+- Built-in generation presets.
+- Clear deterministic download filenames.
+- Generated-output summaries.
+- Improved Learning Objective mode context.
 
-## Phase 4: Question Banks and Templates
+## Phase 5B: Targeted Export Integrations
 
-Status: Future
+Status: Completed for current scope
 
-Goals:
+Completed work:
 
-- Introduce question-bank management.
-- Add course-specific templates.
-- Support curated problem sets by topic or objective.
-- Allow instructors to reuse and adapt generated content.
+- Canvas-friendly manual-entry CSV export for worksheet problems and practice quizzes.
+- LibGuides-safe HTML export for worksheets and resource packs.
+- LibGuides-safe example exports.
+- Documentation and manual QA guidance for paste-friendly institutional-page workflows.
 
-Success criteria:
+Scope boundaries:
 
-- MathForge supports both generated and curated content.
-- Templates reduce setup time for common courses.
-- Question banks remain portable and maintainable.
+- Canvas CSV is not Canvas API integration.
+- LibGuides-safe HTML is not direct LibGuides integration.
+- ZIP bundles remain Markdown plus standard HTML only.
 
-## Phase 5: Integrations and AI-Assisted Features
+## Recommended Next Phase: Print-Friendly Export Polish
 
-Status: Future
+Status: Recommended next implementation direction
 
-Goals:
+Recommended goals:
 
-- Add Canvas LMS integration.
-- Explore AI-generated hints.
-- Explore AI-generated study guides.
-- Support instructor review before any AI-generated material is published.
+- Improve standard HTML print readability.
+- Add or refine print-focused CSS in the standard HTML export only if it preserves existing tests or is explicitly accepted as an output-format change.
+- Add manual QA checks for browser print preview.
+- Keep PDF generation out of scope unless explicitly requested.
+- Keep ZIP bundle behavior unchanged unless explicitly requested.
 
-Success criteria:
+Why this is next:
 
-- Integrations fit instructor workflows without weakening the core export workflow.
-- AI-assisted features remain transparent, reviewable, and optional.
-- Mathematical correctness and accessibility remain required quality gates.
+- It fits existing export-first instructor workflows.
+- It avoids new dependencies and service integrations.
+- It improves classroom usability without adding persistence, accounts, APIs, or platform complexity.
 
-## Current Non-Features
+## Later Possible Direction: Difficulty Expansion
 
-The current MVP has no AI or LLM integration, Canvas integration, database, authentication, external API, production deployment workflow, or production hosting configuration.
+Status: Later
 
-## Known Limitations
+Potential goals:
 
-- Example files are stale and cover only an older linear-equations worksheet sample.
-- `docs/` is currently an empty placeholder folder.
-- CI runs the pytest suite on Python 3.11 and Python 3.12; deployment workflows are not configured.
-- Accessibility and browser QA are limited.
-- Top-level topic routing is centralized in a supported-topic registry; some topic-specific internals remain intentionally explicit.
+- Add meaningful medium and hard difficulty levels for supported topics.
+- Make difficulty behavior explicit and tested per topic.
+- Update registry metadata only when difficulty levels are actually implemented.
+- Preserve existing easy-output behavior.
+
+Risks:
+
+- Difficulty is not just UI metadata; it requires topic-specific math design, validation, examples, and regression tests.
+- Adding difficulty too early could obscure current deterministic behavior.
+
+## Later Possible Direction: Topic Expansion
+
+Status: Later
+
+Potential goals:
+
+- Add more College Algebra topics through the supported-topic registry.
+- Keep new topic generation in `generator/topics/`.
+- Preserve public generator APIs.
+- Add examples and tests for each topic.
+
+Risks:
+
+- Topic expansion should not reintroduce branch-heavy app or generator code.
+- New topics must remain deterministic and instructor-reviewable.
+
+## Later Possible Direction: Local Question Bank Exploration
+
+Status: Later / design first
+
+Potential goals:
+
+- Explore optional local file-based question banks.
+- Keep storage local and explicit if implemented.
+- Avoid accounts, databases, hosted services, or synchronization.
+
+Risks:
+
+- Even local persistence increases schema, migration, validation, and UX complexity.
+- This should not happen before export and topic-generation behavior are stable.
+
+## Not Yet: Direct Integrations and AI
+
+Status: Out of scope unless explicitly requested
+
+Do not add without explicit instruction:
+
+- AI or LLM-generated content.
+- Direct Canvas API integration.
+- Direct LibGuides API integration.
+- OAuth, tokens, secrets, network publishing, or LMS writeback.
+- Database or persistence layer.
+- Authentication or user accounts.
+- External API.
+- Deployment infrastructure.
+- Docker.
+- Plugin architecture.
 
 ## Ongoing Priorities
 
 Across all phases, MathForge should continue to prioritize:
 
-- Maintainable Python architecture.
-- Accessibility for students and instructors.
-- Reliable symbolic validation with SymPy.
-- Clear open-source documentation.
-- Instructor control over generated materials.
+- Deterministic generation.
+- Instructor-reviewable content.
+- Mathematical correctness.
+- Accessibility.
+- Stable public APIs.
+- Stable export formats.
+- Small modules with clear responsibilities.
+- Focused tests before behavior expansion.
