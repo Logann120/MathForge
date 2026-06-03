@@ -51,6 +51,19 @@ Use this section for a focused human QA pass. The broader sections below provide
 | Learning Objective worksheet | Learning Objective mode, `College Algebra`, any module/objective, `Worksheet only`, count `3` | Download Worksheet Markdown, Download Worksheet HTML, Download Worksheet LibGuides-Safe HTML, Download Worksheet Export Bundle, Download Worksheet Canvas Manual-Entry CSV | Course, module, objective, mapped topic, and planned output type appear before generation; generated-output summary identifies Learning Objective mode; worksheet export filenames are clear and deterministic; raw export text areas remain readable. |
 | Learning Objective resource pack | Learning Objective mode, `College Algebra`, `Systems of Equations`, `Solve systems of linear equations in two variables`, `Full Resource Pack`, count `3` | Download Resource Pack Markdown, Download Resource Pack HTML, Download Resource Pack LibGuides-Safe HTML, Download Resource Pack Export Bundle, Download Resource Pack Canvas Manual-Entry Quiz CSV | Resource pack aligns with the selected objective; study guide, common mistakes, tutor notes, and practice quiz are present; standard HTML browser view and print preview are readable; LibGuides-safe HTML remains a separate scoped fragment and is not included in the ZIP bundle. |
 
+### Topic-Aware Difficulty UI Checks
+
+Use these checks after any change to topic routing, presets, registry metadata, or Streamlit controls. This section prepares the QA pass only; do not mark it passed until a human reviewer runs the scenarios.
+
+| Scenario | Inputs | Manual checks |
+| --- | --- | --- |
+| Linear Topic mode worksheet | Topic mode, `Linear equations`, `Worksheet only`, each of `Easy`, `Medium`, and `Hard` | Difficulty selector shows exactly `Easy`, `Medium`, and `Hard`; each difficulty generates without a stack trace; worksheet, solution key, exports tab, individual downloads, ZIP bundle, Canvas CSV, and LibGuides-safe HTML controls still appear; generated-output summary shows the selected difficulty. |
+| Linear Topic mode resource pack | Topic mode, `Linear equations`, `Full Resource Pack`, each of `Easy`, `Medium`, and `Hard` | Difficulty selector shows exactly `Easy`, `Medium`, and `Hard`; each difficulty generates a full resource pack; study guide, common mistakes, tutor notes, practice quiz, export buttons, and generated-output summary remain present; summary reflects the selected difficulty. |
+| Easy-only Topic mode coverage | Topic mode, each non-linear topic, `Worksheet only`, `Easy` | Quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics each show only `Easy`; generation still succeeds; export buttons still appear. |
+| Linear Learning Objective mode | Learning Objective mode, `College Algebra`, `Linear Equations`, `Solve linear equations in one variable`, worksheet or resource pack | Difficulty selector shows exactly `Easy`, `Medium`, and `Hard`; generated-output summary identifies Learning Objective mode, mapped topic `Linear equations`, and the selected difficulty. |
+| Easy-only Learning Objective mode coverage | Learning Objective mode, each non-linear College Algebra module/objective | Difficulty selector shows only `Easy`; generated output remains aligned to the selected objective; export buttons still appear. |
+| Preset defaults | Select each built-in preset before changing topic/objective | Presets still default difficulty to `Easy`; preset-selected values remain editable; selecting a Medium/Hard-capable topic does not change presets into Medium/Hard presets. |
+
 ### Cross-Cutting Manual Checks
 
 - Keyboard: tab through controls and export areas; confirm the page can be navigated and scrolled without mouse-only requirements.
@@ -79,6 +92,7 @@ Follow-up actions:
 Notes on standard HTML print preview:
 Notes on LibGuides-safe copy/paste:
 Notes on Canvas CSV manual-entry usability:
+Notes on topic-aware difficulty UI:
 ```
 
 ## Launch
@@ -123,6 +137,8 @@ Review both generation modes and both output types.
 - Confirm changing the problem count updates the generated output after clicking `Generate`.
 - Confirm Linear equations exposes `Easy`, `Medium`, and `Hard`.
 - Confirm all other supported topics expose only `Easy`.
+- Generate Linear equations worksheets and resource packs at `Easy`, `Medium`, and `Hard`.
+- Confirm generated-output summaries show the selected difficulty.
 
 ### Learning Objective Mode
 
@@ -135,6 +151,9 @@ Review both generation modes and both output types.
 - Confirm the context summary includes course, module, selected objective, mapped topic, and planned output type.
 - Generate output from at least one objective and confirm it matches the selected topic.
 - Confirm the generated-output summary identifies `Learning Objective mode` and includes course, module, objective, and mapped topic.
+- Confirm Linear Equations objectives expose `Easy`, `Medium`, and `Hard`.
+- Confirm non-linear objectives expose only `Easy`.
+- Confirm generated-output summaries show the selected difficulty.
 
 ### Worksheet Only
 
@@ -269,7 +288,10 @@ Use a browser and basic keyboard navigation. When practical, also inspect the HT
 - [ ] Built-in presets provide editable defaults for common workflows.
 - [ ] Topic mode generates worksheet-only output for every supported topic.
 - [ ] Topic mode generates full resource packs for every supported topic.
+- [ ] Topic mode exposes Medium and Hard only for Linear equations.
+- [ ] Linear equations generate worksheet-only and full resource-pack output at Easy, Medium, and Hard.
 - [ ] Learning Objective mode exposes College Algebra modules and objectives.
+- [ ] Learning Objective mode derives difficulty options from the mapped topic.
 - [ ] Learning Objective mode shows course/module/objective context and mapped topic before generation.
 - [ ] Learning Objective mode generates at least one worksheet and one full resource pack.
 - [ ] Worksheet previews show problems and solution steps.
