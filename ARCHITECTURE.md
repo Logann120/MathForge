@@ -41,7 +41,11 @@ Purpose:
 
 Current implementation:
 
-- `app/main.py` contains the Streamlit MVP.
+- `app/main.py` contains the Streamlit entry point and high-level page flow.
+- `app/controls.py` contains Streamlit input controls, topic routing helpers, difficulty mapping, and Learning Objective mode selection.
+- `app/rendering.py` contains worksheet, solution key, resource-pack, practice-quiz, and context-summary preview rendering.
+- `app/downloads.py` contains Markdown, HTML, ZIP bundle, and Canvas manual-entry CSV download orchestration.
+- `app/generation_context.py` contains small view models for Learning Objective selections and generated-output summaries.
 - `app/presets.py` contains built-in preset metadata for default UI settings.
 - Topic mode generates from a supported topic label.
 - Learning Objective mode generates from the College Algebra template.
@@ -265,6 +269,7 @@ Generated content is deterministic and instructor-reviewable. Future AI-assisted
 - There is no deployment workflow.
 - Accessibility and browser QA are limited and should be expanded before broader release.
 - Top-level topic routing is centralized in `topics/registry.py`; topic-specific generator internals remain explicit in `generator/topics/`.
+- Streamlit app code is split by concern, but `app/main.py` remains the only Streamlit entry point.
 - `generator/solution_generator.py` remains a placeholder.
 
 ## Maintainability Principles

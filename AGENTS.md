@@ -55,7 +55,7 @@ The MVP supports:
 
 ## Current Architecture
 
-- `app/` contains the Streamlit MVP interface and built-in generation presets.
+- `app/` contains the Streamlit MVP interface, built-in generation presets, input controls, preview rendering, download orchestration, and generated-output summary view models.
 - `generator/` contains deterministic worksheet, resource-pack, and curriculum-aligned generation.
 - `models/` contains dataclasses for content, resource packs, and curriculum structures.
 - `exporters/` contains Markdown, HTML, Canvas manual-entry CSV, and ZIP bundle exporters.
@@ -123,6 +123,7 @@ For implementation tasks:
 - Confirm scope before adding new project structure.
 - Add focused tests for core generation, validation, and export behavior.
 - Keep UI behavior separate from reusable domain logic.
+- Keep `app/main.py` focused on entry-point and high-level page flow; place control helpers in `app/controls.py`, preview rendering in `app/rendering.py`, download/export UI orchestration in `app/downloads.py`, and summary/context view models in `app/generation_context.py`.
 - Document any accessibility limitations that cannot be resolved immediately.
 
 ## Known Limitations
