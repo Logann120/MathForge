@@ -5,12 +5,12 @@ from __future__ import annotations
 import logging
 
 from app.controls import (
-    DIFFICULTY_OPTIONS,
     GENERATION_MODE_OPTIONS,
     GENERATION_PRESET_OPTIONS,
     OUTPUT_TYPE_OPTIONS,
     TOPIC_OPTIONS,
     default_problem_id_prefix,
+    difficulty_labels_for_topic,
     difficulty_value,
     generate_resource_pack_for_topic,
     generate_worksheet_for_topic,
@@ -103,6 +103,7 @@ def main() -> None:
 
     learning_objective: LearningObjective | None = None
     generation_context: GenerationContext
+    difficulty_topic: str
     if generation_mode == "Learning Objective mode":
         learning_selection = select_learning_objective(
             st,
@@ -111,6 +112,7 @@ def main() -> None:
         )
         learning_objective = learning_selection.learning_objective
         topic = learning_objective.topic
+        difficulty_topic = learning_selection.mapped_topic
         generation_context = GenerationContext.from_learning_objective_selection(
             learning_selection
         )
@@ -121,13 +123,15 @@ def main() -> None:
             index=option_index(TOPIC_OPTIONS, preset.topic_label),
             key=f"topic_{preset_key}",
         )
+        difficulty_topic = topic
         generation_context = GenerationContext.topic_mode(topic)
 
+    difficulty_options = difficulty_labels_for_topic(difficulty_topic)
     difficulty_label = st.selectbox(
         "Difficulty",
-        options=DIFFICULTY_OPTIONS,
-        index=option_index(DIFFICULTY_OPTIONS, preset.difficulty_label),
-        key=f"difficulty_{preset_key}",
+        options=difficulty_options,
+        index=option_index(difficulty_options, preset.difficulty_label),
+        key=f"difficulty_{preset_key}_{topic_key(difficulty_topic)}",
     )
     st.caption("Additional difficulty levels are planned.")
     count = st.number_input(

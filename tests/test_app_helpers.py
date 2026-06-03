@@ -9,6 +9,7 @@ from app.controls import (
     OUTPUT_TYPE_OPTIONS,
     TOPIC_OPTIONS,
     default_problem_id_prefix,
+    difficulty_labels_for_topic,
     difficulty_value,
     find_learning_objective,
     find_module,
@@ -43,9 +44,27 @@ def test_app_option_constants_match_current_supported_metadata() -> None:
 
 def test_difficulty_value_maps_user_label_to_generator_value() -> None:
     assert difficulty_value("Easy") == "easy"
+    assert difficulty_value("Medium") == "medium"
+    assert difficulty_value("Hard") == "hard"
 
     with pytest.raises(ValueError, match="unsupported difficulty"):
-        difficulty_value("Medium")
+        difficulty_value("College Ready")
+
+
+def test_difficulty_labels_for_topic_use_registry_metadata() -> None:
+    assert difficulty_labels_for_topic("Linear equations") == (
+        "Easy",
+        "Medium",
+        "Hard",
+    )
+
+    for topic_label in supported_topic_labels():
+        if topic_label != "Linear equations":
+            assert difficulty_labels_for_topic(topic_label) == ("Easy",)
+
+
+def test_difficulty_labels_for_unknown_topic_fall_back_to_easy() -> None:
+    assert difficulty_labels_for_topic("Not a supported topic") == ("Easy",)
 
 
 def test_option_index_returns_matching_index_or_first_option() -> None:

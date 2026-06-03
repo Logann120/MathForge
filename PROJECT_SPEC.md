@@ -74,7 +74,8 @@ The Streamlit app supports:
 - Worksheet-only output.
 - Full Resource Pack output.
 - Configurable problem count.
-- Easy difficulty.
+- Topic-aware difficulty selection: Easy for all supported topics, with Medium
+  and Hard exposed for linear equations.
 - Advanced problem ID prefix editing.
 - Generated-output summaries.
 - Download controls for all current export paths.
@@ -114,7 +115,6 @@ MathForge currently has no:
 - Production deployment workflow.
 - Docker configuration.
 - Plugin architecture.
-- Medium or hard difficulty generation exposed in the UI.
 - PDF generation.
 
 These areas are out of scope unless explicitly requested.
@@ -134,9 +134,9 @@ Current MVP quality expectations:
 
 ## Known Limitations
 
-- Only easy difficulty is fully exposed in the Streamlit UI.
-- Medium and hard difficulty generation are currently a linear-equations pilot
-  at the generator/registry level, not a broadly exposed UI feature.
+- Medium and hard difficulty are currently exposed only for linear equations.
+- Other topics remain Easy-only until each topic has explicit deterministic
+  Medium/Hard behavior and tests.
 - Topic coverage is limited to five College Algebra topics.
 - Plain-text math notation is readable but not equivalent to MathML or fully accessible equation rendering.
 - Browser and accessibility QA remain primarily manual.
@@ -157,7 +157,7 @@ Near-term work should focus on export QA and usability hardening rather than bro
 
 Later work may include:
 
-- Medium and hard difficulty levels.
+- Medium and hard difficulty levels for additional topics.
 - Additional College Algebra topics.
 - Optional local file-based question-bank experiments.
 - Broader course templates.

@@ -22,6 +22,12 @@ Current export paths:
 - ZIP bundles containing Markdown plus standard HTML.
 - Canvas-friendly manual-entry CSV.
 
+Current difficulty exposure:
+
+- Easy is available for every supported topic.
+- Medium and Hard are exposed in the Streamlit UI only for Linear equations.
+- Built-in presets remain Easy-only.
+
 Current non-features:
 
 - No AI or LLM integration.
@@ -165,17 +171,17 @@ Why this is next:
 - It avoids new dependencies and service integrations.
 - It improves confidence in classroom usability without adding persistence, accounts, APIs, or platform complexity.
 
-## Later Possible Direction: Difficulty Expansion
+## Later Possible Direction: Broader Difficulty Expansion
 
-Status: Linear-equations pilot started; broader expansion later
+Status: Linear-equations pilot active; broader topic expansion later
 
 Potential goals:
 
-- Add meaningful medium and hard difficulty levels for supported topics.
+- Add meaningful medium and hard difficulty levels for additional supported topics.
 - Make difficulty behavior explicit and tested per topic.
 - Update registry metadata only when difficulty levels are actually implemented.
 - Preserve existing easy-output behavior.
-- Keep the Streamlit UI and presets Easy-only until topic-specific difficulty support can be exposed cleanly.
+- Keep built-in presets Easy-only until preset difficulty behavior is explicitly designed.
 
 Risks:
 

@@ -48,6 +48,27 @@ def test_topic_mode_generates_linear_worksheet() -> None:
     assert "Download Worksheet Canvas Manual-Entry CSV" in _download_labels(test_app)
 
 
+def test_topic_mode_linear_exposes_supported_difficulty_options() -> None:
+    test_app = _run_app()
+
+    assert test_app.selectbox[1].label == "Topic"
+    assert test_app.selectbox[1].value == "Linear equations"
+    assert test_app.selectbox[2].label == "Difficulty"
+    assert test_app.selectbox[2].options == ["Easy", "Medium", "Hard"]
+    assert test_app.selectbox[2].value == "Easy"
+
+
+def test_topic_mode_easy_only_topic_exposes_easy_only_difficulty_options() -> None:
+    test_app = _run_app()
+
+    test_app.selectbox[1].set_value("Quadratic equations by factoring").run()
+
+    assert not test_app.exception
+    assert test_app.selectbox[2].label == "Difficulty"
+    assert test_app.selectbox[2].options == ["Easy"]
+    assert test_app.selectbox[2].value == "Easy"
+
+
 def test_topic_mode_generates_quadratic_factoring_worksheet() -> None:
     test_app = _run_app()
 
@@ -143,6 +164,24 @@ def test_learning_objective_mode_exposes_college_algebra_objectives() -> None:
     )
     assert "**Mapped topic:** Linear equations" in objective_context
     assert "**Planned output:** Worksheet only" in objective_context
+
+
+def test_learning_objective_mode_uses_mapped_topic_difficulty_options() -> None:
+    test_app = _run_app()
+
+    test_app.radio[1].set_value("Learning Objective mode").run()
+
+    assert not test_app.exception
+    assert test_app.selectbox[4].label == "Difficulty"
+    assert test_app.selectbox[4].options == ["Easy", "Medium", "Hard"]
+    assert test_app.selectbox[4].value == "Easy"
+
+    test_app.selectbox[2].set_value("Quadratic Equations").run()
+
+    assert not test_app.exception
+    assert test_app.selectbox[4].label == "Difficulty"
+    assert test_app.selectbox[4].options == ["Easy"]
+    assert test_app.selectbox[4].value == "Easy"
 
 
 def test_learning_objective_mode_exposes_quadratic_objective() -> None:

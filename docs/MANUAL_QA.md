@@ -121,6 +121,8 @@ Review both generation modes and both output types.
 - Confirm the problem count matches the requested count.
 - Confirm the advanced `Problem ID prefix` default is topic-specific.
 - Confirm changing the problem count updates the generated output after clicking `Generate`.
+- Confirm Linear equations exposes `Easy`, `Medium`, and `Hard`.
+- Confirm all other supported topics expose only `Easy`.
 
 ### Learning Objective Mode
 
@@ -191,7 +193,7 @@ The current UI constrains most inputs to valid values. For manual review:
 
 - Confirm count cannot be set below 1 or above 25.
 - Confirm unsupported topics are not exposed in the Topic mode selector.
-- Confirm unsupported difficulty levels are not exposed.
+- Confirm unsupported difficulty levels are not exposed for the selected topic.
 - Confirm the app does not show stack traces during normal generation.
 - If a generation failure is intentionally triggered during development, confirm the user-facing error is understandable and does not expose internal stack traces.
 

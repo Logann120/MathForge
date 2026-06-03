@@ -22,6 +22,15 @@ TOPIC_OPTIONS = supported_topic_labels()
 DIFFICULTY_OPTIONS = ("Easy",)
 GENERATION_PRESET_OPTIONS = generation_preset_labels()
 
+_DIFFICULTY_LABEL_BY_VALUE = {
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard",
+}
+_DIFFICULTY_VALUE_BY_LABEL = {
+    label: value for value, label in _DIFFICULTY_LABEL_BY_VALUE.items()
+}
+
 
 def generate_worksheet_for_topic(
     topic: str,
@@ -68,10 +77,22 @@ def topic_key(topic: str) -> str:
     return default_problem_id_prefix(topic)
 
 
+def difficulty_labels_for_topic(topic_label: str) -> tuple[str, ...]:
+    """Return user-facing difficulty labels supported by a topic."""
+    try:
+        topic_record = find_topic_by_label(topic_label)
+    except ValueError:
+        return DIFFICULTY_OPTIONS
+    return tuple(
+        _DIFFICULTY_LABEL_BY_VALUE[difficulty]
+        for difficulty in topic_record.supported_difficulty_levels
+    )
+
+
 def difficulty_value(label: str) -> str:
     """Map a user-facing difficulty label to the generator input value."""
-    if label == "Easy":
-        return "easy"
+    if label in _DIFFICULTY_VALUE_BY_LABEL:
+        return _DIFFICULTY_VALUE_BY_LABEL[label]
     raise ValueError(f"unsupported difficulty: {label}")
 
 
