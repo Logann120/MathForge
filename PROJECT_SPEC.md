@@ -135,6 +135,8 @@ Current MVP quality expectations:
 ## Known Limitations
 
 - Only easy difficulty is fully exposed in the Streamlit UI.
+- Medium and hard difficulty generation are currently a linear-equations pilot
+  at the generator/registry level, not a broadly exposed UI feature.
 - Topic coverage is limited to five College Algebra topics.
 - Plain-text math notation is readable but not equivalent to MathML or fully accessible equation rendering.
 - Browser and accessibility QA remain primarily manual.

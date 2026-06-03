@@ -19,12 +19,15 @@ from validators.sympy_validator import (
 )
 
 
-def test_generated_linear_equation_answers_satisfy_equations() -> None:
+@pytest.mark.parametrize("difficulty", ("easy", "medium", "hard"))
+def test_generated_linear_equation_answers_satisfy_equations(
+    difficulty: str,
+) -> None:
     worksheet = generate_linear_equation_worksheet(
         topic="Linear equations",
-        difficulty="easy",
+        difficulty=difficulty,
         count=5,
-        start_id="validation-linear",
+        start_id=f"validation-linear-{difficulty}",
     )
 
     for problem in worksheet.problems:

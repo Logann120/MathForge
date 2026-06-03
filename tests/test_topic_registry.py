@@ -81,7 +81,10 @@ def test_supported_topic_snapshot_preserves_labels_prefixes_and_objectives() -> 
 def test_supported_topics_use_current_output_types_and_difficulty() -> None:
     for topic in supported_topics():
         assert topic.supported_output_types == ("worksheet", "resource_pack")
-        assert topic.supported_difficulty_levels == ("easy",)
+        if topic.slug == "linear-equations":
+            assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
+        else:
+            assert topic.supported_difficulty_levels == ("easy",)
 
 
 def test_supported_topics_include_expected_metadata() -> None:
@@ -97,6 +100,12 @@ def test_supported_topics_include_expected_metadata() -> None:
     assert topic.curriculum_objective_description == (
         "Solve quadratic equations by factoring"
     )
+
+
+def test_linear_equations_registry_marks_pilot_difficulty_support() -> None:
+    topic = find_topic_by_label("Linear equations")
+
+    assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
 
 
 def test_find_topic_by_slug() -> None:

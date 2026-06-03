@@ -53,9 +53,116 @@ def test_generate_linear_equation_worksheet_creates_expected_easy_problem() -> N
     assert isinstance(solution, Solution)
     assert problem.prompt == "Solve for x: 2*x + 1 = 3"
     assert problem.answer == "1"
-    assert problem.metadata["equation"] == "2*x + 1 = 3"
+    assert problem.metadata == {
+        "equation": "2*x + 1 = 3",
+        "variable": "x",
+        "coefficient_a": "2",
+        "constant_b": "1",
+        "constant_c": "3",
+    }
     assert solution.problem_id == problem.problem_id
     assert solution.final_answer == problem.answer
+    assert solution.steps == (
+        "Start with 2*x + 1 = 3.",
+        "Subtract 1 from both sides.",
+        "Divide both sides by 2.",
+        "x = 1.",
+    )
+
+
+def test_generate_linear_equation_medium_worksheet_is_deterministic() -> None:
+    first = generate_linear_equation_worksheet(
+        "Linear equations",
+        "medium",
+        3,
+        "medium-linear",
+    )
+    second = generate_linear_equation_worksheet(
+        "Linear equations",
+        "medium",
+        3,
+        "medium-linear",
+    )
+
+    assert first == second
+    assert [problem.prompt for problem in first.problems] == [
+        "Solve for x: 5*x - 3 = -8",
+        "Solve for x: 6*x - 5 = -17",
+        "Solve for x: 7*x - 7 = -28",
+    ]
+    assert [problem.answer for problem in first.problems] == ["-1", "-2", "-3"]
+
+
+def test_generate_linear_equation_medium_uses_negative_readable_values() -> None:
+    worksheet = generate_linear_equation_worksheet(
+        "Linear equations",
+        "medium",
+        1,
+        "medium-linear",
+    )
+
+    problem = worksheet.problems[0]
+    solution = worksheet.solutions[0]
+
+    assert problem.metadata["difficulty_pattern"] == "negative_constant_or_solution"
+    assert int(problem.metadata["coefficient_a"]) >= 5
+    assert int(problem.metadata["constant_b"]) < 0
+    assert int(problem.answer) < 0
+    assert problem.prompt == "Solve for x: 5*x - 3 = -8"
+    assert solution.steps == (
+        "Start with 5*x - 3 = -8.",
+        "Add 3 to both sides.",
+        "Divide both sides by 5.",
+        "x = -1.",
+    )
+
+
+def test_generate_linear_equation_hard_worksheet_is_deterministic() -> None:
+    first = generate_linear_equation_worksheet(
+        "Linear equations",
+        "hard",
+        3,
+        "hard-linear",
+    )
+    second = generate_linear_equation_worksheet(
+        "Linear equations",
+        "hard",
+        3,
+        "hard-linear",
+    )
+
+    assert first == second
+    assert [problem.prompt for problem in first.problems] == [
+        "Solve for x: 5*x + 3 = 2*x + 9",
+        "Solve for x: 6*x + 5 = 3*x + 14",
+        "Solve for x: 7*x + 7 = 4*x + 19",
+    ]
+    assert [problem.answer for problem in first.problems] == ["2", "3", "4"]
+
+
+def test_generate_linear_equation_hard_uses_variables_on_both_sides() -> None:
+    worksheet = generate_linear_equation_worksheet(
+        "Linear equations",
+        "hard",
+        1,
+        "hard-linear",
+    )
+
+    problem = worksheet.problems[0]
+    solution = worksheet.solutions[0]
+    left_side, right_side = problem.metadata["equation"].split("=")
+
+    assert problem.metadata["difficulty_pattern"] == "variables_on_both_sides"
+    assert "x" in left_side
+    assert "x" in right_side
+    assert problem.prompt == "Solve for x: 5*x + 3 = 2*x + 9"
+    assert solution.steps == (
+        "Start with 5*x + 3 = 2*x + 9.",
+        "Subtract 2*x from both sides.",
+        "Subtract 3 from both sides.",
+        "Divide both sides by 3.",
+        "x = 2.",
+    )
 
 
 def test_generated_answers_satisfy_generated_equations() -> None:
