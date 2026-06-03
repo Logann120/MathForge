@@ -167,7 +167,7 @@ Why this is next:
 
 ## Later Possible Direction: Difficulty Expansion
 
-Status: Later
+Status: Linear-equations pilot started; broader expansion later
 
 Potential goals:
 
@@ -175,11 +175,13 @@ Potential goals:
 - Make difficulty behavior explicit and tested per topic.
 - Update registry metadata only when difficulty levels are actually implemented.
 - Preserve existing easy-output behavior.
+- Keep the Streamlit UI and presets Easy-only until topic-specific difficulty support can be exposed cleanly.
 
 Risks:
 
 - Difficulty is not just UI metadata; it requires topic-specific math design, validation, examples, and regression tests.
 - Adding difficulty too early could obscure current deterministic behavior.
+- Unknown generator difficulty strings currently have legacy fallback behavior in some generators; changing that should be a deliberate compatibility decision.
 
 ## Later Possible Direction: Topic Expansion
 

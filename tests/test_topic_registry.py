@@ -108,6 +108,23 @@ def test_linear_equations_registry_marks_pilot_difficulty_support() -> None:
     assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
 
 
+def test_registry_difficulty_metadata_is_normalized_lowercase() -> None:
+    for topic in supported_topics():
+        for difficulty in topic.supported_difficulty_levels:
+            assert difficulty == difficulty.lower()
+            assert difficulty == difficulty.strip()
+
+
+def test_only_linear_equations_advertises_expanded_difficulty_pilot() -> None:
+    expanded_topics = tuple(
+        topic.slug
+        for topic in supported_topics()
+        if topic.supported_difficulty_levels != ("easy",)
+    )
+
+    assert expanded_topics == ("linear-equations",)
+
+
 def test_find_topic_by_slug() -> None:
     topic = find_topic_by_slug("systems-of-linear-equations")
 

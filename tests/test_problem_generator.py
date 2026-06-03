@@ -165,6 +165,34 @@ def test_generate_linear_equation_hard_uses_variables_on_both_sides() -> None:
     )
 
 
+def test_generate_linear_equation_unknown_difficulty_uses_legacy_fallback() -> None:
+    worksheet = generate_linear_equation_worksheet(
+        "Linear equations",
+        "practice",
+        1,
+        "fallback-linear",
+    )
+
+    problem = worksheet.problems[0]
+    solution = worksheet.solutions[0]
+
+    assert problem.prompt == "Solve for x: 3*x + 2 = 8"
+    assert problem.answer == "2"
+    assert problem.metadata == {
+        "equation": "3*x + 2 = 8",
+        "variable": "x",
+        "coefficient_a": "3",
+        "constant_b": "2",
+        "constant_c": "8",
+    }
+    assert solution.steps == (
+        "Start with 3*x + 2 = 8.",
+        "Subtract 2 from both sides.",
+        "Divide both sides by 3.",
+        "x = 2.",
+    )
+
+
 def test_generated_answers_satisfy_generated_equations() -> None:
     worksheet = generate_linear_equation_worksheet(
         topic="Linear equations",

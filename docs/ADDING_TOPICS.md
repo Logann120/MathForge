@@ -89,6 +89,22 @@ Add or update focused tests for:
 
 Existing tests should continue to pass without changing expected output for existing topics.
 
+### Difficulty Expansion
+
+Add new difficulty levels topic by topic. Do not add `medium` or `hard` to a topic's `supported_difficulty_levels` until that topic has deterministic generator behavior and focused tests for those levels.
+
+For each new difficulty level:
+
+- Preserve existing `easy` output exactly unless an explicit behavior change is requested.
+- Define the pedagogical meaning of the level in the topic generator tests.
+- Add deterministic generator tests for the new level.
+- Add validation-oriented tests for generated answers where practical.
+- Keep resource-pack metadata consistent with the worksheet difficulty.
+- Avoid broad export snapshots for every difficulty unless exporter behavior changes.
+- Do not expose the difficulty in Streamlit until UI behavior can be supported cleanly for the relevant topic or topics.
+
+The current Medium/Hard pilot is limited to linear equations at the generator and registry level. The Streamlit UI and built-in presets remain Easy-only until topic-specific UI support is implemented.
+
 ### Examples
 
 Add generated example exports under `examples/` when the topic is ready for repository browsing. Prefer both Markdown and HTML worksheet examples. Add a resource-pack example when useful, but avoid duplicating every possible resource pack if one representative example already demonstrates the generic export shape.
@@ -105,6 +121,7 @@ When adding a topic, do not:
 - Change existing generated math content.
 - Change existing worksheet or resource-pack export formats unless required by new model needs.
 - Add unsupported difficulty labels to the Streamlit UI or registry.
+- Add a difficulty label to the registry before the generator and validation tests prove it works for that topic.
 - Scatter topic label, prefix, slug, or alias maps outside the registry.
 - Add broad generator abstractions when a small topic-focused module is enough.
 
@@ -113,6 +130,7 @@ When adding a topic, do not:
 - [ ] Add deterministic worksheet generation in a topic-focused module under `generator/topics/`.
 - [ ] Re-export the worksheet generator from `generator/problem_generator.py`.
 - [ ] Add focused worksheet generation tests.
+- [ ] Add focused difficulty tests if the topic supports more than Easy.
 - [ ] Add deterministic resource-pack generation in the topic-focused module, if supported.
 - [ ] Re-export the resource-pack generator from `generator/resource_pack_generator.py`.
 - [ ] Add focused resource-pack tests, including practice quiz coverage when supported.

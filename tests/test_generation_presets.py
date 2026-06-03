@@ -2,6 +2,7 @@
 
 import pytest
 
+from app.controls import DIFFICULTY_OPTIONS
 from app.presets import (
     find_generation_preset,
     generation_preset_labels,
@@ -29,6 +30,7 @@ def test_generation_presets_use_supported_defaults() -> None:
         assert preset.generation_mode in {"Topic mode", "Learning Objective mode"}
         assert preset.topic_label in supported_topics
         assert preset.difficulty_label == "Easy"
+        assert preset.difficulty_label in DIFFICULTY_OPTIONS
         assert 1 <= preset.problem_count <= 25
         assert preset.description
 
