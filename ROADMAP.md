@@ -4,7 +4,7 @@ This roadmap reflects the current implemented MathForge MVP. Dates are intention
 
 ## Current Status
 
-Status: Working MVP / Phase 5C export-hardening checkpoint
+Status: Working MVP / difficulty-expansion consolidation checkpoint
 
 MathForge currently supports deterministic College Algebra worksheet and resource-pack generation for:
 

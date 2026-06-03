@@ -136,6 +136,8 @@ Current MVP quality expectations:
 
 - Easy, medium, and hard difficulty are currently exposed for all five
   supported topics; built-in presets remain Easy-only.
+- Unknown generator difficulty strings retain legacy fallback behavior for
+  compatibility; supported UI difficulty options come from registry metadata.
 - Topic coverage is limited to five College Algebra topics.
 - Plain-text math notation is readable but not equivalent to MathML or fully accessible equation rendering.
 - Browser and accessibility QA remain primarily manual.

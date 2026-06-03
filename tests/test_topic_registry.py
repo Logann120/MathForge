@@ -81,16 +81,7 @@ def test_supported_topic_snapshot_preserves_labels_prefixes_and_objectives() -> 
 def test_supported_topics_use_current_output_types_and_difficulty() -> None:
     for topic in supported_topics():
         assert topic.supported_output_types == ("worksheet", "resource_pack")
-        if topic.slug in {
-            "linear-equations",
-            "quadratic-equations-by-factoring",
-            "systems-of-linear-equations",
-            "factoring-techniques",
-            "functions-basics",
-        }:
-            assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
-        else:
-            assert topic.supported_difficulty_levels == ("easy",)
+        assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
 
 
 def test_supported_topics_include_expected_metadata() -> None:
@@ -108,31 +99,31 @@ def test_supported_topics_include_expected_metadata() -> None:
     )
 
 
-def test_linear_equations_registry_marks_pilot_difficulty_support() -> None:
+def test_linear_equations_registry_marks_expanded_difficulty_support() -> None:
     topic = find_topic_by_label("Linear equations")
 
     assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
 
 
-def test_quadratic_equations_registry_marks_pilot_difficulty_support() -> None:
+def test_quadratic_equations_registry_marks_expanded_difficulty_support() -> None:
     topic = find_topic_by_label("Quadratic equations by factoring")
 
     assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
 
 
-def test_systems_of_equations_registry_marks_pilot_difficulty_support() -> None:
+def test_systems_of_equations_registry_marks_expanded_difficulty_support() -> None:
     topic = find_topic_by_label("Systems of linear equations")
 
     assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
 
 
-def test_factoring_techniques_registry_marks_pilot_difficulty_support() -> None:
+def test_factoring_techniques_registry_marks_expanded_difficulty_support() -> None:
     topic = find_topic_by_label("Factoring techniques")
 
     assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
 
 
-def test_functions_basics_registry_marks_pilot_difficulty_support() -> None:
+def test_functions_basics_registry_marks_expanded_difficulty_support() -> None:
     topic = find_topic_by_label("Functions basics")
 
     assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
@@ -145,7 +136,7 @@ def test_registry_difficulty_metadata_is_normalized_lowercase() -> None:
             assert difficulty == difficulty.strip()
 
 
-def test_all_current_topics_advertise_expanded_difficulty_pilot() -> None:
+def test_all_current_topics_advertise_expanded_difficulty() -> None:
     expanded_topics = tuple(
         topic.slug
         for topic in supported_topics()

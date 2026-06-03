@@ -162,6 +162,7 @@ Current implementation:
 - `app/main.py` uses the registry for topic options, default problem ID prefixes, and topic routing.
 - `generator/curriculum_resource_pack_generator.py` uses the registry for learning-objective topic routing.
 - `templates/course_templates.py` uses the registry to construct the College Algebra modules and objectives.
+- Supported difficulty options are advertised through the registry; current topics expose Easy, Medium, and Hard while built-in presets remain Easy-only.
 - The registry is a small metadata table, not a plugin system.
 - Topic additions should follow `docs/ADDING_TOPICS.md`.
 
@@ -276,6 +277,7 @@ Generated content is deterministic and instructor-reviewable. Future AI-assisted
 - LibGuides-safe HTML exports are paste-friendly fragments, not a direct LibGuides integration; they are separate downloads and are not included in ZIP bundles.
 - Canvas manual-entry CSV exports are offered as separate downloads and are not included in ZIP bundles.
 - Built-in generation presets are fixed metadata only; there are no custom saved presets, accounts, persistence, or file-based configuration.
+- Unknown generator difficulty strings retain legacy fallback behavior for compatibility and should not be changed without an explicit compatibility decision.
 - Continuous integration runs the pytest suite on Python 3.11 and Python 3.12.
 - There is no deployment workflow.
 - Accessibility and browser QA are limited and should be expanded before broader release.

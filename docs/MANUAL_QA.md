@@ -82,7 +82,10 @@ Use this template when the human review is complete:
 Date:
 Reviewer:
 Environment/browser:
+Python version:
 Automated test command/result:
+Streamlit launch command/result:
+QA status: Ready for human execution / Passed / Failed
 Scenarios tested:
 Pass/fail summary:
 Issues found:

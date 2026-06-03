@@ -71,6 +71,8 @@ When adding a supported topic, keep routing centralized in `topics/registry.py`.
 
 Preserve public generator imports in `generator/problem_generator.py` and `generator/resource_pack_generator.py`. Preserve existing export formats, including standard HTML print behavior, unless an exporter-format change is explicitly requested.
 
+Easy, Medium, and Hard are supported for all current topics through the supported-topic registry. Built-in presets remain Easy-only. Do not change legacy unknown-difficulty fallback behavior unless that compatibility change is explicitly requested and tested.
+
 Use [docs/ADDING_TOPICS.md](docs/ADDING_TOPICS.md) as the checklist for future topic additions.
 
 Use [docs/MANUAL_QA.md](docs/MANUAL_QA.md) before major UI, exporter, or topic changes.

@@ -47,7 +47,7 @@ The current MVP supports:
 
 ## Future Direction
 
-Near-term future work should focus on accessibility review, example maintenance, and maintainability. Later work may include richer difficulty levels, additional College Algebra topics, local question-bank experiments, or broader course templates.
+Near-term future work should focus on accessibility review, example maintenance, and maintainability. Later work may include deeper difficulty refinements, additional College Algebra topics, local question-bank experiments, or broader course templates.
 
 AI features, direct Canvas API integration, direct LibGuides integration, persistence, databases, authentication, external APIs, deployment infrastructure, Docker, and plugin architecture remain out of scope unless explicitly requested.
 
@@ -146,6 +146,7 @@ Next work should focus on accessibility review, examples, and keeping the implem
 - Canvas-friendly CSV exports are manual-entry/import-friendly files only; compatibility with Canvas quiz import workflows can vary by institution and may require instructor cleanup.
 - Built-in presets provide starting defaults only; there are no saved custom presets or file-based preset configuration.
 - Easy, Medium, and Hard are currently exposed for all five supported topics; built-in presets remain Easy-only.
+- Unknown generator difficulty strings retain legacy fallback behavior for compatibility; supported UI options are derived from the topic registry.
 - Continuous integration currently runs the pytest suite on Python 3.11 and Python 3.12.
 - There is no deployment workflow or production hosting configuration.
 - Accessibility and browser behavior need broader manual QA beyond automated exporter tests.
