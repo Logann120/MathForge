@@ -72,15 +72,14 @@ def test_difficulty_labels_for_topic_use_registry_metadata() -> None:
         "Medium",
         "Hard",
     )
+    assert difficulty_labels_for_topic("Functions basics") == (
+        "Easy",
+        "Medium",
+        "Hard",
+    )
 
     for topic_label in supported_topic_labels():
-        if topic_label not in {
-            "Linear equations",
-            "Quadratic equations by factoring",
-            "Systems of linear equations",
-            "Factoring techniques",
-        }:
-            assert difficulty_labels_for_topic(topic_label) == ("Easy",)
+        assert difficulty_labels_for_topic(topic_label) == ("Easy", "Medium", "Hard")
 
 
 def test_difficulty_labels_for_unknown_topic_fall_back_to_easy() -> None:

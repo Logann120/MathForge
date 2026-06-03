@@ -27,9 +27,14 @@ def generate_functions_basics_worksheet(
 
     for index in range(count):
         problem_id = f"{start_id}-{index + 1:03d}"
-        prompt, answer, problem_type, metadata, steps = _function_problem(index)
+        prompt, answer, problem_type, metadata, steps = _function_problem_for_difficulty(
+            difficulty,
+            index,
+        )
 
-        if problem_type == "evaluate" and not _validate_function_evaluation(metadata):
+        if problem_type == "evaluate" and not _validate_function_evaluation(
+            metadata
+        ):
             raise ValueError(
                 f"generated function evaluation failed validation for {problem_id}."
             )
@@ -96,6 +101,20 @@ def generate_functions_basics_resource_pack(
             "generator": "functions_basics_resource_pack",
         },
     )
+
+
+def _function_problem_for_difficulty(
+    difficulty: str,
+    index: int,
+) -> tuple[str, str, str, dict[str, str], tuple[str, ...]]:
+    """Return function basics content for a supported difficulty."""
+    normalized_difficulty = difficulty.strip().lower()
+
+    if normalized_difficulty == "medium":
+        return _medium_function_problem(index)
+    if normalized_difficulty == "hard":
+        return _hard_function_problem(index)
+    return _function_problem(index)
 
 
 def _function_problem(
@@ -172,12 +191,175 @@ def _function_problem(
     )
 
 
+def _medium_function_problem(
+    index: int,
+) -> tuple[str, str, str, dict[str, str], tuple[str, ...]]:
+    """Return deterministic medium function-notation practice."""
+    problem_type_index = index % 3
+    sequence = index // 3
+
+    if problem_type_index == 0:
+        coefficient = sequence + 1
+        constant = sequence + 2
+        input_value = sequence + 2
+        if coefficient == 1:
+            expression = f"x**2 + x + {constant}"
+        else:
+            expression = f"x**2 + {coefficient}*x + {constant}"
+        answer = str((input_value**2) + (coefficient * input_value) + constant)
+        prompt = f"Given f(x) = {expression}, evaluate f({input_value})."
+        return (
+            prompt,
+            answer,
+            "evaluate",
+            {
+                "difficulty_pattern": "quadratic_evaluation",
+                "function_expression": expression,
+                "function_rule": expression,
+                "input_value": str(input_value),
+                "expected_value": answer,
+            },
+            (
+                f"Start with f(x) = {expression}.",
+                f"Substitute x = {input_value}.",
+                f"Evaluate to get f({input_value}) = {answer}.",
+            ),
+        )
+
+    if problem_type_index == 1:
+        input_value = sequence + 3
+        output_value = (input_value**2) + 1
+        prompt = (
+            f"In the statement h({input_value}) = {output_value}, "
+            "what ordered pair is represented?"
+        )
+        answer = f"({input_value}, {output_value})"
+        return (
+            prompt,
+            answer,
+            "notation",
+            {
+                "difficulty_pattern": "ordered_pair_interpretation",
+                "input_value": str(input_value),
+                "output_value": str(output_value),
+                "ordered_pair": answer,
+            },
+            (
+                f"Read h({input_value}) as the output when the input is {input_value}.",
+                f"The input is {input_value} and the output is {output_value}.",
+                f"The ordered pair is {answer}.",
+            ),
+        )
+
+    minimum_value = sequence + 2
+    expression = f"sqrt(x - {minimum_value})"
+    answer = f"All real numbers x >= {minimum_value}"
+    prompt = f"Determine the domain of f(x) = {expression}."
+    return (
+        prompt,
+        answer,
+        "domain",
+        {
+            "difficulty_pattern": "square_root_domain",
+            "function_expression": expression,
+            "function_rule": expression,
+            "domain_minimum": str(minimum_value),
+            "domain_restriction": f"x >= {minimum_value}",
+        },
+        (
+            f"Start with f(x) = {expression}.",
+            "The expression inside the square root must be nonnegative.",
+            f"Solve x - {minimum_value} >= 0 to get x >= {minimum_value}.",
+            f"The domain is {answer}.",
+        ),
+    )
+
+
+def _hard_function_problem(
+    index: int,
+) -> tuple[str, str, str, dict[str, str], tuple[str, ...]]:
+    """Return deterministic hard function-notation practice."""
+    problem_type_index = index % 2
+    sequence = index // 2
+
+    if problem_type_index == 0:
+        outer_coefficient = sequence + 2
+        outer_constant = sequence + 1
+        input_value = sequence + 2
+        inner_expression = "x**2"
+        outer_expression = f"{outer_coefficient}*x + {outer_constant}"
+        inner_value = input_value**2
+        answer = str((outer_coefficient * inner_value) + outer_constant)
+        prompt = (
+            f"Given f(x) = {outer_expression} and g(x) = {inner_expression}, "
+            f"evaluate f(g({input_value}))."
+        )
+        return (
+            prompt,
+            answer,
+            "evaluate",
+            {
+                "difficulty_pattern": "composition_evaluation",
+                "function_expression": outer_expression,
+                "function_rule": outer_expression,
+                "inner_function_rule": inner_expression,
+                "input_value": str(input_value),
+                "composition_inner_value": str(inner_value),
+                "expected_value": answer,
+            },
+            (
+                f"Start by evaluating g({input_value}) using g(x) = {inner_expression}.",
+                f"g({input_value}) = {inner_value}.",
+                f"Now evaluate f({inner_value}) using f(x) = {outer_expression}.",
+                f"f(g({input_value})) = {answer}.",
+            ),
+        )
+
+    first_exclusion = sequence + 2
+    second_exclusion = -(sequence + 3)
+    positive_factor = abs(second_exclusion)
+    expression = f"1/((x - {first_exclusion})*(x + {positive_factor}))"
+    answer = (
+        f"All real numbers except x = {second_exclusion} and x = {first_exclusion}"
+    )
+    prompt = f"Determine the domain of f(x) = {expression}."
+    return (
+        prompt,
+        answer,
+        "domain",
+        {
+            "difficulty_pattern": "two_factor_denominator_domain",
+            "function_expression": expression,
+            "function_rule": expression,
+            "domain_exclusions": f"{second_exclusion},{first_exclusion}",
+            "domain_restriction": (
+                f"x != {second_exclusion} and x != {first_exclusion}"
+            ),
+        },
+        (
+            f"Start with f(x) = {expression}.",
+            "The denominator cannot equal zero.",
+            f"Set each factor equal to zero to find x = {first_exclusion} and x = {second_exclusion}.",
+            f"The domain is {answer}.",
+        ),
+    )
+
+
 def _validate_function_evaluation(metadata: dict[str, str]) -> bool:
     """Validate a generated function evaluation problem."""
     x_symbol = Symbol("x")
+    expected_value = sympify(metadata["expected_value"])
+
+    if metadata.get("difficulty_pattern") == "composition_evaluation":
+        inner_expression = sympify(metadata["inner_function_rule"])
+        outer_expression = sympify(metadata["function_expression"])
+        input_value = sympify(metadata["input_value"])
+        inner_value = inner_expression.subs(x_symbol, input_value)
+        evaluated_value = outer_expression.subs(x_symbol, inner_value)
+        return simplify(evaluated_value - expected_value) == 0
+
     expression = sympify(metadata["function_expression"])
     input_value = sympify(metadata["input_value"])
-    expected_value = sympify(metadata["expected_value"])
     return simplify(expression.subs(x_symbol, input_value) - expected_value) == 0
 
 

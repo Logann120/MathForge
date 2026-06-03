@@ -25,9 +25,7 @@ Current export paths:
 Current difficulty exposure:
 
 - Easy is available for every supported topic.
-- Medium and Hard are exposed in the Streamlit UI only for Linear equations,
-  Quadratic equations by factoring, Systems of linear equations, and Factoring
-  techniques.
+- Medium and Hard are exposed in the Streamlit UI for every supported topic.
 - Built-in presets remain Easy-only.
 
 Current non-features:
@@ -173,15 +171,15 @@ Why this is next:
 - It avoids new dependencies and service integrations.
 - It improves confidence in classroom usability without adding persistence, accounts, APIs, or platform complexity.
 
-## Later Possible Direction: Broader Difficulty Expansion
+## Later Possible Direction: Difficulty Refinement
 
-Status: Linear, quadratic, systems, and factoring pilots active; broader topic expansion later
+Status: Easy, Medium, and Hard implemented for all current topics
 
 Potential goals:
 
-- Add meaningful medium and hard difficulty levels for the remaining supported topics.
-- Make difficulty behavior explicit and tested per topic.
-- Update registry metadata only when difficulty levels are actually implemented.
+- Refine medium and hard difficulty levels based on instructor review.
+- Add new difficulty levels only after explicit design and tests.
+- Update registry metadata only when difficulty behavior is actually implemented.
 - Preserve existing easy-output behavior.
 - Keep built-in presets Easy-only until preset difficulty behavior is explicitly designed.
 

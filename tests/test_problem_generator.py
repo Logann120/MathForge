@@ -990,6 +990,167 @@ def test_generate_functions_basics_worksheet_creates_expected_problem_types() ->
     assert worksheet.problems[0].answer == "7"
     assert worksheet.problems[1].answer == "The input value"
     assert worksheet.problems[2].answer == "All real numbers except x = 2"
+    assert [problem.prompt for problem in worksheet.problems] == [
+        "Given f(x) = 2*x + 1, evaluate f(3).",
+        "In the statement f(4) = 9, what does 4 represent?",
+        "Determine the domain of f(x) = 1/(x - 2).",
+    ]
+    assert [dict(problem.metadata) for problem in worksheet.problems] == [
+        {
+            "function_expression": "2*x + 1",
+            "input_value": "3",
+            "expected_value": "7",
+            "problem_type": "evaluate",
+            "variable": "x",
+        },
+        {
+            "input_value": "4",
+            "output_value": "9",
+            "problem_type": "notation",
+            "variable": "x",
+        },
+        {
+            "function_expression": "1/(x - 2)",
+            "excluded_value": "2",
+            "problem_type": "domain",
+            "variable": "x",
+        },
+    ]
+    assert worksheet.solutions[0].steps == (
+        "Start with f(x) = 2*x + 1.",
+        "Substitute x = 3.",
+        "Evaluate to get f(3) = 7.",
+    )
+
+
+def test_generate_functions_basics_medium_worksheet_is_deterministic() -> None:
+    first = generate_functions_basics_worksheet(
+        "Functions basics",
+        "medium",
+        3,
+        "medium-functions",
+    )
+    second = generate_functions_basics_worksheet(
+        "Functions basics",
+        "medium",
+        3,
+        "medium-functions",
+    )
+
+    assert first == second
+    assert [problem.prompt for problem in first.problems] == [
+        "Given f(x) = x**2 + x + 2, evaluate f(2).",
+        "In the statement h(3) = 10, what ordered pair is represented?",
+        "Determine the domain of f(x) = sqrt(x - 2).",
+    ]
+    assert [problem.answer for problem in first.problems] == [
+        "8",
+        "(3, 10)",
+        "All real numbers x >= 2",
+    ]
+
+
+def test_generate_functions_basics_medium_uses_intended_patterns() -> None:
+    worksheet = generate_functions_basics_worksheet(
+        "Functions basics",
+        "medium",
+        3,
+        "medium-functions",
+    )
+
+    assert [problem.metadata["difficulty_pattern"] for problem in worksheet.problems] == [
+        "quadratic_evaluation",
+        "ordered_pair_interpretation",
+        "square_root_domain",
+    ]
+    assert worksheet.problems[0].metadata["function_rule"] == "x**2 + x + 2"
+    assert worksheet.problems[1].metadata["ordered_pair"] == "(3, 10)"
+    assert worksheet.problems[2].metadata["domain_restriction"] == "x >= 2"
+
+
+def test_generate_functions_basics_hard_worksheet_is_deterministic() -> None:
+    first = generate_functions_basics_worksheet(
+        "Functions basics",
+        "hard",
+        3,
+        "hard-functions",
+    )
+    second = generate_functions_basics_worksheet(
+        "Functions basics",
+        "hard",
+        3,
+        "hard-functions",
+    )
+
+    assert first == second
+    assert [problem.prompt for problem in first.problems] == [
+        "Given f(x) = 2*x + 1 and g(x) = x**2, evaluate f(g(2)).",
+        "Determine the domain of f(x) = 1/((x - 2)*(x + 3)).",
+        "Given f(x) = 3*x + 2 and g(x) = x**2, evaluate f(g(3)).",
+    ]
+    assert [problem.answer for problem in first.problems] == [
+        "9",
+        "All real numbers except x = -3 and x = 2",
+        "29",
+    ]
+
+
+def test_generate_functions_basics_hard_uses_intended_patterns() -> None:
+    worksheet = generate_functions_basics_worksheet(
+        "Functions basics",
+        "hard",
+        2,
+        "hard-functions",
+    )
+
+    assert [problem.metadata["difficulty_pattern"] for problem in worksheet.problems] == [
+        "composition_evaluation",
+        "two_factor_denominator_domain",
+    ]
+    assert worksheet.problems[0].metadata["composition_inner_value"] == "4"
+    assert worksheet.problems[0].metadata["expected_value"] == "9"
+    assert worksheet.problems[1].metadata["domain_exclusions"] == "-3,2"
+
+
+def test_generate_functions_basics_unknown_difficulty_uses_legacy_fallback() -> None:
+    worksheet = generate_functions_basics_worksheet(
+        "Functions basics",
+        "practice",
+        3,
+        "fallback-functions",
+    )
+
+    assert [problem.prompt for problem in worksheet.problems] == [
+        "Given f(x) = 2*x + 1, evaluate f(3).",
+        "In the statement f(4) = 9, what does 4 represent?",
+        "Determine the domain of f(x) = 1/(x - 2).",
+    ]
+    assert [problem.answer for problem in worksheet.problems] == [
+        "7",
+        "The input value",
+        "All real numbers except x = 2",
+    ]
+    assert [dict(problem.metadata) for problem in worksheet.problems] == [
+        {
+            "function_expression": "2*x + 1",
+            "input_value": "3",
+            "expected_value": "7",
+            "problem_type": "evaluate",
+            "variable": "x",
+        },
+        {
+            "input_value": "4",
+            "output_value": "9",
+            "problem_type": "notation",
+            "variable": "x",
+        },
+        {
+            "function_expression": "1/(x - 2)",
+            "excluded_value": "2",
+            "problem_type": "domain",
+            "variable": "x",
+        },
+    ]
 
 
 def test_generated_function_evaluations_are_correct() -> None:

@@ -86,6 +86,7 @@ def test_supported_topics_use_current_output_types_and_difficulty() -> None:
             "quadratic-equations-by-factoring",
             "systems-of-linear-equations",
             "factoring-techniques",
+            "functions-basics",
         }:
             assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
         else:
@@ -131,6 +132,12 @@ def test_factoring_techniques_registry_marks_pilot_difficulty_support() -> None:
     assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
 
 
+def test_functions_basics_registry_marks_pilot_difficulty_support() -> None:
+    topic = find_topic_by_label("Functions basics")
+
+    assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
+
+
 def test_registry_difficulty_metadata_is_normalized_lowercase() -> None:
     for topic in supported_topics():
         for difficulty in topic.supported_difficulty_levels:
@@ -138,7 +145,7 @@ def test_registry_difficulty_metadata_is_normalized_lowercase() -> None:
             assert difficulty == difficulty.strip()
 
 
-def test_only_functions_basics_remains_easy_only() -> None:
+def test_all_current_topics_advertise_expanded_difficulty_pilot() -> None:
     expanded_topics = tuple(
         topic.slug
         for topic in supported_topics()
@@ -155,8 +162,9 @@ def test_only_functions_basics_remains_easy_only() -> None:
         "quadratic-equations-by-factoring",
         "systems-of-linear-equations",
         "factoring-techniques",
+        "functions-basics",
     )
-    assert easy_only_topics == ("functions-basics",)
+    assert easy_only_topics == ()
 
 
 def test_find_topic_by_slug() -> None:

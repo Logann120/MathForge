@@ -99,12 +99,15 @@ def test_generated_system_solutions_satisfy_both_equations(
         assert _system_solution_satisfies_equations(problem.metadata)
 
 
-def test_generated_function_evaluation_answers_are_numeric_matches() -> None:
+@pytest.mark.parametrize("difficulty", ("easy", "medium", "hard"))
+def test_generated_function_evaluation_answers_are_numeric_matches(
+    difficulty: str,
+) -> None:
     worksheet = generate_functions_basics_worksheet(
         topic="Functions basics",
-        difficulty="easy",
+        difficulty=difficulty,
         count=6,
-        start_id="validation-functions",
+        start_id=f"validation-functions-{difficulty}",
     )
 
     evaluation_problems = [
@@ -123,12 +126,15 @@ def test_generated_function_evaluation_answers_are_numeric_matches() -> None:
         assert result.is_valid is True
 
 
-def test_generated_function_domain_answers_match_excluded_value_metadata() -> None:
+@pytest.mark.parametrize("difficulty", ("easy", "medium", "hard"))
+def test_generated_function_domain_answers_match_metadata(
+    difficulty: str,
+) -> None:
     worksheet = generate_functions_basics_worksheet(
         topic="Functions basics",
-        difficulty="easy",
+        difficulty=difficulty,
         count=6,
-        start_id="validation-functions",
+        start_id=f"validation-functions-{difficulty}",
     )
 
     domain_problems = [
@@ -139,20 +145,34 @@ def test_generated_function_domain_answers_match_excluded_value_metadata() -> No
 
     assert domain_problems
     for problem in domain_problems:
-        # Domain answers are prose, so validate the machine-readable excluded
-        # value metadata rather than forcing a symbolic interval format.
-        expected_answer = (
-            f"All real numbers except x = {problem.metadata['excluded_value']}"
-        )
+        # Domain answers are prose, so validate machine-readable metadata
+        # rather than forcing a symbolic interval format.
+        if problem.metadata.get("difficulty_pattern") == "square_root_domain":
+            expected_answer = (
+                f"All real numbers x >= {problem.metadata['domain_minimum']}"
+            )
+        elif (
+            problem.metadata.get("difficulty_pattern")
+            == "two_factor_denominator_domain"
+        ):
+            exclusions = problem.metadata["domain_exclusions"].split(",")
+            expected_answer = (
+                f"All real numbers except x = {exclusions[0]} and x = {exclusions[1]}"
+            )
+        else:
+            expected_answer = (
+                f"All real numbers except x = {problem.metadata['excluded_value']}"
+            )
         assert problem.answer == expected_answer
 
 
-def test_function_notation_answers_are_not_machine_validated_yet() -> None:
+@pytest.mark.parametrize("difficulty", ("easy", "medium", "hard"))
+def test_function_notation_answers_match_metadata(difficulty: str) -> None:
     worksheet = generate_functions_basics_worksheet(
         topic="Functions basics",
-        difficulty="easy",
+        difficulty=difficulty,
         count=6,
-        start_id="validation-functions",
+        start_id=f"validation-functions-{difficulty}",
     )
 
     notation_problems = [
@@ -161,11 +181,18 @@ def test_function_notation_answers_are_not_machine_validated_yet() -> None:
         if problem.metadata["problem_type"] == "notation"
     ]
 
+    if difficulty == "hard":
+        assert not notation_problems
+        return
+
     assert notation_problems
     for problem in notation_problems:
         # These answers intentionally remain prose until MathForge has a
         # structured representation for conceptual function-notation responses.
-        assert problem.answer == "The input value"
+        if problem.metadata.get("difficulty_pattern") == "ordered_pair_interpretation":
+            assert problem.answer == problem.metadata["ordered_pair"]
+        else:
+            assert problem.answer == "The input value"
         assert problem.metadata["input_value"].strip()
         assert problem.metadata["output_value"].strip()
 
@@ -190,6 +217,14 @@ def _system_solution_satisfies_equations(metadata: Mapping[str, str]) -> bool:
 def _evaluate_function_metadata(metadata: Mapping[str, str]) -> str:
     """Evaluate generated function metadata and return a numeric string."""
     x_symbol = Symbol("x")
+
+    if metadata.get("difficulty_pattern") == "composition_evaluation":
+        inner_expression = sympify(metadata["inner_function_rule"])
+        outer_expression = sympify(metadata["function_expression"])
+        input_value = sympify(metadata["input_value"])
+        inner_value = inner_expression.subs(x_symbol, input_value)
+        return str(outer_expression.subs(x_symbol, inner_value))
+
     expression = sympify(metadata["function_expression"])
     input_value = sympify(metadata["input_value"])
     return str(expression.subs(x_symbol, input_value))

@@ -18,7 +18,7 @@ The older `linear_equations_sample.md` and `linear_equations_sample.html` files 
 
 ### Difficulty Pilot Examples
 
-Linear equations, quadratic equations by factoring, systems of linear equations, and factoring techniques currently support Easy, Medium, and Hard at the generator, registry, and Streamlit UI level. The standard worksheet examples above show Easy output. These additional Markdown examples demonstrate the deterministic Medium/Hard pilot without adding a full matrix of export formats:
+All current supported topics now support Easy, Medium, and Hard at the generator, registry, and Streamlit UI level. The standard worksheet examples above show Easy output. These additional Markdown examples demonstrate the deterministic Medium/Hard pilot without adding a full matrix of export formats:
 
 - `linear_equations_medium_worksheet.md`: medium linear equations with negative constants and negative integer solutions.
 - `linear_equations_hard_worksheet.md`: hard linear equations with variables on both sides.
@@ -28,8 +28,10 @@ Linear equations, quadratic equations by factoring, systems of linear equations,
 - `systems_of_linear_equations_hard_worksheet.md`: hard systems with negative coefficients and negative integer solutions.
 - `factoring_techniques_medium_worksheet.md`: medium factoring with variable GCF, coefficient difference of squares, and mixed-sign trinomials.
 - `factoring_techniques_hard_worksheet.md`: hard factoring with grouping and non-monic trinomials.
+- `functions_basics_medium_worksheet.md`: medium function practice with quadratic evaluation, ordered-pair notation, and square-root domain reasoning.
+- `functions_basics_hard_worksheet.md`: hard function practice with composition evaluation and two-factor denominator domain reasoning.
 
-Functions basics remains Easy-only. Do not add Medium/Hard examples for a topic until that topic has explicit deterministic generator behavior, registry metadata, UI exposure, and tests.
+Medium/Hard examples are Markdown-only pilot examples, not a full export-format matrix. Do not add Medium/Hard examples for a topic until that topic has explicit deterministic generator behavior, registry metadata, UI exposure, and tests.
 
 ## Resource Pack Example
 
@@ -46,4 +48,4 @@ These examples demonstrate the separate LibGuides-safe exporter. They do not rep
 
 ## Regeneration Notes
 
-Most examples were generated with easy difficulty, a count of three problems, and deterministic problem ID prefixes. The Linear, Quadratic, Systems, and Factoring Medium/Hard Markdown examples were generated with the same count and the current deterministic difficulty branches. Refresh these files through the existing generator and exporter functions rather than manually changing generated instructional content.
+Most examples were generated with easy difficulty, a count of three problems, and deterministic problem ID prefixes. The Medium/Hard Markdown examples were generated with the same count and the current deterministic difficulty branches. Refresh these files through the existing generator and exporter functions rather than manually changing generated instructional content.
