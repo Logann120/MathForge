@@ -4,6 +4,10 @@ This guide covers manual review for the MathForge Streamlit MVP and exported ins
 
 MathForge is deterministic and instructor-reviewable. Manual QA should confirm both the application workflow and the generated materials remain clear, accurate, readable, and accessible enough for classroom review.
 
+## Current QA Baseline
+
+The current checkpoint covers Markdown, print-friendly standard HTML, ZIP bundles containing Markdown plus standard HTML, Canvas-friendly manual-entry CSV, and separate LibGuides-safe HTML. Automated tests cover exporter structure and deterministic output, but browser print preview, copy/paste behavior, and accessibility review still require manual checks. MathForge does not include a PDF exporter, direct Canvas integration, or direct LibGuides integration.
+
 ## Launch
 
 Install dependencies if needed:

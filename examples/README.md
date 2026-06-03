@@ -6,7 +6,7 @@ All files are generated from existing College Algebra generators and exporters. 
 
 ## Worksheet Examples
 
-Each worksheet example includes problems and the solution key in both Markdown and HTML:
+Each worksheet example includes problems and the solution key in both Markdown and standard HTML. The standard HTML examples include the current browser print-preview CSS used by the standard HTML exporter:
 
 - `linear_equations_worksheet.md` and `linear_equations_worksheet.html`: linear equations of the form `ax + b = c`.
 - `quadratic_equations_by_factoring_worksheet.md` and `quadratic_equations_by_factoring_worksheet.html`: factorable quadratic equations.
@@ -20,7 +20,7 @@ The older `linear_equations_sample.md` and `linear_equations_sample.html` files 
 
 - `linear_equations_resource_pack.md` and `linear_equations_resource_pack.html`: a full instructional resource pack with worksheet, solution key, study guide, common mistakes, tutor notes, and practice quiz.
 
-This resource pack demonstrates the current Markdown and HTML resource-pack export shape. Other supported topics use the same exporter paths.
+This resource pack demonstrates the current Markdown and print-friendly standard HTML resource-pack export shape. Other supported topics use the same exporter paths.
 
 ## LibGuides-Safe HTML Examples
 
