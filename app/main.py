@@ -27,6 +27,10 @@ from exporters.canvas_exporter import (
     export_worksheet_to_canvas_csv,
 )
 from exporters.html_exporter import export_resource_pack_to_html
+from exporters.libguides_html_exporter import (
+    export_resource_pack_to_libguides_html,
+    export_worksheet_to_libguides_html,
+)
 from exporters.markdown_exporter import export_resource_pack_to_markdown
 from generator.curriculum_resource_pack_generator import (
     generate_resource_pack_from_learning_objective,

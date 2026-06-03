@@ -31,12 +31,14 @@ The current MVP supports:
 - Validating generated answers using SymPy
 - Exporting worksheets to Markdown
 - Exporting worksheets to accessible HTML
+- Exporting worksheets to LibGuides-safe embedded HTML
 - Exporting worksheet problems to a Canvas-friendly manual-entry CSV
 - Downloading worksheet Markdown and HTML together as a ZIP convenience bundle
 - Generating full instructional resource packs with study guides, common mistakes, and tutor notes
 - Generating practice quizzes inside full instructional resource packs
 - Exporting full resource packs to Markdown
 - Exporting full resource packs to accessible HTML
+- Exporting full resource packs to LibGuides-safe embedded HTML
 - Exporting resource-pack practice quizzes to a Canvas-friendly manual-entry CSV
 - Downloading resource-pack Markdown and HTML together as a ZIP convenience bundle
 - Generating materials from sample College Algebra learning objectives for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics
@@ -70,7 +72,7 @@ MathForge is organized around small, testable Python modules:
 - `app/` contains the Streamlit MVP interface and built-in generation presets.
 - `generator/` contains deterministic worksheet, resource pack, and curriculum-aligned generation.
 - `models/` contains dataclasses for worksheets, problems, solutions, exports, curriculum objects, and resource packs.
-- `exporters/` contains Markdown, accessible HTML, Canvas-friendly manual-entry CSV exporters, standard-library ZIP bundle helpers, and deterministic download filename helpers.
+- `exporters/` contains Markdown, accessible HTML, LibGuides-safe HTML, Canvas-friendly manual-entry CSV exporters, standard-library ZIP bundle helpers, and deterministic download filename helpers.
 - `validators/` contains SymPy-based validation helpers.
 - `templates/` contains the deterministic College Algebra course template.
 - `topics/` contains the supported-topic registry for topic labels, routing, defaults, and curriculum metadata.
@@ -133,7 +135,7 @@ Screenshots will be added as the MVP interface stabilizes.
 
 ## Current Status
 
-MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics, built-in generation presets, resource pack generation with practice quizzes, SymPy validation, Markdown export, HTML export, Canvas-friendly manual-entry CSV export, optional ZIP export bundles, and demo-ready Streamlit UI are implemented and covered by automated tests.
+MathForge is at MVP 0.1 readiness review. The core worksheet flow for linear equations, quadratic equations by factoring, systems of linear equations, factoring techniques, and functions basics, built-in generation presets, resource pack generation with practice quizzes, SymPy validation, Markdown export, standard HTML export, LibGuides-safe HTML export, Canvas-friendly manual-entry CSV export, optional ZIP export bundles, and demo-ready Streamlit UI are implemented and covered by automated tests.
 
 Current work includes a curriculum-alignment milestone with a deterministic College Algebra template. Next work should focus on hardening, documentation, accessibility review, careful topic expansion, and keeping the implementation small and maintainable.
 
@@ -141,6 +143,7 @@ Current work includes a curriculum-alignment milestone with a deterministic Coll
 
 - Example files should be periodically checked against current generated output as topics and resource-pack sections evolve.
 - ZIP export bundles are convenience downloads for already-rendered Markdown and HTML files; individual export buttons remain the source of each format.
+- LibGuides-safe HTML is an embed-focused copy/paste format, not a direct LibGuides integration, and does not replace the standard HTML export.
 - Canvas-friendly CSV exports are manual-entry/import-friendly files only; compatibility with Canvas quiz import workflows can vary by institution and may require instructor cleanup.
 - Built-in presets provide starting defaults only; there are no saved custom presets or file-based preset configuration.
 - Continuous integration currently runs the pytest suite on Python 3.11 and Python 3.12.

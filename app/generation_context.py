@@ -86,6 +86,7 @@ def generated_output_summary_lines(
     markdown_filename: str,
     html_filename: str,
     bundle_filename: str,
+    libguides_html_filename: str = "",
     canvas_filename: str = "",
 ) -> tuple[str, ...]:
     """Return Markdown lines for the generated output summary."""
@@ -93,9 +94,15 @@ def generated_output_summary_lines(
         "- **Generated export filenames:**",
         f"  - Markdown: `{markdown_filename}`",
         f"  - HTML: `{html_filename}`",
-        f"  - ZIP bundle: `{bundle_filename}`",
     ]
-    download_types = ["Markdown", "HTML", "ZIP bundle"]
+    download_types = ["Markdown", "HTML"]
+    if libguides_html_filename:
+        filename_lines.append(
+            f"  - LibGuides-safe HTML: `{libguides_html_filename}`"
+        )
+        download_types.append("LibGuides-safe HTML")
+    filename_lines.append(f"  - ZIP bundle: `{bundle_filename}`")
+    download_types.append("ZIP bundle")
     if canvas_filename:
         filename_lines.append(f"  - Canvas manual-entry CSV: `{canvas_filename}`")
         download_types.append("Canvas manual-entry CSV")

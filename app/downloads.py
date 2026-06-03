@@ -19,6 +19,10 @@ from exporters.download_filenames import (
     with_download_filename,
 )
 from exporters.html_exporter import export_resource_pack_to_html, export_worksheet_to_html
+from exporters.libguides_html_exporter import (
+    export_resource_pack_to_libguides_html,
+    export_worksheet_to_libguides_html,
+)
 from exporters.markdown_exporter import (
     export_resource_pack_to_markdown,
     export_worksheet_to_markdown,
@@ -35,10 +39,15 @@ def render_worksheet_exports(
     """Render worksheet export controls."""
     markdown_export = export_worksheet_to_markdown(worksheet, include_solutions=True)
     html_export = export_worksheet_to_html(worksheet, include_solutions=True)
+    libguides_html_export = export_worksheet_to_libguides_html(
+        worksheet,
+        include_solutions=True,
+    )
     canvas_export = export_worksheet_to_canvas_csv(worksheet)
 
     markdown_download = with_download_filename(markdown_export)
     html_download = with_download_filename(html_export)
+    libguides_html_download = with_download_filename(libguides_html_export)
     canvas_download = with_download_filename(canvas_export)
     export_bundle = create_export_bundle(
         (markdown_download, html_download),
@@ -53,6 +62,7 @@ def render_worksheet_exports(
         generation_context=generation_context,
         markdown_filename=markdown_download.filename,
         html_filename=html_download.filename,
+        libguides_html_filename=libguides_html_download.filename,
         bundle_filename=export_bundle.filename,
         canvas_filename=canvas_download.filename,
     )
@@ -66,6 +76,12 @@ def render_worksheet_exports(
         label="Download Worksheet HTML",
         data=html_download.content,
         file_name=html_download.filename,
+        mime="text/html",
+    )
+    st.download_button(
+        label="Download Worksheet LibGuides-Safe HTML",
+        data=libguides_html_download.content,
+        file_name=libguides_html_download.filename,
         mime="text/html",
     )
     st.download_button(
@@ -97,6 +113,14 @@ def render_worksheet_exports(
             label_visibility="collapsed",
         )
 
+    with st.expander("LibGuides-safe HTML export text"):
+        st.text_area(
+            "LibGuides-Safe HTML",
+            value=libguides_html_export.content,
+            height=260,
+            label_visibility="collapsed",
+        )
+
     with st.expander("Canvas manual-entry CSV text"):
         st.text_area(
             "Canvas Manual-Entry CSV",
@@ -120,6 +144,10 @@ def render_resource_pack_exports(
         resource_pack,
         include_solutions=True,
     )
+    libguides_html_export = export_resource_pack_to_libguides_html(
+        resource_pack,
+        include_solutions=True,
+    )
     canvas_export = (
         export_resource_pack_quiz_to_canvas_csv(resource_pack)
         if resource_pack.practice_quiz is not None
@@ -128,6 +156,7 @@ def render_resource_pack_exports(
 
     markdown_download = with_download_filename(markdown_export)
     html_download = with_download_filename(html_export)
+    libguides_html_download = with_download_filename(libguides_html_export)
     canvas_download = (
         with_download_filename(canvas_export)
         if canvas_export is not None
@@ -146,6 +175,7 @@ def render_resource_pack_exports(
         generation_context=generation_context,
         markdown_filename=markdown_download.filename,
         html_filename=html_download.filename,
+        libguides_html_filename=libguides_html_download.filename,
         bundle_filename=export_bundle.filename,
         canvas_filename=canvas_download.filename if canvas_download else "",
     )
@@ -159,6 +189,12 @@ def render_resource_pack_exports(
         label="Download Resource Pack HTML",
         data=html_download.content,
         file_name=html_download.filename,
+        mime="text/html",
+    )
+    st.download_button(
+        label="Download Resource Pack LibGuides-Safe HTML",
+        data=libguides_html_download.content,
+        file_name=libguides_html_download.filename,
         mime="text/html",
     )
     st.download_button(
@@ -191,6 +227,14 @@ def render_resource_pack_exports(
             label_visibility="collapsed",
         )
 
+    with st.expander("Resource pack LibGuides-safe HTML export text"):
+        st.text_area(
+            "Resource Pack LibGuides-Safe HTML",
+            value=libguides_html_export.content,
+            height=320,
+            label_visibility="collapsed",
+        )
+
     if canvas_export is not None:
         with st.expander("Resource pack Canvas manual-entry quiz CSV text"):
             st.text_area(
@@ -210,6 +254,7 @@ def _render_generated_output_summary(
     markdown_filename: str,
     html_filename: str,
     bundle_filename: str,
+    libguides_html_filename: str = "",
     canvas_filename: str = "",
 ) -> None:
     """Render a compact summary of generated output and downloads."""
@@ -222,6 +267,7 @@ def _render_generated_output_summary(
                 generation_context=generation_context,
                 markdown_filename=markdown_filename,
                 html_filename=html_filename,
+                libguides_html_filename=libguides_html_filename,
                 bundle_filename=bundle_filename,
                 canvas_filename=canvas_filename,
             )

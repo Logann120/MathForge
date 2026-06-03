@@ -12,6 +12,7 @@ MAX_FILENAME_LENGTH = 120
 FORMAT_EXTENSIONS = {
     "canvas_csv": "csv",
     "html": "html",
+    "libguides_html": "html",
     "markdown": "md",
 }
 
@@ -98,6 +99,8 @@ def _format_part(export: ExportResult) -> str:
         return "markdown"
     if export.format_name == "html":
         return "html"
+    if export.format_name == "libguides_html":
+        return "libguides-html"
     return export.format_name
 
 

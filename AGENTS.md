@@ -45,6 +45,7 @@ The MVP supports:
 - Math worksheet generation.
 - Detailed solution key generation.
 - Accessible HTML export.
+- LibGuides-safe embedded HTML export.
 - Markdown export.
 - Canvas-friendly manual-entry CSV export for worksheet problems and practice quizzes.
 - Answer validation using SymPy.
@@ -58,7 +59,7 @@ The MVP supports:
 - `app/` contains the Streamlit MVP interface, built-in generation presets, input controls, preview rendering, download orchestration, and generated-output summary view models.
 - `generator/` contains deterministic worksheet, resource-pack, and curriculum-aligned generation.
 - `models/` contains dataclasses for content, resource packs, and curriculum structures.
-- `exporters/` contains Markdown, HTML, Canvas manual-entry CSV, and ZIP bundle exporters.
+- `exporters/` contains Markdown, standard HTML, LibGuides-safe HTML, Canvas manual-entry CSV, and ZIP bundle exporters.
 - `validators/` contains SymPy validation helpers.
 - `templates/` contains the College Algebra course template.
 - `topics/` contains the supported-topic registry for labels, defaults, routing, difficulty support, and curriculum metadata.
@@ -83,6 +84,7 @@ Documentation and implementation should treat accessibility as a core requiremen
 Agents should preserve or improve guidance related to:
 
 - Semantic HTML export.
+- Scoped LibGuides-safe HTML export that avoids page-level headings and global CSS.
 - Logical heading structure.
 - Readable Markdown.
 - Screen-reader-friendly material structure.
@@ -130,6 +132,7 @@ For implementation tasks:
 
 - Example exports should be periodically checked against current generated output.
 - ZIP bundles are convenience downloads for already-rendered exports; individual Markdown and HTML exports remain available.
+- LibGuides-safe HTML is a separate embed-oriented download, not a direct LibGuides integration, and is not included in ZIP bundles.
 - Canvas-friendly CSV export is manual/import-friendly only and is not a Canvas API integration.
 - Built-in generation presets are fixed starting defaults only; there are no saved custom presets or file-based preset configuration.
 - CI runs the pytest suite on Python 3.11 and Python 3.12; deployment workflows are not configured.

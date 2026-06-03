@@ -89,6 +89,24 @@ def test_build_canvas_csv_download_filename_uses_csv_extension() -> None:
     )
 
 
+def test_build_libguides_html_download_filename_uses_html_extension() -> None:
+    export = ExportResult(
+        content='<div class="mathforge-libguides-export"></div>\n',
+        format_name="libguides_html",
+        filename="linear-worksheet-libguides.html",
+        metadata={
+            "topic": "Linear equations",
+            "resource_type": "worksheet",
+            "problem_id_prefix": "linear",
+        },
+    )
+
+    assert (
+        build_export_download_filename(export)
+        == "mathforge-linear-equations-worksheet-linear-libguides-html.html"
+    )
+
+
 def test_sanitize_filename_part_handles_spaces_punctuation_case_and_paths() -> None:
     assert (
         sanitize_filename_part(

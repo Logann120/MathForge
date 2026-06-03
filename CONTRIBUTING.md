@@ -36,7 +36,7 @@ The structure is organized around current MVP responsibilities:
 - `generator/` for deterministic worksheet, resource-pack, and curriculum-aligned generation.
 - `models/` for dataclasses representing content, resource packs, and curriculum structures.
 - `validators/` for answer validation, including SymPy-based checks.
-- `exporters/` for HTML, Markdown, Canvas manual-entry CSV, and ZIP bundle exports.
+- `exporters/` for HTML, LibGuides-safe HTML, Markdown, Canvas manual-entry CSV, and ZIP bundle exports.
 - `templates/` for the College Algebra course template.
 - `topics/` for the supported-topic registry.
 - `tests/` for automated tests.
@@ -81,6 +81,7 @@ The MVP intentionally has no AI or LLM integration, direct Canvas API integratio
 
 - Example outputs should be periodically checked against current generated output.
 - ZIP export bundles are convenience downloads for already-rendered Markdown and HTML files and should not replace individual export buttons.
+- LibGuides-safe HTML exports are separate embed-focused downloads, not a direct LibGuides integration, and should not replace the standard HTML export.
 - Canvas-friendly CSV exports are manual-entry/import-friendly files only; do not add Canvas API calls, OAuth, tokens, secrets, or network behavior without an explicit request.
 - Built-in generation presets are fixed defaults only; do not add persistence, accounts, or file-based preset configuration without an explicit request.
 - CI runs the pytest suite on Python 3.11 and Python 3.12; deployment workflows are not configured.

@@ -22,6 +22,13 @@ The older `linear_equations_sample.md` and `linear_equations_sample.html` files 
 
 This resource pack demonstrates the current Markdown and HTML resource-pack export shape. Other supported topics use the same exporter paths.
 
+## LibGuides-Safe HTML Examples
+
+- `linear_equations_worksheet_libguides.html`: a scoped, paste-friendly worksheet HTML fragment for LibGuides-style institutional pages.
+- `linear_equations_resource_pack_libguides.html`: a scoped, paste-friendly resource-pack HTML fragment with worksheet, solution key, study guide, common mistakes, tutor notes, and practice quiz.
+
+These examples demonstrate the separate LibGuides-safe exporter. They do not replace the standard HTML examples, are not included in ZIP bundles, and are not a direct LibGuides integration.
+
 ## Regeneration Notes
 
 The examples were generated with easy difficulty, a count of three problems, and deterministic problem ID prefixes. Refresh these files through the existing generator and exporter functions rather than manually changing generated instructional content.

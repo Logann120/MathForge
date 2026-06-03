@@ -66,10 +66,10 @@ Review both generation modes and both output types.
 - Confirm the solution key preview includes answers and solution steps.
 - Confirm the generated-output summary appears in the exports area before download buttons and raw export text.
 - Confirm the summary includes output type, context, difficulty, problem count, problem ID prefix, export filenames, and available download types.
-- Confirm Markdown and HTML download buttons are present.
+- Confirm Markdown, HTML, and LibGuides-safe HTML download buttons are present.
 - Confirm the worksheet export bundle download is present and does not replace the individual downloads.
 - Confirm the Canvas manual-entry CSV download is present as a separate optional export.
-- Expand raw Markdown and HTML export text areas and confirm they are readable.
+- Expand raw Markdown, HTML, and LibGuides-safe HTML export text areas and confirm they are readable.
 - Expand the raw Canvas CSV text area and confirm it is readable as CSV.
 
 ### Full Resource Pack
@@ -83,7 +83,7 @@ Review both generation modes and both output types.
 - Confirm the practice quiz includes questions and an answer key.
 - Confirm the generated-output summary appears in the exports area before download buttons and raw export text.
 - Confirm the summary identifies `Full Resource Pack` and includes resource-pack export filenames.
-- Confirm Resource Pack Markdown and HTML download buttons are present.
+- Confirm Resource Pack Markdown, HTML, and LibGuides-safe HTML download buttons are present.
 - Confirm the resource-pack export bundle download is present and does not replace the individual downloads.
 - Confirm the Resource Pack Canvas manual-entry quiz CSV download is present when a practice quiz exists.
 - Expand raw export text areas and confirm the content includes all resource-pack sections.
@@ -91,16 +91,20 @@ Review both generation modes and both output types.
 ### Downloads
 
 - Download worksheet Markdown and HTML.
+- Download worksheet LibGuides-safe HTML.
 - Download resource-pack Markdown and HTML.
+- Download resource-pack LibGuides-safe HTML.
 - Download worksheet and resource-pack Canvas manual-entry CSV files.
 - Download worksheet and resource-pack ZIP bundles.
 - Confirm filenames are clear and deterministic.
 - Confirm filenames identify MathForge, the topic or learning-objective context, the output type, the problem ID prefix, and the file format.
 - Confirm custom problem ID prefixes with spaces, punctuation, or path-like characters are sanitized in filenames.
 - Confirm ZIP bundles contain the same Markdown and HTML files offered by the individual buttons.
+- Confirm ZIP bundles still contain Markdown and standard HTML only; LibGuides-safe HTML remains a separate download.
 - Confirm Canvas CSV files include question title, prompt, answer, explanation, topic, difficulty, problem ID, source type, and source ID columns.
 - Confirm Canvas CSV files are labeled as manual-entry/import-friendly exports, not direct Canvas publishing.
 - Open downloaded HTML in a browser and confirm it renders without obvious broken markup.
+- Paste LibGuides-safe HTML into a test LibGuides-style content area or HTML sandbox and confirm it does not alter page/global headings or surrounding content.
 - Open downloaded Markdown in a text editor and confirm it is readable as plain text.
 
 ### Error and Empty-State Behavior
@@ -150,6 +154,16 @@ Use a browser and basic keyboard navigation. When practical, also inspect the HT
 - Confirm exported fragments are portable enough to paste into an LMS content editor.
 - Note any limitations caused by plain-text math notation so they can be addressed in future accessibility work.
 
+## LibGuides-Safe HTML Review
+
+- Confirm the export is wrapped in `mathforge-libguides-export`.
+- Confirm embedded headings start at `h3` or lower.
+- Confirm no `h1` or `h2` headings appear in the exported fragment.
+- Confirm CSS selectors are scoped to the MathForge wrapper and do not target global page elements.
+- Confirm no scripts, external fonts, or external stylesheets are included.
+- Confirm the fragment can be copied into a LibGuides-style HTML editor without changing surrounding page styles.
+- Note that this check verifies paste-friendly behavior only; it does not certify compatibility with every institutional LibGuides configuration.
+
 ## Exported Markdown Review
 
 - Confirm the worksheet title is a top-level heading.
@@ -175,6 +189,7 @@ Use a browser and basic keyboard navigation. When practical, also inspect the HT
 - [ ] Generated-output summaries appear before export downloads and include filename/download context.
 - [ ] Markdown export text areas and downloads work for worksheet-only and resource-pack output.
 - [ ] HTML export text areas and downloads work for worksheet-only and resource-pack output.
+- [ ] LibGuides-safe HTML export text areas and downloads work for worksheet-only and resource-pack output.
 - [ ] Canvas manual-entry CSV text areas and downloads work for worksheet-only and resource-pack output.
 - [ ] ZIP export bundles download for worksheet-only and resource-pack output.
 - [ ] Downloaded HTML opens in a browser and has sensible semantic structure.
