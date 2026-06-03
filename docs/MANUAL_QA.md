@@ -57,10 +57,10 @@ Use these checks after any change to topic routing, presets, registry metadata, 
 
 | Scenario | Inputs | Manual checks |
 | --- | --- | --- |
-| Expanded-difficulty Topic mode worksheet | Topic mode, `Linear equations` and `Quadratic equations by factoring`, `Worksheet only`, each of `Easy`, `Medium`, and `Hard` | Difficulty selector shows exactly `Easy`, `Medium`, and `Hard`; each difficulty generates without a stack trace; worksheet, solution key, exports tab, individual downloads, ZIP bundle, Canvas CSV, and LibGuides-safe HTML controls still appear; generated-output summary shows the selected difficulty. |
-| Expanded-difficulty Topic mode resource pack | Topic mode, `Linear equations` and `Quadratic equations by factoring`, `Full Resource Pack`, each of `Easy`, `Medium`, and `Hard` | Difficulty selector shows exactly `Easy`, `Medium`, and `Hard`; each difficulty generates a full resource pack; study guide, common mistakes, tutor notes, practice quiz, export buttons, and generated-output summary remain present; summary reflects the selected difficulty. |
-| Easy-only Topic mode coverage | Topic mode, each remaining Easy-only topic, `Worksheet only`, `Easy` | Systems of linear equations, factoring techniques, and functions basics each show only `Easy`; generation still succeeds; export buttons still appear. |
-| Expanded-difficulty Learning Objective mode | Learning Objective mode, `College Algebra`, Linear Equations and Quadratic Equations modules, worksheet or resource pack | Difficulty selector shows exactly `Easy`, `Medium`, and `Hard`; generated-output summary identifies Learning Objective mode, mapped topic, and the selected difficulty. |
+| Expanded-difficulty Topic mode worksheet | Topic mode, `Linear equations`, `Quadratic equations by factoring`, and `Systems of linear equations`, `Worksheet only`, each of `Easy`, `Medium`, and `Hard` | Difficulty selector shows exactly `Easy`, `Medium`, and `Hard`; each difficulty generates without a stack trace; worksheet, solution key, exports tab, individual downloads, ZIP bundle, Canvas CSV, and LibGuides-safe HTML controls still appear; generated-output summary shows the selected difficulty. |
+| Expanded-difficulty Topic mode resource pack | Topic mode, `Linear equations`, `Quadratic equations by factoring`, and `Systems of linear equations`, `Full Resource Pack`, each of `Easy`, `Medium`, and `Hard` | Difficulty selector shows exactly `Easy`, `Medium`, and `Hard`; each difficulty generates a full resource pack; study guide, common mistakes, tutor notes, practice quiz, export buttons, and generated-output summary remain present; summary reflects the selected difficulty. |
+| Easy-only Topic mode coverage | Topic mode, each remaining Easy-only topic, `Worksheet only`, `Easy` | Factoring techniques and functions basics each show only `Easy`; generation still succeeds; export buttons still appear. |
+| Expanded-difficulty Learning Objective mode | Learning Objective mode, `College Algebra`, Linear Equations, Quadratic Equations, and Systems of Equations modules, worksheet or resource pack | Difficulty selector shows exactly `Easy`, `Medium`, and `Hard`; generated-output summary identifies Learning Objective mode, mapped topic, and the selected difficulty. |
 | Easy-only Learning Objective mode coverage | Learning Objective mode, each remaining Easy-only College Algebra module/objective | Difficulty selector shows only `Easy`; generated output remains aligned to the selected objective; export buttons still appear. |
 | Preset defaults | Select each built-in preset before changing topic/objective | Presets still default difficulty to `Easy`; preset-selected values remain editable; selecting a Medium/Hard-capable topic does not change presets into Medium/Hard presets. |
 
@@ -135,9 +135,9 @@ Review both generation modes and both output types.
 - Confirm the problem count matches the requested count.
 - Confirm the advanced `Problem ID prefix` default is topic-specific.
 - Confirm changing the problem count updates the generated output after clicking `Generate`.
-- Confirm Linear equations and Quadratic equations by factoring expose `Easy`, `Medium`, and `Hard`.
+- Confirm Linear equations, Quadratic equations by factoring, and Systems of linear equations expose `Easy`, `Medium`, and `Hard`.
 - Confirm all remaining supported topics expose only `Easy`.
-- Generate Linear equations and Quadratic equations by factoring worksheets and resource packs at `Easy`, `Medium`, and `Hard`.
+- Generate Linear equations, Quadratic equations by factoring, and Systems of linear equations worksheets and resource packs at `Easy`, `Medium`, and `Hard`.
 - Confirm generated-output summaries show the selected difficulty.
 
 ### Learning Objective Mode
@@ -151,7 +151,7 @@ Review both generation modes and both output types.
 - Confirm the context summary includes course, module, selected objective, mapped topic, and planned output type.
 - Generate output from at least one objective and confirm it matches the selected topic.
 - Confirm the generated-output summary identifies `Learning Objective mode` and includes course, module, objective, and mapped topic.
-- Confirm Linear Equations and Quadratic Equations objectives expose `Easy`, `Medium`, and `Hard`.
+- Confirm Linear Equations, Quadratic Equations, and Systems of Equations objectives expose `Easy`, `Medium`, and `Hard`.
 - Confirm remaining objectives expose only `Easy`.
 - Confirm generated-output summaries show the selected difficulty.
 
@@ -288,8 +288,8 @@ Use a browser and basic keyboard navigation. When practical, also inspect the HT
 - [ ] Built-in presets provide editable defaults for common workflows.
 - [ ] Topic mode generates worksheet-only output for every supported topic.
 - [ ] Topic mode generates full resource packs for every supported topic.
-- [ ] Topic mode exposes Medium and Hard only for Linear equations and Quadratic equations by factoring.
-- [ ] Linear equations and Quadratic equations by factoring generate worksheet-only and full resource-pack output at Easy, Medium, and Hard.
+- [ ] Topic mode exposes Medium and Hard only for Linear equations, Quadratic equations by factoring, and Systems of linear equations.
+- [ ] Linear equations, Quadratic equations by factoring, and Systems of linear equations generate worksheet-only and full resource-pack output at Easy, Medium, and Hard.
 - [ ] Learning Objective mode exposes College Algebra modules and objectives.
 - [ ] Learning Objective mode derives difficulty options from the mapped topic.
 - [ ] Learning Objective mode shows course/module/objective context and mapped topic before generation.

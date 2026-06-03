@@ -84,6 +84,7 @@ def test_supported_topics_use_current_output_types_and_difficulty() -> None:
         if topic.slug in {
             "linear-equations",
             "quadratic-equations-by-factoring",
+            "systems-of-linear-equations",
         }:
             assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
         else:
@@ -117,6 +118,12 @@ def test_quadratic_equations_registry_marks_pilot_difficulty_support() -> None:
     assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
 
 
+def test_systems_of_equations_registry_marks_pilot_difficulty_support() -> None:
+    topic = find_topic_by_label("Systems of linear equations")
+
+    assert topic.supported_difficulty_levels == ("easy", "medium", "hard")
+
+
 def test_registry_difficulty_metadata_is_normalized_lowercase() -> None:
     for topic in supported_topics():
         for difficulty in topic.supported_difficulty_levels:
@@ -124,7 +131,7 @@ def test_registry_difficulty_metadata_is_normalized_lowercase() -> None:
             assert difficulty == difficulty.strip()
 
 
-def test_only_linear_and_quadratic_advertise_expanded_difficulty_pilot() -> None:
+def test_only_linear_quadratic_and_systems_advertise_expanded_difficulty_pilot() -> None:
     expanded_topics = tuple(
         topic.slug
         for topic in supported_topics()
@@ -134,6 +141,7 @@ def test_only_linear_and_quadratic_advertise_expanded_difficulty_pilot() -> None
     assert expanded_topics == (
         "linear-equations",
         "quadratic-equations-by-factoring",
+        "systems-of-linear-equations",
     )
 
 

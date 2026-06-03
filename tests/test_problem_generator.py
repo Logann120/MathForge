@@ -507,10 +507,165 @@ def test_generate_systems_of_equations_worksheet_creates_expected_easy_problem()
         "x - y = -1"
     )
     assert problem.answer == "(1, 2)"
-    assert problem.metadata["equation_1"] == "x + y = 3"
-    assert problem.metadata["equation_2"] == "x - y = -1"
+    assert dict(problem.metadata) == {
+        "equation_1": "x + y = 3",
+        "equation_2": "x - y = -1",
+        "variable_1": "x",
+        "variable_2": "y",
+        "x_value": "1",
+        "y_value": "2",
+    }
     assert solution.problem_id == problem.problem_id
     assert solution.final_answer == problem.answer
+    assert solution.steps == (
+        "Start with the system x + y = 3 and x - y = -1.",
+        "Add the equations to eliminate y.",
+        "Solve for x to get x = 1.",
+        "Substitute x = 1 into one equation to get y = 2.",
+        "The solution is (1, 2).",
+    )
+
+
+def test_generate_systems_of_equations_medium_worksheet_is_deterministic() -> None:
+    first = generate_systems_of_equations_worksheet(
+        "Systems of linear equations",
+        "medium",
+        3,
+        "medium-systems",
+    )
+    second = generate_systems_of_equations_worksheet(
+        "Systems of linear equations",
+        "medium",
+        3,
+        "medium-systems",
+    )
+
+    assert first == second
+    assert [problem.prompt for problem in first.problems] == [
+        "Solve the system of equations:\n2*x + y = 7\nx - 2*y = -4",
+        "Solve the system of equations:\n2*x + y = 10\nx - 2*y = -5",
+        "Solve the system of equations:\n2*x + y = 13\nx - 2*y = -6",
+    ]
+    assert [problem.answer for problem in first.problems] == [
+        "(2, 3)",
+        "(3, 4)",
+        "(4, 5)",
+    ]
+
+
+def test_generate_systems_of_equations_medium_requires_one_equation_scaling() -> None:
+    worksheet = generate_systems_of_equations_worksheet(
+        "Systems of linear equations",
+        "medium",
+        1,
+        "medium-systems",
+    )
+
+    problem = worksheet.problems[0]
+    solution = worksheet.solutions[0]
+
+    assert problem.metadata["difficulty_pattern"] == "one_equation_scaling"
+    assert problem.metadata["recommended_method"] == "elimination"
+    assert problem.metadata["scaling_equation"] == "equation_1"
+    assert problem.metadata["scaling_factor"] == "2"
+    assert problem.metadata["equation_1"] == "2*x + y = 7"
+    assert problem.metadata["equation_2"] == "x - 2*y = -4"
+    assert solution.steps == (
+        "Start with the system 2*x + y = 7 and x - 2*y = -4.",
+        "Multiply the first equation by 2 so the y-coefficients are opposites.",
+        "Add the scaled first equation to the second equation to eliminate y.",
+        "Solve for x to get x = 2.",
+        "Substitute x = 2 into one equation to get y = 3.",
+        "The solution is (2, 3).",
+    )
+
+
+def test_generate_systems_of_equations_hard_worksheet_is_deterministic() -> None:
+    first = generate_systems_of_equations_worksheet(
+        "Systems of linear equations",
+        "hard",
+        3,
+        "hard-systems",
+    )
+    second = generate_systems_of_equations_worksheet(
+        "Systems of linear equations",
+        "hard",
+        3,
+        "hard-systems",
+    )
+
+    assert first == second
+    assert [problem.prompt for problem in first.problems] == [
+        "Solve the system of equations:\n-2*x + 3*y = -7\n4*x + y = 7",
+        "Solve the system of equations:\n-2*x + 3*y = -12\n4*x + y = 10",
+        "Solve the system of equations:\n-2*x + 3*y = -17\n4*x + y = 13",
+    ]
+    assert [problem.answer for problem in first.problems] == [
+        "(2, -1)",
+        "(3, -2)",
+        "(4, -3)",
+    ]
+
+
+def test_generate_systems_of_equations_hard_uses_negative_coefficients_or_solution() -> None:
+    worksheet = generate_systems_of_equations_worksheet(
+        "Systems of linear equations",
+        "hard",
+        1,
+        "hard-systems",
+    )
+
+    problem = worksheet.problems[0]
+    solution = worksheet.solutions[0]
+
+    assert problem.metadata["difficulty_pattern"] == "negative_coefficients_or_solution"
+    assert problem.metadata["recommended_method"] == "elimination"
+    assert problem.metadata["scaling_equation"] == "equation_2"
+    assert problem.metadata["scaling_factor"] == "-3"
+    assert problem.metadata["equation_1"].startswith("-2*x")
+    assert int(problem.metadata["y_value"]) < 0
+    assert solution.steps == (
+        "Start with the system -2*x + 3*y = -7 and 4*x + y = 7.",
+        "Multiply the second equation by -3 so the y-coefficients are opposites.",
+        "Add the equations to eliminate y.",
+        "Solve for x to get x = 2.",
+        "Substitute x = 2 into one equation to get y = -1.",
+        "The solution is (2, -1).",
+    )
+
+
+def test_generate_systems_of_equations_unknown_difficulty_uses_legacy_fallback() -> None:
+    worksheet = generate_systems_of_equations_worksheet(
+        "Systems of linear equations",
+        "practice",
+        1,
+        "fallback-systems",
+    )
+
+    problem = worksheet.problems[0]
+    solution = worksheet.solutions[0]
+
+    assert problem.prompt == (
+        "Solve the system of equations:\n"
+        "x + y = 5\n"
+        "x - y = -1"
+    )
+    assert problem.answer == "(2, 3)"
+    assert dict(problem.metadata) == {
+        "equation_1": "x + y = 5",
+        "equation_2": "x - y = -1",
+        "variable_1": "x",
+        "variable_2": "y",
+        "x_value": "2",
+        "y_value": "3",
+    }
+    assert solution.steps == (
+        "Start with the system x + y = 5 and x - y = -1.",
+        "Add the equations to eliminate y.",
+        "Solve for x to get x = 2.",
+        "Substitute x = 2 into one equation to get y = 3.",
+        "The solution is (2, 3).",
+    )
 
 
 def test_generated_system_solutions_satisfy_generated_equations() -> None:

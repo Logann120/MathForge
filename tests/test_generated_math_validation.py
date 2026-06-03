@@ -79,12 +79,15 @@ def test_generated_factoring_answers_are_expression_equivalent() -> None:
         assert result.is_valid is True
 
 
-def test_generated_system_solutions_satisfy_both_equations() -> None:
+@pytest.mark.parametrize("difficulty", ("easy", "medium", "hard"))
+def test_generated_system_solutions_satisfy_both_equations(
+    difficulty: str,
+) -> None:
     worksheet = generate_systems_of_equations_worksheet(
         topic="Systems of linear equations",
-        difficulty="easy",
+        difficulty=difficulty,
         count=5,
-        start_id="validation-systems",
+        start_id=f"validation-systems-{difficulty}",
     )
 
     for problem in worksheet.problems:

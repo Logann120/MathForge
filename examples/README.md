@@ -18,14 +18,14 @@ The older `linear_equations_sample.md` and `linear_equations_sample.html` files 
 
 ### Difficulty Pilot Examples
 
-Linear equations and quadratic equations by factoring currently support Easy, Medium, and Hard at the generator, registry, and Streamlit UI level. The standard worksheet examples above show Easy output. These additional Markdown examples demonstrate the deterministic Medium/Hard pilot without adding a full matrix of export formats:
+Linear equations, quadratic equations by factoring, and systems of linear equations currently support Easy, Medium, and Hard at the generator, registry, and Streamlit UI level. The standard worksheet examples above show Easy output. These additional Markdown examples demonstrate the deterministic Medium/Hard pilot without adding a full matrix of export formats:
 
 - `linear_equations_medium_worksheet.md`: medium linear equations with negative constants and negative integer solutions.
 - `linear_equations_hard_worksheet.md`: hard linear equations with variables on both sides.
 - `quadratic_equations_by_factoring_medium_worksheet.md`: medium monic quadratic equations with mixed-sign integer roots.
 - `quadratic_equations_by_factoring_hard_worksheet.md`: hard non-monic quadratic equations with integer roots.
 
-Systems of linear equations, factoring techniques, and functions basics remain Easy-only. Do not add Medium/Hard examples for a topic until that topic has explicit deterministic generator behavior, registry metadata, UI exposure, and tests.
+Systems Medium/Hard examples are deferred for now. Factoring techniques and functions basics remain Easy-only. Do not add Medium/Hard examples for a topic until that topic has explicit deterministic generator behavior, registry metadata, UI exposure, and tests.
 
 ## Resource Pack Example
 
@@ -42,4 +42,4 @@ These examples demonstrate the separate LibGuides-safe exporter. They do not rep
 
 ## Regeneration Notes
 
-Most examples were generated with easy difficulty, a count of three problems, and deterministic problem ID prefixes. The Linear and Quadratic Medium/Hard Markdown examples were generated with the same count and the current deterministic difficulty branches. Refresh these files through the existing generator and exporter functions rather than manually changing generated instructional content.
+Most examples were generated with easy difficulty, a count of three problems, and deterministic problem ID prefixes. The Linear and Quadratic Medium/Hard Markdown examples were generated with the same count and the current deterministic difficulty branches. Systems Medium/Hard examples can be added in a later examples checkpoint. Refresh these files through the existing generator and exporter functions rather than manually changing generated instructional content.
